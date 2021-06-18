@@ -1102,8 +1102,6 @@ function prepare_slides() {
 	if (! ('nooutline' in parameters && parameters['nooutline']=='true')) outlines=document.getElementById('outline');
 	slides.push({'id':'title','background':slide.dataset['background'],'animation':slide.dataset['animation'],'navigation':compare(slide.dataset['navigation'],'true'),'footer':compare(slide.dataset['footer'],'true'),'numfragments':0});
 	let defaults={'background':'','animation':''};
-	let lastb="";
-	let lasta="";
 	Array.from(document.getElementsByTagName('section')).forEach(function(element,index) {
 		// Give an id to the slide
 		let id="slide-"+(index+1);
@@ -1123,7 +1121,7 @@ function prepare_slides() {
 			// Prepare default values for background and animation
 			let defaultsoverride={};
 			if ('data-background' in slidespec) defaultsoverride['background']=from_string(slidespec['data-background']);
-			if ('data-animation' in slidespec) defaultsoverride['animation']=slidespec['animation'];
+			if ('data-animation' in slidespec) defaultsoverride['animation']=slidespec['data-animation'];
 			let slideo=process_slide(document.getElementById(slidespec['id']),defaults);
 			Object.assign(slideo,slidespec);
 			Object.assign(slideo,defaultsoverride);
@@ -1151,8 +1149,10 @@ function prepare_slides() {
 					if (parameters['subset'].includes(group)) ok=true;
 					break;
 				}
-				if (ok==false) return;
+				if (!ok) return;
 			}
+			// Test if the slide is in the slideshow hidden subset, if this is the case, skip it
+			if ('hidden' in parameters && parameters['hidden'].length>0 && (parameters['hidden'].includes(''+(index+1)) || parameters['hidden'].includes(element.id))) return;
 			// Insert slide in array
 			// If the slide starts a new section, also inserts an outline slide
 			if (outlines && 'section' in element.dataset) 
@@ -1184,6 +1184,7 @@ document.addEventListener("DOMContentLoaded",function(event) {
 		parameters[varval[0]]=varval[1];
 	}
 	if ('subset' in parameters && parameters['subset']!='') parameters['subset']=parameters['subset'].split(',');
+	if ('hidden' in parameters && parameters['hidden']!='') parameters['hidden']=parameters['hidden'].split(',');
 	// Disable outline stylesheet
 	for (let i=0;i<document.styleSheets.length;++i) if (document.styleSheets[i].title=='outlinesheet') document.styleSheets[i].disabled=true;
 	// Load external SVG files
