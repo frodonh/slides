@@ -1138,6 +1138,18 @@ function prepare_slides() {
 			slides.push(slideo);
 		}
 	} else {
+		// Process heading (h1 and h2) elements outside slides and replace them with the right attribute in the following slide. This allows for an alternate syntax for specifying new sections and subsections. It is especially needed for conversion with Pandoc because the converter can't rely on the order of the slides in the source document to find the starts of sections and subsections. (The converter is stateless.)
+		Array.from(document.querySelectorAll('body > h1,h2')).forEach(function(element) {
+			let sec=element;
+			do {
+				sec=element.nextElementSibling;
+			} while (sec!=null && sec.tagName!='SECTION');
+			if (sec==null) return;
+			sec.dataset[(element.tagName=='H1') ? 'section' : 'subsection']=element.textContent;
+			if (element.tagName=='H1' && 'ssection' in element.dataset) sec.dataset['ssection']=element.dataset['ssection'];
+			element.parentNode.removeChild(element);
+		});
+		// Add all slides to the array
 		Array.from(document.getElementsByTagName('section')).forEach(function(element,index) {
 			if (element.id=='title' || element.id=='outline') return;
 			let slideo=process_slide(element,defaults);
