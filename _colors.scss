@@ -1,0 +1,30 @@
+// Colors
+$color_afbgreen: #9FC418;
+$color_afbsemigreen: #D9E8A3;
+$color_afbdarkgreen: #A1C51B;
+$color_afblightgreen: #E9F1DA;
+$color_afbdarkblue: #08508A;
+$color_afblightblue: #199FD9;
+$palettea: $color_afbdarkgreen !default;
+$paletteb: $color_afbdarkblue !default;
+$palettec: #777 !default;
+$paletted: #e68a00 !default;
+$palettee: $color_afblightblue !default;
+$palettef: #ff3399 !default;
+$palettela: scale-color($palettea,$lightness: 40%) !default;
+$palettelb: scale-color($paletteb,$lightness: 40%) !default;
+$palettelc: scale-color($palettec,$lightness: 40%) !default;
+$paletteld: scale-color($paletted,$lightness: 40%) !default;
+
+:root {
+	--palettea: #{$palettea};
+	--paletteb: #{$paletteb};
+	--palettec: #{$palettec};
+	--paletted: #{$paletted};
+	--palettee: #{$palettee};
+	--palettef: #{$palettef};
+	--palettela: #{$palettela};
+	--palettelb: #{$palettelb};
+	--palettelc: #{$palettelc};
+	--paletteld: #{$paletteld};
+}

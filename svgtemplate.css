@@ -1,0 +1,64 @@
+:root {
+  --palettea: #A1C51B;
+  --paletteb: #08508A;
+  --palettec: #777;
+  --paletted: #e68a00;
+  --palettee: #199FD9;
+  --palettef: #ff3399;
+  --palettela: #cfea68;
+  --palettelb: #319cf3;
+  --palettelc: #adadad;
+  --paletteld: #ffbc57; }
+
+svg .fill_la {
+  fill: #cfea68; }
+
+svg .fill_a {
+  fill: #A1C51B; }
+
+svg .fill_b {
+  fill: #08508A; }
+
+svg .fill_c {
+  fill: #777; }
+
+svg .fill_d {
+  fill: #e68a00; }
+
+svg .fill_e {
+  fill: #199FD9; }
+
+svg .stroke_a {
+  stroke: #A1C51B; }
+
+svg .stroke_b {
+  stroke: #08508A; }
+
+svg .stroke_c {
+  stroke: #777; }
+
+svg .stroke_d {
+  stroke: #e68a00; }
+
+svg .stroke_e {
+  stroke: #199FD9; }
+
+svg .stroke_f {
+  stroke: #ff3399; }
+
+svg .shadowed {
+  filter: url("#shadow"); }
+
+svg .svgbox {
+  rx: 10;
+  ry: 10;
+  stroke: #A1C51B;
+  fill: #cfea68;
+  filter: url("#shadow"); }
+
+svg .hcentertext {
+  text-anchor: middle; }
+
+svg .hvcentertext {
+  text-anchor: middle;
+  dominant-baseline: middle; }

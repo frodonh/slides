@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="utf-8">
+	<meta name="description" content="Manuel de l'utilisateur du modèle">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Manuel de l'utilisateur</title>
+	<link rel="stylesheet" href="prism/prism.css" />
+	<link rel="stylesheet" href="manual.css" />
+</head>
+<body>
+	<h1>Manuel de l'utilisateur</h2>
+
+	<h2>Structure générale</h2>
+	<pre>
+		<code class="language-markup">
+			&lt;!DOCTYPE html&gt;
+			&lt;html lang="fr" data-notes="notes.html" data-synchronize="sync.php"&gt;
+			&lt;head&gt;
+				&lt;meta charset="utf-8"&gt;
+				&lt;meta name="description" content="Modèle"&gt;
+				&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+
+				&lt;title&gt;Modèle&lt;/title&gt;
+				&lt;link rel="stylesheet" href="/template_pres/svgtemplate.css"&gt;
+				&lt;link rel="stylesheet" href="/template_pres/template.css"&gt;
+
+				&lt;!--[if lt IE 9]&gt;
+				&lt;script src="//html5shim.googlecode.com/svn/trunk/html5.js"&gt;&lt;/script&gt;
+				&lt;![endif]--&gt;
+			&lt;/head&gt;
+			&lt;body&gt;
+				&lt;div id="outline" data-background="img/page_courante.svg" data-animation="convex"&gt;
+					&lt;h1&gt;Sommaire&lt;/h1&gt;
+					&lt;div class="content"&gt;&lt;/div&gt;
+				&lt;/div&gt;
+
+				&lt;section id="title" data-background="img/page_garde.svg" data-animation="convex"&gt;
+					&lt;h1&gt;
+						Modèle&lt;br/&gt;&lt;span class="subtitle"&gt;Manuel de l'utilisateur&lt;/span&gt;
+					&lt;/h1&gt;
+					&lt;div class="authordate"&gt;Jean Bon&lt;br/&gt;&lt;time&gt;&lt;/time&gt;&lt;/div&gt;
+				&lt;/section&gt;
+
+				&lt;section data-section="L'introduction générale" data-ssection="Introduction" data-subsection="Historique" data-numfragment="5" data-background="img/page_courante.svg" data-animation="convex"&gt; 
+					&lt;h1&gt;L'histoire du modèle&lt;/h1&gt;
+					&lt;div class="content"&gt;
+					&lt;/div&gt;
+				&lt;/section&gt;
+			&lt;/body&gt;
+			&lt;script src="/template_pres/template_js.js"&gt;&lt;/script&gt;
+			&lt;/html&gt;
+		</code>
+	</pre>
+	<p>Le style <tt>template.css</tt> et le script <tt>template_js.js</tt> doivent être inclus. Le script est inclus en fin de code, de préférence après la fermeture de la balise <tt><code class="language-markup">&lt;body&gt;</code></tt>.</p>
+
+	<h3>Ajouter une diapositive</h3>
+	<p>Une nouvelle diapositive est créee en rajoutant une section. Les balises sont présentées dans l'ordre où elles figurent dans le fichier source.</p>
+	<pre><code class="language-markup">
+		&lt;section data-section="L'introduction générale" data-ssection="Introduction" data-subsection="Historique" data-numfragment="5" data-background="img/page_courante.svg" data-animation="convex"&gt; 
+			&lt;h1&gt;L'histoire du modèle&lt;/h1&gt;
+			&lt;div class="content"&gt;
+			&lt;/div&gt;
+		&lt;/section&gt;
+	</code></pre>
+	<p>La présentation peut être structurée en sections et en sous-sections. La structure est présentée sur les <a href="#slide-outline">diapositives de sommaire</a> ainsi que dans la <a href="#minitoc">barre de navigation</a>. Pour démarrer une nouvelle section, la première diapositive de la section doit comporter un attribut <tt>data-section</tt> comportant le titre de la section. Elle peut aussi comporter un attribut <tt>data-ssection</tt> comportant un titre abrégé, qui est alors utilisé à la place du titre dans la barre de navigation.</p>
+	<p>Une nouvelle sous-section est ouverte en ajoutant l'attribut <tt>data-subsection</tt> à la première diapositive de la sous-section. Les sous-sections figurent dans les <a href="#slide-outline">diapositives de sommaire</a>, et peuvent être mises en évidence dans la <a href="#minitoc">barre de navigation</a>.</p>
+
+	<h3>Diapositive titre</h3>
+	<p>Une diapositive modèle, avec l'identifiant <tt>title</tt> est créée pour représenter la diapositive de titre. Elle n'est affichée qu'une fois en début de présentation. Le modèle permet de configurer la diapositive.</p>
+	<p>Si elle contient une balise <tt><code class="language-markup">&lt;time&gt;&lt;/time&gt;</code></tt> vide, la date de la présentation est automatiquement ajoutée au moment de l'affichage sous la forme "Samedi 26 janvier 2019". Si la balise n'est pas vide, son contenu est conservé.</p>
+	<pre><code class="language-markup">
+		&lt;section id="title" data-background="img/page_garde.svg" data-animation="convex"&gt;
+			&lt;h1&gt;
+				Modèle&lt;br/&gt;&lt;span class="subtitle"&gt;Manuel de l'utilisateur&lt;/span&gt;
+			&lt;/h1&gt;
+			&lt;div class="authordate"&gt;Jean Bon&lt;br/&gt;&lt;time&gt;&lt;/time&gt;&lt;/div&gt;
+		&lt;/section&gt;
+	</code></pre>
+
+	<h3 id="slide-outline">Diapositive de sommaire</h3>
+	<p>Une diapositive modèle, avec l'identifiant <tt>outline</tt> est créée pour représenter le sommaire. La même diapositive est utilisée en début de présentation et avant chaque nouvelle section. Le modèle permet de configurer la diapositive (image de fond, animation, titre). Le sommaire est généré automatiquement à l'intérieur de la balise <tt><code class="language-markup">&lt;div class="content"&gt;&lt;/div&gt;</code></tt></p>
+	<pre><code class="language-markup">
+		&lt;div id="outline" data-background="img/page_courante.svg" data-animation="convex"&gt;
+			&lt;h1&gt;Sommaire&lt;/h1&gt;
+			&lt;div class="content"&gt;&lt;/div&gt;
+		&lt;/div&gt;
+	</code></pre>
+
+	<h2>Diapositive</h2>
+
+	<h3 id="slide">Structure générale</h3>
+	<p>La diapositive est l'unité de base de la présentation. Elle correspond à un écran et peut comprendre des éléments animés. Lorsque la diapositive est affichée, une animation est jouée entre la diapositive courante et celle-ci, comme spécifié par l'attribut <tt>data-animation</tt> (voir aussi la rubrique <a href="#animation">Animation</a>).</p>
+	<pre><code class="language-markup">
+		&lt;section data-section="L'introduction générale" data-ssection="Introduction" data-subsection="Historique" data-numfragment="5" data-background="img/page_courante.svg" data-animation="convex"&gt; 
+			&lt;h1&gt;L'histoire du modèle&lt;/h1&gt;
+			&lt;div class="content"&gt;
+			&lt;/div&gt;
+		&lt;/section&gt;
+	</code></pre>
+	<dl class="components">
+		<dt><tt><code class="language-markup">&lt;h1&gt;L'histoire du modèle&lt;/h1&gt;</code></tt></dt><dd>Titre de la diapositive</dd> 
+		<dt><tt><code class="language-markup">
+			&lt;div class="content"&gt;
+			&lt;/div&gt;
+		</code></tt></dt><dd>Contenu de la diapositive. </dd> 
+	</dl>
+	<dl class="attributes">
+		<dt><tt>id</tt></dt><dd>Identifiant de la diapositive. S'il n'est pas précisé, un identifiant du type <tt>slide-xx</tt> est généré automatiquement, où <tt>xx</tt> est le numéro de la diapositive. L'identifiant est utilisé pour référencer la diapositive depuis l'URL de la présentation.</dd>
+		<dt><tt>data-section</tt></dt><dd>Titre de la nouvelle section</dd>
+		<dt><tt>data-ssection</tt></dt><dd>Titre abrégé de la nouvelle section</dd>
+		<dt><tt>data-subsection</tt></dt><dd>Titre de la nouvelle sous-section</dd>
+		<dt><tt>data-background</tt></dt><dd>Chemin de l'image de fond à appliquer à la diapositive. Si cet attribut est absent, l'image de fond de la diapositive précédente est conservée. Si cet attribut est vide, une diapositive sans image de fond est créée. L'attribut peut également prendre la forme d'un tableau composé de plusieurs chemins. Dans ce cas, l'image de fond est sélectionnée aléatoirement parmi tous les liens mentionnés (pour chaque diapositive).</dd>
+		<dt><tt>data-animation</tt></dt><dd>Nom de l'<a href="#animation">animation de transition</a> à appliquer lorsque cette diapositive est affichée. Si cet attribut est absent, l'animation de la précédente diapositive est reprise. Si l'attribut est vide, la diapositive s'affiche sans animation.</dd>
+		<dt><tt>data-navigation</tt></dt><dd>Indique si la <a href="#minitoc">barre de navigation</a> doit être affichée. La barre de navigation n'est pas affichée uniquement si cet attribut vaut <tt>false</tt>. Pour toute autre valeur ou s'il est absent, la barre de navigation est affichée.</dd>
+		<dt><tt>data-footer</tt></dt><dd>Indique si le pied de page doit être affiché. Le pied de page n'est pas affiché uniquement si cet attribut vaut <tt>false</tt>. Pour toute autre valeur ou s'il est absent, le pied de page est affiché.</dd>
+		<dt><tt>data-onshow</tt></dt><dd>Nom d'une fonction à lancer à l'affichage de la diapositive. La fonction ne prend qu'un paramètre qui est l'objet DOM correspondant à la diapositive.</dd>
+		<dt><tt>data-onhide</tt></dt><dd>Nom d'une fonction à lancer lorsque la diapositive disparaît. La fonction ne prend qu'un paramètre qui est l'objet DOM correspondant à la diapositive.</dd>
+		<dt><tt>data-numfragment</tt></dt><dd>Numéro du dernier <a href="#fragment">fragment</a> de la diapositive.</dd>
+		<dt><tt>data-autofragment</tt></dt><dd>Auto-fragmentation de la diapositive. Voir le paragraphe <a href=#fragment">Fragmentation</a> pour plus d'informations.</dd>
+		<dt><tt>data-groups</tt></dt><dd>Liste de groupes auxquels la diapositive appartient, séparés par des virgules. Voir le paragraphe <a href=#variante">Variante</a> pour plus d'informations.</dd>
+	</dl>
+
+	<h3 id="slide-content">Contenu</h3>
+	<p>Le corps de la diapositive est contenu dans la balise <tt><code class="language-markup">&lt;div class="content"&gt;&lt;/div&gt;</code></tt>.</p>
+	<p>Par défaut, le contenu de la balise <tt><code class="language-markup">&lt;div class="content"&gt;&lt;/div&gt;</code></tt> est centré verticalement sur la diapositive comme dans le schéma suivant.</p>
+	<figure style="text-align: center">
+		<svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid meet" baseprofile="full" xmlns="http://www.w3.org/2000/svg" version="1.1" style="width: 45%; height: 30%;">
+			<rect x="0" y="0" width="300" height="200" style="stroke:black; fill:transparent" />
+			<rect x="5" y="20" width="290" height="20" style="stroke:black; fill:#ccc" />
+			<text x="150" y="30" style="font-size: 12px; fill:black; text-anchor: middle; dominant-baseline: middle">Titre</text>
+			<rect x="5" y="50" width="290" height="140" style="stroke:black; fill:transparent" />
+			<rect x="5" y="90" width="290" height="60" style="stroke:black; fill:#ccc" />
+			<text x="150" y="120" style="font-size: 12px; fill:black; text-anchor: middle; dominant-baseline: middle">Contenu</text>
+		</svg>
+	</figure>
+	<p>En rajoutant la classe <tt>autocolumns</tt>, comme dans <tt><code class="language-markup">&lt;div class="content autocolumns"&gt;&lt;/div&gt;</code></tt>, les éléments de contenu sont réduits à la moitié de la largeur et automatiquement placés sur deux colonnes.</p>
+	<figure style="text-align: center">
+		<svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid meet" baseprofile="full" xmlns="http://www.w3.org/2000/svg" version="1.1" style="width: 45%; height: 30%;">
+			<rect x="0" y="0" width="300" height="200" style="stroke:black; fill:transparent" />
+			<rect x="5" y="20" width="290" height="20" style="stroke:black; fill:#ccc" />
+			<text x="150" y="30" style="font-size: 12px; fill:black; text-anchor: middle; dominant-baseline: middle">Titre</text>
+			<rect x="5" y="50" width="140" height="140" style="stroke:black; fill:transparent" />
+			<rect x="5" y="60" width="140" height="20" style="stroke:black; fill:#ccc" />
+			<rect x="5" y="90" width="140" height="30" style="stroke:black; fill:#ccc" />
+			<rect x="5" y="130" width="140" height="50" style="stroke:black; fill:#ccc" />
+			<rect x="155" y="50" width="140" height="140" style="stroke:black; fill:transparent" />
+			<rect x="155" y="90" width="140" height="30" style="stroke:black; fill:#ccc" />
+			<rect x="155" y="130" width="140" height="20" style="stroke:black; fill:#ccc" />
+		</svg>
+	</figure>
+	<p>En rajoutant la classe <tt>twocolumns</tt>, comme dans <tt><code class="language-markup">&lt;div class="content twocolumns"&gt;&lt;/div&gt;</code></tt>, les deux éléments <tt>div</tt> fils sont centrés verticalement, le premier à gauche de la diapositive et le second à droite.</p>
+	<figure style="text-align: center">
+		<svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid meet" baseprofile="full" xmlns="http://www.w3.org/2000/svg" version="1.1" style="width: 45%; height: 30%;">
+			<rect x="0" y="0" width="300" height="200" style="stroke:black; fill:transparent" />
+			<rect x="5" y="20" width="290" height="20" style="stroke:black; fill:#ccc" />
+			<text x="150" y="30" style="font-size: 12px; fill:black; text-anchor: middle; dominant-baseline: middle">Titre</text>
+			<rect x="5" y="50" width="140" height="140" style="stroke:black; fill:transparent" />
+			<rect x="5" y="70" width="140" height="100" style="stroke:black; fill:#ccc" />
+			<text x="75" y="120" style="font-size: 12px; fill:black; text-anchor: middle; dominant-baseline: middle">&lt;div&gt;...&lt;/div&gt;</text>
+			<rect x="155" y="50" width="140" height="140" style="stroke:black; fill:transparent" />
+			<rect x="155" y="90" width="140" height="60" style="stroke:black; fill:#ccc" />
+			<text x="225" y="120" style="font-size: 12px; fill:black; text-anchor: middle; dominant-baseline: middle">&lt;div&gt;...&lt;/div&gt;</text>
+		</svg>
+	</figure>
+
+	<h3>La barre de navigation</h3>
+	<p>Il s'agit d'une représentation en miniature des diapositives de la présentation. Chaque diapositive y est représentée par un petit cercle vide. La diapositive en cours est un cercle plein. Les noms courts des sections sont affichés et les cercles sont groupés par section. Les cercles sont des liens vers les diapositives correspondantes : un clic sur le cercle mène directement à la diapositive. Les sous-sections peuvent être représentées par des groupes de cercles avec une couleur de fond différente.</p>
+	
+	<h3>Le fond d'écran</h3>
+	<p>Le fond d'écran est géré indépendamment de la diapositive. Il repose sur une diapositive affichée en transparence en-dessous de la diapositive courante. Ceci permet d'une part de réduire la mémoire nécessaire pour le chargement de la présentation, et d'autre part de figer le fond d'écran pendant le mouvement des diapositives.</p>
+	<p>Il est configuré par l'attribut <tt>data-background</tt> qui peut prendre :</p>
+	<ul>
+		<li>Soit une valeur unique, qui représente alors l'URL d'une image à afficher en fond. L'image est étirée pour occuper tout l'écran. Exemple : <pre><code class="language-markup">&lt;section data-background="/template_pres/img/page_courante.svg"&gt;</code></pre></li>
+		<li>Soit la valeur d'un tableau d'URL. L'image de fond est alors choisie aléatoirement parmi les URL du tableau. Exemple : <pre><code class="language-markup">&lt;section data-background="['/template_pres/ofb/page_courante_oiseau.svg','/template_pres/ofb/page_courante_riviere.svg','/template_pres/ofb/page_courante_tortue.svg']"&gt;</code></pre></li>
+	</ul>
+
+	<h2 id="animation">Animations entre diapositives</h2>
+	<p>Une animation représente la façon dont la transition est opérée graphiquement entre une diapositive présentée à l'écran et la suivante à afficher. Le paramétrage de l'animation se fait via l'attribut <tt>data-animation</tt> de la <a href="#slide">diapositive</a> de <em>destination</em>.</p>
+
+	<p>L'attribut <tt>data-animation</tt> est interprété de la façon suivante.</p>
+	<ul>
+		<li>S'il s'agit d'un nom de fonction, la fonction est appelée de la façon suivante : <tt>func(source,dest,increasing,callback,null)</tt>. Les arguments sont :
+			<dl>
+				<dt><tt>source</tt></dt><dd>Objet DOM de la diapositive source</dd>
+				<dt><tt>dest</tt></dt><dd>Objet DOM de la diapositive destination</dd>
+				<dt><tt>increasing</tt></dt><dd>Booléen de réglage du sens de l'animation. S'il est vrai, il est considéré que l'animation de destination est située après l'animation de source. Sinon, on considère qu'elle est située avant.</dd>
+				<dt><tt>callback</tt></dt><dd>Fonction de rappel, exécutée après la fin de l'animation de transition</dd>
+			</dl>
+		</li>
+		</li>S'il ne s'agit pas d'un nom de fonction et si le nom n'est pas vide, l'animation est exécutée par adjonction et suppression de classes CSS aux deux diapositives source et destination. On note <tt><i>name</i></tt> la valeur de l'attribut <tt>data-animation</tt>
+			<ul>
+				<li>Dans un premier temps, la classe <tt>anim-<i>name</i>-transitions</tt> est ajoutée aux deux diapositives. Elle doit contenir la configuration des transitions.</li>
+				<li>Puis la classe <tt>anim-<i>name</i>-to</tt> est ajoutée à la diapositive source (respectivement destination si <tt>increasing</tt> vaut false).</li>
+				<li>La classe <tt>anim-<i>name</i>-from</tt> est ajoutée à la diapositive destination (respectivement source si <tt>increasing</tt> vaut false).</li>
+				<li>La fonction indiquée par l'attribut <tt>data-onshow</tt> est exécutée sur la diapositive destination (nouvellement visible).</li>
+				<li>La fonction indiquée par l'attribut <tt>data-onhide</tt> est exécutée sur la diapositive source (maintenant cachée).</li>
+			</ul>
+		</li>
+		<li>Si le nom est vide, la nouvelle diapositive est affichée sans animation. Elle prend immédiatement la place de l'ancienne.</li>
+	</ul>
+
+	<p>Plusieurs animations sont prédéfinies :</p>
+	<dl>
+		<dt><tt>fade</tt></dt><dd>Transition douce entre les deux diapositives. Celle de destination se superpose progressivement à celle d'origine.</dd>
+		<dt><tt>sweep</tt></dt><dd>La diapositive de destination "balaye" celle d'origine en la poussant par la droite.</dd>
+		<dt><tt>rotate</tt></dt><dd>La diapositive de destination "balaye" celle d'origine en la faisant tourner dans le sens des aiguilles d'une montre.</dd>
+		<dt><tt>convex</tt></dt><dd>Les diapositives source et destination tournent dans un carroussel en trois dimensions.</dd>
+		<dt><tt>takeoff</tt></dt><dd>La diapositive source disparaît en s'élargissant et en devenant progressivement transparente.</dd>
+	</dl>
+
+	<div class="example">
+	<pre><code class="language-markup">
+		&lt;section data-animation="sweep"&gt;
+		&lt;/section&gt;
+	</code></pre>
+	</div>
+
+	<h2 id="fragment">Fragmentation</h2>
+	<p>Les diapositives peuvent être constituées de plusieurs <em>fragments</em>. Un fragment est une partie de contenu qui s'affiche sur la diapositive après une action de l'utilisateur, éventuellement avec une animation particulière. Une diapositive peut contenir autant de fragments que désiré.</p>
+	<p>La configuration des fragments fait intervenir plusieurs attributs, dans la section représentant la <a href="#slide">diapositive</a> et dans les éléments qui constituent les fragments.</p>
+
+	<h3>Spécification d'un fragment</h3>
+	<p>Un fragment est configuré via une spécification de fragment, représentée par un attribut <tt>data-fragment</tt> d'un élément HTML ou SVG quel qu'il soit. Une spécification de fragment prend la forme d'un objet JSON dont les clefs sont les numéros de fragments et les éléments correspondants sont des tableaux de classe à appliquer à l'élément lorsque le fragment correspondant est activé.</p>
+
+	<div class="example">
+		<p>Un exemple de spécification de fragment est le suivant :</p>
+		<pre><code class="language-markup">
+			&lt;g data-fragment="{'0':['invisible'],'1-3':['emphasized','bigger']}"&gt;
+			&lt;/g&gt;
+		</code></pre>
+
+		<p>Dans cet exemple, lorsque le fragment 0 est activé, l'élément <tt>&lt;g&gt;</tt> reçoit la classe <tt>invisible</tt>. Lorsque les fragments 1 à 3 sont activés, l'élément <tt>&lt;g&gt;</tt> reçoit les classes <tt>emphasized</tt> et <tt>bigger</tt>. Il n'a alors plus la classe <tt>invisible</tt>.</p>
+		<p>Noter que les guillemets doubles du JSON sont à remplacer par des apostrophes.</p>
+	</div>
+
+	<p>Les numéros de fragments sont une liste de plages de fragments séparées par des virgules. Chaque plage de fragments est soit un numéro unique de fragment, soit un intervalle du type <tt>1-3</tt>. Les deux bornes de l'intervalle sont considérées comme faisant partie des numéros de fragments.</pp>
+
+</body>
+<script src="prism/prism.js"></script>
+<script src="manual.js"></script>
+</html>
