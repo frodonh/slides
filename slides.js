@@ -349,7 +349,7 @@ function apply_animation(source,dest,increasing,callback) {
  * Add a navigation bar on top of all slides and populate it with sections and subsections as read from the presentation.
  * A new section is started by a slide with a <tt>data-section</tt> attribute. This attribute stands for the title of the new section.
  * A <tt>data-ssection</tt> attribute may be added to provide a short name for the title of the section. In that case, the short title is used in the navigation bar.
- * A new section is started by a slide with a <tt>data-subsection</tt> attribute. This attribute stands for the title of the new subsection.
+ * A new subsection is started by a slide with a <tt>data-subsection</tt> attribute. This attribute stands for the title of the new subsection.
  */
 function add_navigation_bar() {
 	let nav=document.createElement('nav');
@@ -388,7 +388,6 @@ function add_navigation_bar() {
  * @param {number} oldslidenum - Old slide index, relative to the {@link slides} array
  */
 function update_navigation_bar(newslidenum,oldslidenum) {
-	let link;
 	let minitoc=document.getElementById('minitoc');
 	Array.from(minitoc.getElementsByClassName('section')).forEach(element => element.classList.remove('currentSection'));
 	Array.from(minitoc.getElementsByTagName('ul')).forEach(element => element.classList.remove('currentSubsection'));
@@ -664,10 +663,10 @@ function close_overview(newslidenum=null) {
 	} else {
 		slideo.parentNode.style.zIndex='30';
 		let oldpos=slideo.getBoundingClientRect();	// Remember the current position of the selected slide
-		let deltal=oldpos.left;
-		let deltat=oldpos.top;
-		let deltaw=oldpos.width/window.innerWidth-1;
-		let deltah=oldpos.height/window.innerHeight-1;
+		//let deltal=oldpos.left;
+		//let deltat=oldpos.top;
+		//let deltaw=oldpos.width/window.innerWidth-1;
+		//let deltah=oldpos.height/window.innerHeight-1;
 		// Detach the selected slide from the flexbox layout
 		slideo.style.position='fixed';
 		slideo.style.transformOrigin='left top';
@@ -708,8 +707,7 @@ function close_overview(newslidenum=null) {
 					update_footer(newslidenum);
 					switch_background(slides[newslidenum]['background']);
 				} else {
-					let e=document.createEvent('HTMLEvents');
-					e.initEvent('hashchange',false,true);
+					let e=new Event("hashchange",{bubbles:false, cancelable:true})
 					window.dispatchEvent(e);
 				}
 			},{capture:false,once:true});
@@ -994,7 +992,7 @@ function toggle_outline() {
 }
 
 /**********************************
- *     Main document functions    *
+ *   Pre-processing of slides     *
  **********************************/
 /** Pre-process the HTML code. This function does several things:
  *	<ul>
@@ -1113,7 +1111,7 @@ function prepare_slides() {
 			// Generate slide if it does not exist
 			if ('html' in slidespec) {
 				let newslide=document.createElement('section');
-				slidespec['id']='slide-'+Math.random().toString().substr(2).replace(/./g,s=>String.fromCharCode(s.charCodeAt(0)+17));
+				slidespec['id']='slide-'+Math.random().toString().substring(2).replace(/./g,s=>String.fromCharCode(s.charCodeAt(0)+17));
 				newslide.id=slidespec['id'];
 				newslide.innerHTML=slidespec['html'];
 				document.body.appendChild(newslide);
@@ -1190,9 +1188,12 @@ function prepare_slides() {
 		'section':''});
 }
 
+/**********************************
+ *       Handler functions        *
+ **********************************/
 document.addEventListener("DOMContentLoaded",function(event) {
 	// Read query string
-	let querys=decodeURI(location.search.substr(1)).split('&');
+	let querys=decodeURI(location.search.substring(1)).split('&');
 	for (let i=0;i<querys.length;++i) {
 		let varval=querys[i].split('=');
 		parameters[varval[0]]=varval[1];
@@ -1314,12 +1315,12 @@ function afterLoad() {
 
 	// Handle key events
 	document.addEventListener('keydown',function(e) {
-		if (!on_overview && e.keyCode==80) toggle_outline(); // 'p'
+		if (!on_overview && e.key=='p') toggle_outline(); // 'p'
 		if (outlinestyle) return;
 		let newslide=curslide;
 		let newfragment=curfragment;
-		switch (e.keyCode) {
-			case 39:case 32:	// Right arrow, Space
+		switch (e.key) {
+			case "ArrowRight":case " ":	// Right arrow, Space
 				if (!on_overview) {
 					to_next_slide();
 				} else {
@@ -1336,7 +1337,7 @@ function afterLoad() {
 					}
 				}
 				break;
-			case 37:	// Left arrow
+			case "ArrowLeft":	// Left arrow
 				if (!on_overview) {
 					to_previous_slide();
 				} else {
@@ -1353,7 +1354,7 @@ function afterLoad() {
 					}
 				}
 				break;
-			case 38:	// Up arrow
+			case "ArrowUp":	// Up arrow
 				if (!on_overview) {
 					if (curslide>0) {
 						newslide--;
@@ -1362,7 +1363,7 @@ function afterLoad() {
 					}
 				}
 				break;
-			case 40:	// Down arrow
+			case "ArrowDown":	// Down arrow
 				if (!on_overview) {
 					if (curslide<slides.length-1) {
 						newslide++;
@@ -1371,7 +1372,7 @@ function afterLoad() {
 					}
 				}
 				break;
-			case 33: // Page up
+			case "PageUp": // Page up
 				if (!on_overview) {
 					if (newslide>0) newslide--;
 					if (! ('nooutline' in parameters && parameters['nooutline']=='true')) while (newslide>0 && getSlide(newslide).id!='outline') newslide--;
@@ -1380,7 +1381,7 @@ function afterLoad() {
 					switch_slide(newslide,newfragment);
 				}
 				break;
-			case 34: // Page down
+			case "PageDown": // Page down
 				if (!on_overview) {
 					if (newslide<slides.length-1) newslide++;
 					if (! ('nooutline' in parameters && parameters['nooutline']=='true')) while (newslide<slides.length-1 && getSlide(newslide).id!='outline') newslide++;
@@ -1389,31 +1390,31 @@ function afterLoad() {
 					switch_slide(newslide,newfragment);
 				}
 				break;
-			case 36: // Home
+			case "Home": // Home
 				if (!on_overview) {
 					newslide=0;
 					newfragment=0;
 					switch_slide(newslide,newfragment);
 				}
 				break;
-			case 35: // End
+			case "End": // End
 				if (!on_overview) {
 					newslide=slides.length-1;
 					newfragment=slides[newslide]['numfragments'];
 					switch_slide(newslide,newfragment);
 				}
 				break;
-			case 79:	// 'o'
+			case "o":	// 'o'
 				if (!on_overview) {
 					open_overview();
 				} else {
 					close_overview();
 				}
 				break;
-			case 13:	// enter
+			case "Enter":	// enter
 				if (on_overview) close_overview(overview_curslide);
 				break;
-			case 78:	// 'n'
+			case "n":	// 'n'
 				if (wnotes==null || wnotes.closed) {
 					wnotes=window.open(document.documentElement.dataset['notes']+"#"+getSlide(curslide).id,"Notes","left=0, top=0, status=no, menubar=no, toolbar=no, location=no, directories=no, copyhistory=no, width='+w+', height='+h', fullscreen=yes");
 					wnotes.onload=onNotesLoaded;
@@ -1421,19 +1422,19 @@ function afterLoad() {
 					wnotes.close();
 				}
 				break;
-			case 188:	// ','
+			case ",":	// ','
 				if (wnotes!=null && !wnotes.closed) {
 					let obj=wnotes.document.getElementById('notes');
 					obj.scrollTop+=wnotes.screen.height/2;
 				}
 				break;
-			case 190:	// ';'
+			case ";":	// ';'
 				if (wnotes!=null && !wnotes.closed) {
 					let obj=wnotes.document.getElementById('notes');
 					obj.scrollTop-=wnotes.screen.height/2;
 				}
 				break;
-			case 83:	// 's'
+			case "s":case "S":	// 's'
 				if (e.shiftKey) {
 					if (on_qrcode) {
 						closeQrcode();
@@ -1450,7 +1451,7 @@ function afterLoad() {
 						setTimeout(function() {
 							syncd.style.top='0px';
 							let obj=syncd.lastChild;
-							obj.addEventListener('keydown',() => {event.stopPropagation()},false);
+							obj.addEventListener('keydown',(evt) => {evt.stopPropagation()},false);
 							obj.addEventListener('keyup',getSyncName,false);
 							obj.focus();
 						},20);
