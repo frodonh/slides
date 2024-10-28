@@ -1,7 +1,97 @@
-@import "colors";
-@import 'animations';
+/********************************************/
+/*                 Colors                   */
+/********************************************/
+@use "sass:map";
+@import 'colors';
 
-// Mixins
+/********************************************/
+/*               Animations                 */
+/********************************************/
+body>section {
+	// Slide-animation: fade
+	&.anim-fade-transitions {
+		opacity: 1;
+		transition: opacity 1s ease-in-out;
+	}
+
+	&.anim-fade-from {
+		opacity: 0 !important;
+	}
+
+	&.anim-fade-to {
+		opacity: 0 !important;
+	}
+
+	// Slide-animation: sweep
+	&.anim-sweep-transitions {
+		transition: left 1s ease-in-out;
+	}
+
+	&.anim-sweep-from {
+		left: 100%;
+	}
+
+	&.anim-sweep-to {
+		left: -100%;
+	}
+
+	// Slide-animation: rotate
+	&.anim-rotate-transitions {
+		transform-origin: -50% 50%;
+		transition: transform 1s ease-in-out;
+	}
+
+	&.anim-rotate-from {
+		transform: rotate(-90deg);
+	}
+
+	&.anim-rotate-to {
+		transform: rotate(90deg);
+	}
+
+	// Slide-animation: convex
+	&.anim-convex-transitions {
+		opacity: 1;
+		transform-origin: center center 250px;
+		transition-property: transform, opacity;
+		transition-duration: 1s;
+		transition-timing-function: ease-in-out;
+	}
+
+	&.anim-convex-from {
+		transform: rotateY(-120deg) scale(0.5);
+		opacity: 0 !important;
+	}
+
+	&.anim-convex-to {
+		transform: rotateY(120deg) scale(0.5);
+		opacity: 0 !important;
+	}
+
+	// Slide-animation: takeoff
+	&.anim-takeoff-transitions {
+		opacity: 1;
+		transform-origin: center center;
+		transition-property: transform, opacity;
+		transition-duration: 1s;
+		transition-timing-function: ease-in-out;
+	}
+
+	&.anim-takeoff-from {
+		transform: scale(0.2);
+		opacity: 0 !important;
+	}
+
+	&.anim-takeoff-to {
+		transform: scale(5);
+		opacity: 0 !important;
+	}
+
+}
+
+/********************************************/
+/*                 Mixins                   */
+/********************************************/
 @mixin shadowed {
 	box-shadow: 1.5vw 1.2vh 1.2vmax rgba(0,0,0,0.5);
 }
@@ -21,6 +111,9 @@
 	}
 }
 
+/********************************************/
+/*              General styles              */
+/********************************************/
 // General declarations
 ul {
 	margin: 0;
@@ -35,33 +128,60 @@ body {
 	overflow: hidden;
 	margin: 0;
 	font: 2.8vh sans-serif;
+    --background-layer: "active"; // May be "active" or "inactive". When active, the background of the slides is added to a separate background layer, and is not attached to the slide (therefore it does not move with the slides animation. When inactive, the background is added to each slide.
+    --foreground-layer: "active";
+
+    & > h1, & > h2, & > h3, & > h4, & > h5, & > h6 {
+        display: none;
+    }
+
+    & > h1, & > h2 {
+        --outline: "ClassicOutlineSlide";
+    }
 }
 
-// Backgrounds
-#background,#newbackground {
+/********************************************/
+/*     Background and foreground layers     */
+/********************************************/
+#background,#foreground,#newbackground,#newforeground {
 	width: 100%;
 	height: 100%;
 	position: absolute;
 	top: 0;
 	left: 0;
-	z-index: -1;
 	transition: opacity 1s ease;
+    pointer-events: none;
 }
 
 #background {
 	opacity: 1;
+	z-index: -1;
+}
+
+#foreground {
+	opacity: 1;
+    z-index: 1;
 }
 
 #newbackground {
 	opacity: 0;
+	z-index: -1;
 }
 
-// Navigation bar
-#minitoc {
+#newforeground {
+	opacity: 0;
+    z-index: 1;
+}
+
+/********************************************/
+/*            Outer components              */
+/********************************************/
+// Navigation bars
+.component-minitoc {
+    pointer-events: auto;
 	width: 100%;
 	height: 5%;
 	position: absolute;
-	opacity: 0;
 	transition: opacity 1s ease;
 	display: flex;
 	top: 0;
@@ -70,51 +190,68 @@ body {
 	flex-flow: row nowrap;
 	justify-content: center;
 
-	.section {
-		margin: 0 1.2vw;
-		font-size: 0.7em;
-		color: $palettea;
-	}
+    ul {
+        padding: 0;
+    }
 
-	ul {
-		display: inline-block;
-		list-style-type: none;
-		padding: 0;
-		margin: 0;
-	}
+    a { color: inherit;}
 
-	li {
-		display: inline-block;
-	}
+    & > ul {
+        display: flex;
+        flex-flow: row nowrap;
 
-	& > ul.currentSection .title {
-		background-color: $palettea;
-		color: white;
-	}
+        & > li {
+            list-style-type: none;
+            margin: 0 1.2vw;
+            font-size: 0.7em;
+            color: map.get($theme, "primary-darker");
+            padding: 0;
+            flex: auto;
 
-	.title {
-		padding: 0;
-	}
+            &:not(:has(.current)) {opacity: 0.4;}
+            &.current {
+                opacity: 1;
+                background-color: map.get($theme, "primary-darker");
+                color: white;
+            }
 
-	.section ul.currentSubsection {
-		display: inline-block;
-		background-color: $palettea;
-		margin: 0 0.24vw 0 0;
+            & > ul {
+                display: block;
+                list-style-type: none;
+                padding: 0;
+                margin: -1vh 0 0 0;
+                li { 
+                    display: inline-block; 
+                    &.h3 {
+                        font-size: 0em;
+                        margin-right: 0.5rem;
+                    }
+                    &.section {
+                        font-size: 0px;
+                        a::before {
+                            font-size: 0.8rem;
+                            content: "\25cb";
+                        }
+                        &.current a::before {
+                            content: "\25cf";
+                        }
+                    }
+                }
+            }
+        }
 
-		a {
-			color: white;
-		}
-	}
-	
+    }
+
 	a {
-		color: $palettea;
 		text-decoration: none;
 		font-size: 1.2em;
 	}
+
+
 }
 
-// Footer
-#footer {
+// Footers
+.component-classicfooter {
 	display: block;
 	width: calc(100% - 2.4vw);
 	height: 5vh;
@@ -124,7 +261,7 @@ body {
 	left: 0;
 	margin: 0 1.2vw;
 	font-size: 0.7em;
-	color: $palettea;
+	color: map.get($theme, "primary-darker");
 
 	div:first-child {
 		position: absolute;
@@ -143,6 +280,9 @@ body {
 	}
 }
 
+/********************************************/
+/*               Synchronization            */
+/********************************************/
 // Input line for synchronization
 #synchronize {
 	background-color: black;
@@ -205,7 +345,7 @@ body {
 
 	.title {
 		text-align: center;
-		color: $palettea;
+		color: map.get($theme, "primary-darker");
 		flex: 0 1 0;
 	}
 
@@ -228,103 +368,173 @@ body {
 	}
 }
 
+/********************************************/
+/*              Slide layout                */
+/********************************************/
 // Slide page
-body>section,#thumblayer>div.wthumb>section {
+body>section, #thumblayer>div.wthumb>section {
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100vw;
 	height: 100vh;
-	display: flex;
 	visibility: hidden;
-	flex-flow: column nowrap;
+
+    &:target {
+        visibility: visible;
+    }
 
 	&.overview-transition {
 		transition: transform 1s ease-in-out;
 	}
 
-	&:target {
-		visibility: visible;
-	}
+    // Title slide
+    &#title {
+        --background: "";
+        --foreground: "";
 
-	&:not(#title) > h1 {
+        h1 {
+            position: absolute;
+            left: 45%;
+            width: 51%;
+            bottom: 26%;
+            color: map.get($theme, "primary-darker");
+            font: bold 180% sans-serif;
+
+            .subtitle {
+                color: map.get($theme, "secondary-darker");
+                font: italic 80% sans-serif;
+            }
+        }
+
+        .authordate {
+            position: absolute;
+            left: 45%;
+            width: 51%;
+            top: 78%;
+            color: map.get($theme, "secondary-darker");
+            font-size: 120%;
+            line-height: 1.5;
+        }
+    }
+
+    // Regular content slide (title + content)
+    &.content {
+        display: flex;
+        flex-flow: column nowrap;
+        --background: "";
+        --foreground: "['Minitoc()', 'ClassicFooter()']";
+
+        & > h1 {
+            position: relative;
+            padding: 1.5vh 0px 0.8vh 0px;
+            text-align: center;
+            font: bold 180% sans-serif;
+            color: map.get($theme, "primary-darker");
+            flex: none;
+            margin: 8vh 5vw 0.6vw 5vw;
+        }
+
+        & > .content {
+            border-width: 0.6vh 0;
+            border-style: solid;
+            border-color: map.get($theme, "primary-darker");
+            padding: 1.2vw 2.4vw;
+            margin: 0 5vw 6vh 5vw;
+            min-height: 0;
+            flex: auto;
+            display: flex;
+            position: relative;
+            flex-flow: column nowrap;
+            justify-content: center;
+
+            figure.centered {
+                display: flex;
+                flex-flow: column nowrap;
+                flex: auto;
+                overflow: hidden;
+                position: relative;
+
+                svg,img {
+                    margin: auto;
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    max-width: 100%;
+                    max-height: 100%;
+                }
+            }
+
+            &.autocolumns {
+                flex-wrap: wrap;
+
+                &>p,&>ul,&>div {
+                    width: calc(50% - 3.6vw);
+                    margin: 1.56vh 1.2vw;
+                }
+            }
+
+            &.twocolumns,.twocolumns {
+                display: flex;
+                flex-flow: row nowrap;
+                align-items: center;
+                justify-content: space-between;
+
+                & > div {
+                    min-height:0;
+                    flex: auto;
+                    display: flex;
+                    position: relative;
+                    flex-flow: column nowrap;
+                    justify-content: center;
+                    box-sizing : border-box;
+                    width: 45%;
+                }
+
+                & > div:first-child {
+                    margin-right: 1em;
+                }
+            }
+
+            &.plain {
+                margin-top: 8vh;		
+            }
+        }
+    }
+
+    // Plain slide
+	&.plain {
+		display: block;
 		position: relative;
-		padding: 1.5vh 0px 0.8vh 0px;
-		text-align: center;
-		font: bold 180% sans-serif;
-		color: $palettea;
-		flex: none;
-		margin: 8vh 5vw 0.6vw 5vw;
 	}
 
-	&:not(#title) > .content {
-		border-width: 0.6vh 0;
-		border-style: solid;
-		border-color: $palettea;
-		padding: 1.2vw 2.4vw;
-		margin: 0 5vw 6vh 5vw;
-		min-height: 0;
-		flex: auto;
-		display: flex;
-		position: relative;
-		flex-flow: column nowrap;
-		justify-content: center;
+    // Outline slide
+    &.outline {
+        @extend .content;
 
-		figure.centered {
-			display: flex;
-			flex-flow: column nowrap;
-			flex: auto;
-			overflow: hidden;
-			position: relative;
+        & > div > ul > li {
+            padding-bottom: 0.2vh;
+            padding-right: 1.2vw;
+        }
 
-			svg,img {
-				margin: auto;
-				position: absolute;
-				top: 0;
-				right: 0;
-				bottom: 0;
-				left: 0;
-				max-width: 100%;
-				max-height: 100%;
-			}
-		}
+        .not-current {
+            opacity: 0.5;
+        }
 
-		&.autocolumns {
-			flex-wrap: wrap;
+        .current {
+            opacity: 1;
+            background-color: map.get($theme, "primary-lighter");
+            @include shadowed;
+            border-radius: 1.2vmax;
+        }
 
-			&>p,&>ul,&>div {
-				width: calc(50% - 3.6vw);
-				margin: 1.56vh 1.2vw;
-			}
-		}
+        @extend %hiddenLinks;
+    }
 
-		&.twocolumns,.twocolumns {
-			display: flex;
-			flex-flow: row nowrap;
-			align-items: center;
-			justify-content: space-between;
 
-			& > div {
-				min-height:0;
-				flex: auto;
-				display: flex;
-				position: relative;
-				flex-flow: column nowrap;
-				justify-content: center;
-				box-sizing : border-box;
-				width: 45%;
-			}
-
-			& > div:first-child {
-				margin-right: 1em;
-			}
-		}
-
-		&.plain {
-			margin-top: 8vh;		
-		}
-	}
-
+    // Inner structure
 	p,table,img,object {
 		margin: 2.8vh 0;
 	}
@@ -343,7 +553,7 @@ body>section,#thumblayer>div.wthumb>section {
 				content: "• ";
 				font-size: 200%;
 				margin-right: 0.35em;
-				color: $palettea;
+				color: map.get($theme, "primary-darker");
 				display: inline-block;
 				vertical-align: -0.1em;
 				height: 0.8em;
@@ -367,74 +577,11 @@ body>section,#thumblayer>div.wthumb>section {
 		}
 	}
 
-	&.plain {
-		display: block;
-		position: relative;
-	}
 }
 
-// Title page
-#title {
-	visibility: hidden;
-	width: 100vw;
-	height: 100vh;
-	position: absolute;
-	top: 0;
-	left: 0;
-
-	%leftpos {
-		position: absolute;
-		left: 45%;
-		width: 51%;
-	}
-
-	&:target {
-		visibility: visible;
-	}
-
-	h1 {
-		@extend %leftpos;
-		color: $palettea;
-		font: bold 180% sans-serif;
-		bottom: 26%;
-
-		.subtitle {
-			color: $paletteb;
-			font: italic 80% sans-serif;
-		}
-	}
-
-	.authordate {
-		@extend %leftpos;
-		color: $paletteb;
-		font-size: 120%;
-		line-height: 1.5;
-		top: 78%;
-	}
-}
-
-
-// Outline page override
-#outline {
-	& > div > ul > li {
-		padding-bottom: 0.2vh;
-		padding-right: 1.2vw;
-	}
-
-	.notCurrentSection {
-		opacity: 0.5;
-	}
-
-	.currentSection {
-		opacity: 1;
-		background-color: $palettela;
-		@include shadowed;
-		border-radius: 1.2vmax;
-	}
-
-	@extend %hiddenLinks;
-}
-
+/********************************************/
+/*             Overview layout              */
+/********************************************/
 // Overview
 #thumblayer {
 	width: 100%;
@@ -493,11 +640,14 @@ body>section,#thumblayer>div.wthumb>section {
 	transform: scale(0.20, 0.20);
 
 	&.targetted {
-		border: 20px solid $palettea;
+		border: 20px solid map.get($theme, "primary");
 	}
 }
 
 
+/********************************************/
+/*             Fragment styles              */
+/********************************************/
 // Fragment styles
 .visible {
 	visibility: visible;
@@ -514,21 +664,24 @@ body>section,#thumblayer>div.wthumb>section {
 	animation-play-state: running;
 }
 
+/********************************************/
+/*             Inner components             */
+/********************************************/
 // Generic styles
 .block,.infoblock {
 	margin: 1.56vh 0vw;
 	padding: 0;
 	border-radius: 0.6vmax;
 	@include shadowed;
-	background-color: $palettela;
+	background-color: map.get($theme, "primary-lighter");
 	
 	h1 {
 		padding: 0.47vh 0.6vw 0.78vh 0.6vw;
 		margin: 0 0 0 0;
 		border-radius: 0.6vmax 0.6vmax 0 0;
 		font: bold 120% sans-serif;
-		color: $palettela;
-		background-image: linear-gradient(to bottom,$paletteb 0%,$paletteb 80%,$palettela 100%);
+		color: map.get($theme, "primary-darker");
+		background-image: linear-gradient(to bottom,map.get($theme, "secondary-light") 0%,map.get($theme, "secondary-light") 80%,map.get($theme, "primary-lighter") 100%);
 	}
 
 	.content {
@@ -541,7 +694,7 @@ body>section,#thumblayer>div.wthumb>section {
 }
 
 .infoblock {
-	background-color: $palettelb;
+	background-color: map.get($theme, "secondary-lighter");
 	padding-left: 2em;
 	position: relative;
 
@@ -550,7 +703,7 @@ body>section,#thumblayer>div.wthumb>section {
 		color: white;
 		font: italic 1.5em serif;
 		border-radius: 1em;
-		background-color: $paletteb;
+		background-color: map.get($theme, "secondary-darker");
 		position: absolute;
 		left: 0.1em;
 		top: 50%;
@@ -561,7 +714,7 @@ body>section,#thumblayer>div.wthumb>section {
 }
 
 strong {
-	color: $palettea;
+	color: map.get($theme, "primary-darker");
 	font-weight: bold;
 }
 
@@ -573,7 +726,7 @@ blockquote {
 	
 	&::before {
 		content: "\201C";
-		color: $paletteb;
+		color: map.get($theme, "secondary-darker");
 		font-size: 4em;
 		position: absolute;
 		left: 0px;
@@ -601,14 +754,14 @@ table {
 	border-collapse: collapse;
 
 	thead,tfoot {
-		background-color: $palettea;
+		background-color: map.get($theme, "primary-darker");
 		color: white;
 		font-weight: bold;
 	}
 
 	tbody.dummy-header {
 		font-weight: bold;
-		color: $palettea;
+		color: map.get($theme, "primary-darker");
 	}
 
 	thead,tr,tfoot,tbody.dummy-header {
@@ -616,7 +769,7 @@ table {
 	}
 
 	tbody tr:nth-child(even) {
-		background-color: $palettela;
+		background-color: map.get($theme, "primary-lighter");
 	}
 
 	img {
@@ -633,7 +786,7 @@ table {
 
 	&.headcolumn {
 		td:first-child {
-			background: $palettea;
+			background: map.get($theme, "primary-darker");
 			font-weight: bold;
 			color: white;
 		}
@@ -645,7 +798,7 @@ table {
 
 	&.grid {
 		td {
-			border: 1px solid $palettea;
+			border: 1px solid map.get($theme, "primary-darker");
 		}
 		thead td {
 			border: 1px solid white;
@@ -665,6 +818,9 @@ table {
 	}
 }
 
+/********************************************/
+/*             Handouts styles              */
+/********************************************/
 @media print {
 	@page {
 		size: landscape;

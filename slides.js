@@ -1,22 +1,32 @@
-/** Array of slides together with their characteristics
+/** Array of slides together with ook characteristics
  *	Each element of the slide is an object with the following members:
  *	<dl>
  *		<dt>id</dt><dd>id of the slide</dd>
- *		<dt>background</dt><dd>URL of background image, an empty string if there is no background</dd>
+ *		<dt>element</dt><dd>DOM element for the slide</dd>
  *		<dt>animation</dt><dd>Name of the animation used when the slide is displayed (either a function name or a part of a CSS class name)</dd>
- *		<dt>navigation</dt><dd>True if the navigation bar has to be displayed. By default, it is true for all slides except for title slide.</dd>
- *		<dt>footer</dt><dd>True if the footer has to be displayed. By default, it is true for all slides except for title slide.</dd>
  *		<dt>numfragments</dt><dd>Number of fragments in the slide</dd>
+ *		<dt>autofragment</dt><dd>Auto-fragment specification</dd>
  *		<dt>groups</dt><dd>Array of groups the slide belongs to</dd>
- *	</dl>
- *	Additionnally, it may hold the following members:
- *	<dl>
- *		<dt>section</dt><dd>Name of the section, when the slide starts a new section</dd>
- *		<dt>ssection</dt><dd>Short name of the section, when the slide starts a new section</dd>
- *		<dt>subsection</dt><dd>Name of the subsection, when the slide starts a new subsection</dd>
+ *		<dt>background</dt><dd>Background component (a class Constructor)</dd>
+ *		<dt>foreground</dt><dd>Foreground component (a class Constructor)</dd>
+ *		<dt>components</dt><dd>Array of components added to the slide</dd>
  *	</dl>
  */
 var slides=[];
+/** Structure of the slideshow
+ *  The structure is an array of elements. Each element is an object with the following members:
+ *  <dl>
+ *  	<dt>name</dt><dd>Title of the part</dd>
+ *  	<dt>level</dt><dd>Level of the heading (0 for h1, 1 for h2...)</dd>
+ *  	<dt>short</dt><dd>Short title of the part</dd>
+ *  	<dt>element</dt><dd>DOM element of the heading</dd>
+ *  	<dt>parts</dt><dd>List of subparts</dd>
+ *  	<dt>parent</dt><dd>Parent entry of the element</dd>
+ *  </dl>
+ *
+ *  This variable holds the root of the structure. Therefore it should only have one element which is the title of the document and the list of sections.
+ */
+var structure = [];
 /** Current slide number, relative to the slides array, 0 is first slide */
 var curslide=0;
 /** Current fragment number, 0 is first fragment */
@@ -45,8 +55,14 @@ var syncName=null;
 var slaveMode=false;
 /** Outline stylesheet activated */
 var outlinestyle=false;
-/** Array of slideshow parameters. */
+/** Array of slideshow parameters */
 var parameters=[];
+/** Metadata */
+var meta = [];
+/** General configuration of the slidehow */
+var config = [];
+/** Promises used to wait for everything to load */
+var promises = [];
 
 /**
  * Compare string values in a case-insensitive manner. Also works when one string is undefined.
@@ -73,7 +89,8 @@ function getSlideElement(slideid) {
  * @returns DOM element for the slide
  */
 function getSlide(num) {
-	return document.getElementById(slides[num]['id']);
+	//return document.getElementById(slides[num]['id']);
+	return slides[num]['element'];
 }
 
 /**
@@ -101,46 +118,36 @@ function from_string(arg) {
 }
 
 /**********************************
- *       Utility functions        *
- **********************************/
-function getDate() {
-	let elem=document.getElementById("title").getElementsByTagName('time')[0];
-	if (elem.innerHTML!='') return;
-	let d=new Date().toLocaleDateString(document.documentElement.lang,{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-	elem.innerHTML=d[0].toUpperCase()+d.slice(1);
-}
-
-/**********************************
- *      Background functions      *
+ *   Background and foreground    *
  **********************************/
 /**
- * Change background image to a new one applying a smooth transition between them
- * @param {object} back - Either a string, which stands for the url of the new background, or a Javascript array of strings, in which case the background in randomly chosen among the array.
+ * Switch background or foreground layer, applying a smooth transition between them
+ * @param {string} layer - "background" or "foreground", choose which layer to switch
+ * @param {slideo} New slide object
  */
-function switch_background(back) {
-	let url;
-	if (typeof back==='string' || back instanceof String) url=back; else url=back[Math.floor(Math.random()*back.length)];
-	if (url==background_url && !url.endsWith('php')) return;
-	let oldbg=document.getElementById('background');
-	let newbg=document.getElementById('newbackground');
-	if (url && url!='') newbg.style.backgroundImage='url('+url+')'; else newbg.style.backgroundImage='none';
-	oldbg.style.opacity='0';
-	newbg.addEventListener('transitionend',function(event) {
-		oldbg.style.backgroundImage=newbg.style.backgroundImage;
-		oldbg.style.transition='none';
-		newbg.style.transition='none';
-		background_url=url;
+function switch_layer(layer, slideo) {
+	let oldlayer = document.getElementById(layer);
+	let newlayer = document.getElementById('new'+layer);
+	if (oldlayer && slideo[layer] == oldlayer.dataset[layer]) {
+		if ((layer+"-components") in slideo) for (let comp of slideo[layer+"-components"]) comp.update(oldlayer, slideo);
+		return;
+	}
+	newlayer.innerHTML = '';
+	newlayer.dataset[layer] = slideo[layer];
+	if (slideo[layer]) 
+		for (let comp of eval(slideo[layer]).toReversed()) {
+			comp.add_to(newlayer, slideo);
+		}
+	oldlayer.style.opacity = '0';
+	newlayer.addEventListener('transitionend',function(event) {
 		setTimeout(function() {
-			oldbg.style.opacity='1';
-			newbg.style.opacity='0';
-			setTimeout(function() {
-				oldbg.style.transition='opacity 1s ease';
-				newbg.style.transition='opacity 1s ease';
-			},20);
+			oldlayer.id = "temp";
+			newlayer.id = layer;
+			oldlayer.id = "new" + layer;
 		},20);
-	},{capture:false,once:true});
+	},{capture:false, once:true});
 	setTimeout(function() {
-		newbg.style.opacity='1';
+		newlayer.style.opacity = '1';
 	},20);
 }
 
@@ -266,6 +273,7 @@ function animate_none(source,dest,increasing,callback) {
  * @param {object} source - DOM object for the old slide
  * @param {object} dest - DOM object for the new slide
  * @param {boolean} increasing - Direction of the animation
+ *
  * @param {function} callback - Callback function called when the animation ends
  * @param {string} name - Name of the animation
  */
@@ -343,160 +351,249 @@ function apply_animation(source,dest,increasing,callback) {
 }
 
 /**********************************
- *         Navigation bar         *
+ *        Slide components        *
  **********************************/
 /**
- * Add a navigation bar on top of all slides and populate it with sections and subsections as read from the presentation.
- * A new section is started by a slide with a <tt>data-section</tt> attribute. This attribute stands for the title of the new section.
- * A <tt>data-ssection</tt> attribute may be added to provide a short name for the title of the section. In that case, the short title is used in the navigation bar.
- * A new subsection is started by a slide with a <tt>data-subsection</tt> attribute. This attribute stands for the title of the new subsection.
+ * Abstract base class for slides components
+ *
+ * @class Component
  */
-function add_navigation_bar() {
-	let nav=document.createElement('nav');
-	nav.setAttribute('id','minitoc');
-	document.body.insertAdjacentElement('afterbegin',nav);
-	let csection=null;
-	let csubsection=null;
-	for (let slide of slides) if (slide['id']!='outline') {
-		if (slide['section']) {
-			let sname=slide['ssection'] ? slide['ssection'] : slide['section'];
-			let newsection=document.createElement('div');
-			newsection.classList.add('section');
-			newsection.dataset['section']=slide['section'];
-			newsection.innerHTML='<div class="title">'+sname+'</div>';
-			csection=document.createElement('ul');
-			csection.classList.add('slides');
-			newsection.insertAdjacentElement('beforeend',csection);
-			nav.insertAdjacentElement('beforeend',newsection);
-			csubsection=null;
+class Component {
+	constructor() {
+		if (this.constructor == Component)  {
+			throw new Error("Component is an abstract class and cannot be instantiated.");
 		}
-		if (slide['subsection']) {
-			let cli=document.createElement('li');
-			csubsection=document.createElement('ul');
-			csubsection.dataset['subsection']=slide['subsection'];
-			cli.insertAdjacentElement('afterbegin',csubsection);
-			csection.insertAdjacentElement('beforeend',cli);
-		}
-		if (csubsection) csubsection.insertAdjacentHTML('beforeend','<li><a href="#'+slide['id']+'">&#x25cb;</a></li>');
-		else if (csection) csection.insertAdjacentHTML('beforeend','<li><a href="#'+slide['id']+'">&#x25cb;</a></li>');
-	};
-}
-
-/**
- * Update the navigation bar: the new slide is represented by a filled circle, the old slide is reverted to its original state. The section and subsection of the new slide also get new styles by adding the <tt>currentSection</tt> and <tt>currentSubsection</tt> classes to them.
- * @param {number} newslidenum - New slide index, relative to the {@link slides} array
- * @param {number} oldslidenum - Old slide index, relative to the {@link slides} array
- */
-function update_navigation_bar(newslidenum,oldslidenum) {
-	let minitoc=document.getElementById('minitoc');
-	Array.from(minitoc.getElementsByClassName('section')).forEach(element => element.classList.remove('currentSection'));
-	Array.from(minitoc.getElementsByTagName('ul')).forEach(element => element.classList.remove('currentSubsection'));
-	if (oldslidenum) {
-		Array.from(minitoc.querySelectorAll('[href="#'+slides[oldslidenum]['id']+'"]')).forEach(element => element.innerHTML='&#x25cb;');
+		this.componentName = null; // Class name of the component
 	}
-	if (slides[newslidenum]['navigation']===true) {
-		minitoc.style.opacity='1';
-		if (slides[newslidenum]['id']=="outline") {
-			Array.from(minitoc.querySelectorAll('div[data-section="'+slides[newslidenum]['section']+'"]')).forEach(element => element.classList.add('currentSection'));
-		} else {
-			Array.from(minitoc.querySelectorAll('[href="#'+slides[newslidenum]['id']+'"]')).forEach(function(element) {
-				element.innerHTML='&#x25cf;';
-				let subsection=element.closest('ul');
-				if (subsection) subsection.classList.add('currentSubsection');
-				let section=element.closest('.section');
-				if (section) section.classList.add('currentSection');
-			});
-		}
-	} else minitoc.style.opacity='0';
+
+	/**
+	 * Add the component to the slide object
+	 *
+	 * @param {object} slide - DOM object for the slide
+	 * @param {object} slideo - Slide object
+	 */
+	add_to(slide, slideo=null) {
+	}
+
+	/**
+	 * Update the component in a slide.
+	 * This function should only be used for background and foreground slides, where the component may stay during the whole slideshow but has to be updated according to the progress.
+	 *
+	 * @param {object} slide - DOM object for the slide
+	 * @param {object} slideo - Slide object
+	 */
+	update(slide, slideo=null) {
+	}
 }
 
-/**********************************
- *             Footer             *
- **********************************/
-/**
- * Add a footer to the presentation
- */
-function add_footer() {
-	let footer=document.createElement('footer');
-	footer.setAttribute('id','footer');
-	let titles=document.getElementById('title');
-	let title=titles.getElementsByTagName('h1')[0].innerHTML;
-	let i=title.indexOf('<');
-	if (i>=0) title=title.substring(0,i);
-	footer.innerHTML='<div>'+titles.getElementsByTagName('time')[0].innerHTML+'</div><div>'+title.trim()+'</div><div></div>';
-	document.body.insertAdjacentElement('afterbegin',footer);
-}
+// Backgrounds
+class ImageBackgroundObject extends Component {
+	/**
+	 * Constructor of the background object
+	 *
+	 * @param {object} path - Either a string with the URL of the background image, or an array of strings from which the image is randomly chosen
+	 */
+	constructor(path) {
+		super()
+		this.componentName = 'component-imagebackground';
+		this.path = (path.startsWith('/')) ? path : (meta.template_path + path);
+		this.url = ''; // Actual URL of the background used
+	}
 
-/**
- * Update the footer when a new slide is displayed. The function change the page index in the footer
- * @param {number} newslidenum - New slide index, relative to the {@link slides} array
- */
-function update_footer(newslidenum) {
-	let footer=document.getElementById('footer');
-	if (slides[newslidenum]['footer']===true) {
-		footer.style.display='';
-		footer.querySelector('div:last-child').innerHTML=newslidenum+'/'+(slides.length-1);
-	} else footer.style.display='none';
+	add_to(slide, slideo=null) {
+		super.add_to(slide, slideo);
+		if (typeof this.path === 'string' || this.path instanceof String) this.url=this.path; else this.url=this.path[Math.floor(Math.random()*this.path.length)];
+		slide.style.backgroundImage = 'url(' + this.url + ')';
+	}
+
 }
+function ImageBackground(path) {return new ImageBackgroundObject(path);}
+
+// Navigation bars
+class MinitocObject extends Component {
+	constructor(pconfig) {
+		super()
+		this.componentName = 'component-minitoc';
+		this.config = pconfig;
+	}
+
+	/**
+	 * Navigation bar on top of the slide, populated with small circles representing the slides, and with the names of sections..
+	 * A new section is started by a slide with a <tt>data-section</tt> attribute. This attribute stands for the title of the new section.
+	 * A <tt>data-ssection</tt> attribute may be added to provide a short name for the title of the section. In that case, the short title is used in the navigation bar.
+	 * A new subsection is started by a slide with a <tt>data-subsection</tt> attribute. This attribute stands for the title of the new subsection.
+	 *
+	 * @param {object} slide - DOM object for the slide where the component has to be added
+	 * @param {object} slideo - Slide object
+	 */
+	add_to(slide, slideo=null) {
+		super.add_to(slide, slideo);
+		// Add the navigation bar to the slide
+		let nav=document.createElement('nav');
+		nav.classList.add(this.componentName);
+		slide.insertAdjacentElement('afterbegin',nav);
+		let spart = generate_html_from_structure(structure[0].parts, null, slideo.id, (entry) => entry.short ? entry.short : entry.name);
+		if (spart) nav.append(spart);
+	}
+
+	/**
+	 * Update the navigation bar: the new slide is represented by a filled circle, the old slide is reverted to its original state. The section and subsection of the new slide also get new styles by adding the <tt>currentSection</tt> and <tt>currentSubsection</tt> classes to them.
+	 *
+	 * @param {object} slide - DOM object for the slide where the component has to be updated
+	 * @param {object} slideo - Slide object
+	 */
+	update(slide, slideo=null) {
+		super.update(slide, slideo);
+		let nav = slide.getElementsByClassName(this.componentName)[0];
+		Array.from(nav.getElementsByTagName('li')).forEach(element => {
+			element.classList.remove('current');
+		});
+		Array.from(nav.querySelectorAll('[href="#'+slideo['id']+'"]')).forEach(function(element) {
+			element.parentNode.classList.add("current");
+		});
+	}
+}
+function Minitoc(pconfig) {return new MinitocObject(pconfig);}
+
+// Footers
+class ClassicFooterObject extends Component {
+	constructor(pconfig) {
+		super()
+		this.componentName = 'component-classicfooter';
+		this.config = pconfig;
+	}
+
+	add_to(slide, slideo) {
+		super.add_to(slide, slideo);
+		let footer=document.createElement('footer');
+		footer.classList.add(this.componentName);
+		footer.innerHTML='<div>'+meta["date"]+'</div><div>'+meta["title"]+'</div><div>'+slideo["num"]+'/'+(slides.length-1)+'</div>';
+		slide.insertAdjacentElement('afterbegin',footer);
+	}
+
+	/**
+	 * Update the footer when a new slide is displayed. The function change the page index in the footer
+	 *
+	 * @param {object} slide - DOM object for the slide where the component has to be updated
+	 * @param {object} slideo - Slide object
+	 */
+	update(slide, slideo) {
+		super.update(slide, slideo);
+		let footer=slide.getElementsByClassName(this.componentName)[0];
+		footer.querySelector('div:last-child').innerHTML=slideo["num"]+'/'+(slides.length-1);
+	}
+}
+function ClassicFooter(pconfig) {return new ClassicFooterObject(pconfig);}
 
 /**********************************
  *         Outline slides         *
  **********************************/
 /**
- * Compose an outline slide. The same outline slide, with id <tt>outline</tt> is used for the whole presentation. This function populates it with the names of sections and subsections.
- * @see {@link add_navigation_bar} for additional information about how new sections and subsections are declared.
+ * Browse structure using depth-first run and execute callbacks for each heading
+ *
+ * @param {object} struct - Structure to browse
+ * @param {array} tags - Array of tags to include in the outline, null if all tags must be included
+ * @param {function} callback - Callback function to execute on each entry. The function takes one argument: the entry as stored in the struct array
  */
-function compose_outline_slide() {
-	let outlineslide=document.getElementById('outline');
-	if (!outlineslide) return;
-	let outline=outlineslide.getElementsByClassName('content')[0];
-	let content=document.createElement('ul');
-	outline.insertAdjacentElement('afterbegin',content);
-	let csection=null;
-	let csubsection=null;
-	for (let slide of slides) if (slide['id']!='outline') {
-		if (slide['section']) {
-			let sname=slide['section'];
-			csection=document.createElement('li');
-			csection.dataset['section']=sname;
-			csection.innerHTML='<a href="#'+slide['id']+'">'+sname+'</a>';
-			content.insertAdjacentElement('beforeend',csection);
-			csubsection=null;
-		}
-		if (slide['subsection']) {
-			if (!csubsection) {
-				csubsection=document.createElement('ul');
-				csection.insertAdjacentElement('beforeend',csubsection);
-			}
-			csubsection.insertAdjacentHTML('beforeend','<li><a href="#'+slide['id']+'">'+slide['subsection']+'</a></li>');
-		}
+function execute_structure(struct, tags=null, callback) {
+	if (!struct) return;
+	for (const entry of struct) if (!tags || tags.includes(entry.element.tagName)) {
+		callback(entry);
+		execute_structure(entry.parts, tags, callback);
 	}
 }
 
 /**
- * Update the outline slide based on the position in the presentation. The function highlights the current section in the outline slide.
- * @param {number} slidenum - Current slide index, relative to the {@link slides} array
+ * Generate a HTML list from the outline structure
+ *
+ * @param {object} struct - Structure to browse
+ * @param {array} tags - Array of tags to include in the outline, null if all tags must be included
+ * @param {string} section - Id of the section to highlight
+ * @param {function} custom_name - Function to generate a custom title for an element. It takes one parameter which is the structure entry. It returns the HTML string that has to be displayed in the outline. When it returns an array of two strings, the second one is used when the slide is the current one.
+ * @returns {object} - HTML list
  */
-function update_outline_slide(slidenum) {
-	let outlineslide=document.getElementById('outline');
-	if (!outlineslide) return;
-	if (slides[slidenum]['section']=="") {
-		Array.from(outlineslide.querySelectorAll('[data-section]')).forEach(function(element) {
-			element.classList.remove('currentSection');
-			element.classList.remove('notCurrentSection');
-		});
+function generate_html_from_structure(struct, tags=null, section=null, custom_name=(entry)=>entry.name) {
+	if (!struct || struct.length==0) return;
+	let ul = document.createElement("ul");
+	for (const entry of struct) if (!tags || tags.includes(entry.element.tagName)) {
+		let li = document.createElement("li");
+		li.classList.add(entry.element.tagName.toLowerCase());
+		let id;
+		if (entry.element.tagName == 'SECTION') {
+			id = entry.element.id;
+		} else if ("outline_slide" in entry) {
+			id = entry.outline_slide.id;
+		} else {
+			let sibling = entry.element;
+			do { sibling = sibling.nextElementSibling; } while (sibling && sibling.tagName != 'SECTION');
+			if (sibling) id = sibling.id;
+		}
+		let sname = custom_name(entry);
+		if (Array.isArray(sname)) sname = (section == entry.element.id) ? sname[1] : sname[0];
+		let a = document.createElement("a");
+		a.href = "#" + id;
+		a.innerHTML = sname;
+		li.append(a);
+		if (section == id) li.classList.add("current");
+		let spart = generate_html_from_structure(entry.parts, tags, section, custom_name); 
+		if (spart) li.append(spart);
+		ul.appendChild(li);
 	}
-	else {
-		Array.from(outlineslide.querySelectorAll('[data-section]')).forEach(function(element) {
-			element.classList.remove('currentSection');
-			element.classList.add('notCurrentSection');
-		});
-		Array.from(outlineslide.querySelectorAll('[data-section="'+slides[slidenum]['section']+'"]')).forEach(function(element) {
-			element.classList.add('currentSection');
-			element.classList.remove('notCurrentSection');
-		});
+	return (ul.childElementCount>0) ? ul : null;
+}
+
+
+/**
+ * Abstract base class for outline slides
+ *
+ * @class OutlineSlide
+ */
+class OutlineSlide {
+	static index = 0; 	// Static index of the outline, used to give unique IDs to slides
+
+	constructor() {
+		if (this.constructor == OutlineSlide)  {
+			throw new Error("Component is an abstract class and cannot be instantiated.");
+		}
+	}
+
+	/**
+	 * Compose an outline slide. 
+	 *
+	 * @param {array} struct - Structure of the document, as describes in the {@link structure} array
+	 * @param {object} element - DOM element where the outline should be added
+	 * @param {string} section - Name of the current section, null for the slideshow general outline slide
+	 * @returns {object} - slide object adapted for the {@link slides} array, with an additional entry 'element' holding a reference to the DOM element
+	 */
+	compose(struct, element, section=null) {
+		throw new Error("Method compose is not implemented.")
 	}
 }
+
+/**
+ * Classic model of outline slide using the "content" class of slides (title and unordered list of sections)
+ */
+class ClassicOutlineSlideObject extends OutlineSlide {
+	/**
+	 * Compose an outline slide. 
+	 *
+	 * @param {array} struct - Structure of the document, as describes in the {@link structure} array
+	 * @param {object} element - DOM element where the outline should be added
+	 * @param {string} section - Id of the current section, null for the slideshow general outline slide
+	 * @returns {object} - slide object adapted for the {@link slides} array, with an additional entry 'element' holding a reference to the DOM element
+	 */
+	compose(struct, element, section=null) {
+		let h = document.createElement("h1");
+		h.textContent = "Sommaire";
+		element.append(h);
+		let outline = document.createElement("div");
+		outline.classList.add("content")
+		element.append(outline);
+		let spart = generate_html_from_structure(struct, ['H2', 'H3'], element.id);
+		if (spart) outline.append(spart);
+	}
+}
+function ClassicOutlineSlide() {return new ClassicOutlineSlideObject();}
 
 /**********************************
  *        Printing management     *
@@ -601,10 +698,10 @@ function open_overview() {
 		tl.scrollTop=tl.offsetTop+wrapper.offsetTop;
 		wrapper.style.zIndex='30';
 		let newpos=wrapper.getBoundingClientRect();	// Remember the new position of the current slide
-		let deltal=newpos.left-oldpos.left;
-		let deltat=newpos.top-oldpos.top;
-		let deltaw=newpos.width/oldpos.width-1;
-		let deltah=newpos.height/oldpos.height-1;
+		//let deltal=newpos.left-oldpos.left;
+		//let deltat=newpos.top-oldpos.top;
+		//let deltaw=newpos.width/oldpos.width-1;
+		//let deltah=newpos.height/oldpos.height-1;
 		// Put back the current slide at its original position
 		slideo.classList.remove('thumbnail');
 		slideo.style.position='fixed';
@@ -705,7 +802,7 @@ function close_overview(newslidenum=null) {
 					reset_fragments(slideo,0);
 					update_navigation_bar(newslidenum,slide);
 					update_footer(newslidenum);
-					switch_background(slides[newslidenum]['background']);
+					for (let l of ["background", "foreground"]) switch_layer(l, slides[newslidenum]);
 				} else {
 					let e=new Event("hashchange",{bubbles:false, cancelable:true})
 					window.dispatchEvent(e);
@@ -778,15 +875,12 @@ function switch_slide(newslidenum,newfragmentnum) {
 			reset_fragments(newslideo,0); 
 			apply_start_fragments(newslideo,true);
 		} else reset_fragments(newslideo,slides[newslidenum]['numfragments']);
-		if (newslideo.id=="outline") update_outline_slide(newslidenum);
 		apply_animation(slideo,newslideo,increasing,function() {
 			reset_fragments(slideo,0);
 			apply_start_fragments(newslideo,false);
 			animate_fragment(curslide,0,curslide>slide);
-			update_navigation_bar(newslidenum,slide);
-			update_footer(newslidenum);
 		});
-		switch_background(slides[newslidenum]['background']);
+		for (const layer of ["background", "foreground"]) switch_layer(layer, slides[newslidenum]);
 	} else if (curfragment!=newfragmentnum) {
 		let fragment=curfragment;
 		curfragment=newfragmentnum;
@@ -994,6 +1088,71 @@ function toggle_outline() {
 /**********************************
  *   Pre-processing of slides     *
  **********************************/
+/** Create the automatically generated slides (title and outlines) and generate the structure
+ */
+function create_structure() {
+	// Create title slide and title heading
+	let tslide = document.getElementById("title");
+	if (!tslide) {
+		let h = document.createElement("h1");
+		h.innerHTML = (meta.title ? meta.title : "");
+		document.body.insertAdjacentElement("afterbegin", h);
+		tslide = document.createElement("section");
+		tslide.id = "title";
+		tslide.innerHTML = `
+			<h1><span data-variable="title">${meta.title ? meta.title : ""}</span><br/><span class="subtitle" data-variable="subtitle">${meta.subtitle ? meta.subtitle : ""}</span></h1>
+			<div class="authordate"><span data-variable="author">${meta.authors ? meta.authors : ""}</span><br/><time data-variable="date">${meta.date}</time></div>
+		`;
+		document.body.insertAdjacentElement("afterbegin", tslide);
+	}
+
+	// Generate structure and create placeholder outline slides (we can't create the full outline slides at this stage because the slides don't have any ids, thus we can't link to them)
+	let parents = [structure];
+	Array.from(document.querySelectorAll(Array.from({length: 6}, (_, i) => 1+i).map((val) => "body > h" + val.toString()).join() + ', body > section:not(#title)')).forEach(function(el) {
+		let entry = {"element": el};
+		if (el.tagName == 'SECTION') {
+			entry.level = parents.length;
+			entry.name = el.querySelector('h1').innerHTML;
+		} else {
+			entry.name = el.innerHTML;	
+			entry.level = Number.parseInt(el.tagName.substring(1));
+			entry.parts = [];
+			let outlinestyle = el.dataset['outline'];
+			if (!outlinestyle) outlinestyle = window.getComputedStyle(el).getPropertyValue('--outline');
+			if (outlinestyle) {
+				let oslide = document.createElement("section");
+				oslide.classList.add("outline");
+				oslide.dataset["level"] = entry.level;
+				el.insertAdjacentElement('afterend', oslide);
+				entry.outline_slide = oslide;
+			}
+			parents[entry.level] = entry.parts;
+			parents.length = entry.level + 1;
+		}
+		if ("short" in el.dataset) entry["short"] = el.dataset["short"];
+		if (entry.level > parents.length) {
+			for (const i=parents.length ; i<entry.level ; ++i) {
+				parents.push({"name": "", "parts": []});
+			}
+		}
+		entry.parent = parents[entry.level-1];
+		parents[entry.level-1].push(entry);
+	});
+
+	// Create background and foreground layers if they are not disabled and they are not provided
+	for (const layer of ['foreground', 'background']) if (config[layer+"Layer"]) {
+		let layers = document.getElementById(layer);
+		if (!layers) {
+			layers = document.createElement('div');
+			layers.id = layer;
+			document.body.insertAdjacentElement('afterbegin', layers);
+		}
+		let newlayers = layers.cloneNode(true);
+		newlayers.id = 'new' + layer;
+		document.body.insertAdjacentElement('afterbegin', newlayers);
+	}
+}
+
 /** Pre-process the HTML code. This function does several things:
  *	<ul>
  *		<li>it replaces single quotes by double quotes in JSON attributes</li>
@@ -1002,33 +1161,51 @@ function toggle_outline() {
  */
 function process_slideshow() {
 	// Replace quotes in JSON attributes
-	for (let val of ['fragment','fanim','fstart','autofragment','background']) {
+	for (const val of ['fragment','fanim','fstart','autofragment','background','foreground','animation','components']) {
 		Array.from(document.querySelectorAll('[data-'+val+']')).forEach(function(element) {
 			let attr=element.dataset[val];
 			attr=attr.replace(/'/g,'"');
 			element.dataset[val]=attr;
 		});
 	}
+
+	// Read some configuration options from the CSS or the inline document
+	// Then update it with user-provided configuration options
+	let properties = window.getComputedStyle(document.body);
+	if ("background-layer" in document.body.dataset) config.backgroundLayer = true;
+		else config.backgroundLayer = properties.getPropertyValue("--background-layer") == '"active"' ? true : false;
+	if ("foreground-layer" in document.body.dataset) config.foregroundLayer = true;
+		else config.foregroundLayer = properties.getPropertyValue("--foreground-layer") == '"active"' ? true : false;
+
 	// Replace parameterized text
 	Array.from(document.querySelectorAll('[data-variable]')).forEach(function(span) {
 		if (span.dataset['variable'] in parameters) span.innerHTML=parameters[span.dataset['variable']];
 	});
 }
 
-
 /**
  * Pre-process a slide and generate an object describing it, suited for the {@link slides} array
  * @param {object} element - HTML slide element
- * @param {object} defaults - Object containing the default values for background and animation
  * @returns {object} - Object describing the slide
  */
-function process_slide(element,defaults) {
-	// Background and animation
-	if ('background' in element.dataset) defaults['background']=from_string(element.dataset['background']);
-	if ('animation' in element.dataset) defaults['animation']=element.dataset['animation'];
+function process_slide(element) {
+	// Create slide object and get properties
+	let slide = {
+		'id': element.id,
+		'element': element
+	};
+	let properties = window.getComputedStyle(element);
+	for (const prop of ["background", "foreground", "animation", "components", "autofragment"]) {
+		if (element.dataset["data-"+prop]) {
+			slide[prop] = element.dataset["data-"+prop].replace(/'/g, '"');
+		} else {
+			const val = properties.getPropertyValue('--'+prop).replace(/^"|"$/g, "");
+			if (val) slide[prop] = val.replace(/'/g, '"');
+		}
+	}
 	// Count fragments in slide by first parsing the <tt>data-fragment</tt> and <tt>data-fanim</tt> attributes of objects. The total number of fragments is the highest fragment number referenced by those attributes.
-	let numfragments=0;
-	if (element.dataset['numfragment']) numfragments=parseInt(element.dataset["numfragment"]);
+	slide['numfragments'] = 0;
+	if (element.dataset['numfragment']) slide['numfragments'] = parseInt(element.dataset["numfragment"]);
 	else {
 		let max=0;
 		for (let attr of ["fragment","fanim"]) {
@@ -1045,11 +1222,11 @@ function process_slide(element,defaults) {
 				});
 			});
 		}
-		numfragments=max;
+		slide['numfragments'] = max;
 	}
 	// Autogenerate fragments
-	if ('autofragment' in element.dataset) {
-		let fragspec=JSON.parse(element.dataset["autofragment"]);
+	if ("autofragment" in slide) {
+		let fragspec=JSON.parse(slide["autofragment"]);
 		let fragbefore=['invisible'];
 		let fragafter=null;
 		let fragcurrent=null;
@@ -1079,8 +1256,7 @@ function process_slide(element,defaults) {
 			}
 		}
 	}
-	// Section and subsection
-	let slide={'id':element.id,'background':defaults['background'],'animation':defaults['animation'],'navigation':!compare(element.dataset['navigation'],'false'),'footer':!compare(element.dataset['footer'],'false'),'numfragments':numfragments};
+	// Add section and subsection data
 	if ('section' in element.dataset && element.dataset['section']!='') {
 		slide['section']=element.dataset['section'];
 		if ('ssection' in element.dataset && element.dataset['ssection']!='') slide['ssection']=element.dataset['ssection'];
@@ -1090,16 +1266,50 @@ function process_slide(element,defaults) {
 }
 
 /**
+ * Fill out outline slides
+ */
+function compose_outline_slides() {
+	execute_structure(structure, ["H1", "H2", "H3", "H4", "H5", "H6"], function(entry) {
+		if (entry.outline_slide) {
+			let outlinestyle = entry.element.dataset['outline'];
+			if (!outlinestyle) outlinestyle = window.getComputedStyle(entry.element).getPropertyValue('--outline').replace(/^"|"$/g, "");
+			if (!outlinestyle) return;
+			let element = window[outlinestyle]();
+			element.compose(structure[0].parts, entry.outline_slide);
+		}
+	});
+}
+
+/**
+ * Add the components to a slide
+ *
+ * @param {object} slideo - Slide object, relative to the {@link slides} array
+ */
+function add_components(slideo) {
+	if (slideo["components"]) for (const comp of eval(slideo["components"])) {
+		comp.add_to(slideo.element, slideo);
+		if (!("slide-components" in slideo)) slideo["slide-components"] = [];
+		slideo["slide-components"].push(comp);
+	}
+	if (slideo["background"]) for (const comp of eval(slideo['background'])) {
+		if (!("background-components" in slideo)) slideo["background-components"] = [];
+		if (config.backgroundLayer) slideo["background-components"].push(comp);
+		else comp.add_to(slideo.element, slideo);
+	}
+	if (slideo["foreground"]) for (const comp of eval(slideo['foreground'])) {
+		if (config.foregroundLayer) {
+			if (!("foreground-components" in slideo)) slideo["foreground-components"] = [];
+			slideo["foreground-components"].push(comp);
+		}
+		else comp.add_to(slideo.element, slideo);
+	}
+}
+
+/**
  * Generate the array of slides {@link slides}
  */
 function prepare_slides() {
-	process_slideshow();
 	// Prepare array of slides
-	let slide=document.getElementById('title');
-	let outlines=null;
-	if (! ('nooutline' in parameters && parameters['nooutline']=='true')) outlines=document.getElementById('outline');
-	slides.push({'id':'title','background':slide.dataset['background'],'animation':slide.dataset['animation'],'navigation':compare(slide.dataset['navigation'],'true'),'footer':compare(slide.dataset['footer'],'true'),'numfragments':0});
-	let defaults={'background':'','animation':''};
 	Array.from(document.getElementsByTagName('section')).forEach(function(element,index) {
 		// Give an id to the slide
 		let id="slide-"+(index+1);
@@ -1108,56 +1318,31 @@ function prepare_slides() {
 	});
 	if ('outline' in parameters) {
 		for (let slidespec of parameters['outline']) {
-			// Generate slide if it does not exist
-			if ('html' in slidespec) {
-				let newslide=document.createElement('section');
+			let slidee;
+			if ('html' in slidespec) { // Generate slide if it does not exist
+				let slidee=document.createElement('section');
 				slidespec['id']='slide-'+Math.random().toString().substring(2).replace(/./g,s=>String.fromCharCode(s.charCodeAt(0)+17));
-				newslide.id=slidespec['id'];
-				newslide.innerHTML=slidespec['html'];
-				document.body.appendChild(newslide);
+				slidee.id=slidespec['id'];
+				slidee.innerHTML=slidespec['html'];
+			} else { // Overrides attributes with the one given as parameters
+				slidee = document.getElementById(slidespec['id']);
+				for (const att in slidespec) if (att!='id' && att!='html') {
+					slidee.dataset[att.replace(/^data-/, '')] = from_string(slidespec[att]);
+				}
 			}
-			// Prepare default values for background and animation
-			let defaultsoverride={};
-			if ('data-background' in slidespec) defaultsoverride['background']=from_string(slidespec['data-background']);
-			if ('data-animation' in slidespec) defaultsoverride['animation']=slidespec['data-animation'];
-			let slideo=process_slide(document.getElementById(slidespec['id']),defaults);
-			Object.assign(slideo,slidespec);
-			Object.assign(slideo,defaultsoverride);
+			let slideo=process_slide(slidee);
 			// Insert slide in array
-			// If the slide starts a new section, also inserts an outline slide
-			if (outlines && 'section' in slideo && slideo['section']!='') 
-				slides.push({'id':'outline',
-					'background':(('background' in outlines.dataset)?outlines.dataset['background']:''),
-					'animation':(('animation' in outlines.dataset)?outlines.dataset['animation']:''),
-					'navigation':!compare(outlines.dataset['navigation'],'false'),
-					'footer':!compare(outlines.dataset['footer'],'false'),
-					'numfragments':0,
-					'section':slideo['section']});
+			if ('html' in slidespec) document.body.appendChild(slidee);
 			slides.push(slideo);
 		}
 	} else {
-		// Process heading (h1 and h2) elements outside slides and replace them with the right attribute in the following slide. This allows for an alternate syntax for specifying new sections and subsections. It is especially needed for conversion with Pandoc because the converter can't rely on the order of the slides in the source document to find the starts of sections and subsections. (The converter is stateless.)
-		let noh1=(document.querySelectorAll('body > h1').length==0);
-		Array.from(document.querySelectorAll('body > h1,body > h2')).forEach(function(element) {
-			let sec=element;
-			do {
-				sec=sec.nextElementSibling;
-			} while (sec!=null && sec.tagName!='SECTION');
-			if (sec==null) return;
-			let seclevel=(element.tagName=='H1' || noh1);
-			sec.dataset[seclevel ? 'section' : 'subsection']=element.textContent;
-			if (seclevel && 'ssection' in element.dataset) sec.dataset['ssection']=element.dataset['ssection'];
-			element.parentNode.removeChild(element);
-		});
 		// Add all slides to the array
 		Array.from(document.getElementsByTagName('section')).forEach(function(element,index) {
-			if (element.id=='title' || element.id=='outline') return;
-			let slideo=process_slide(element,defaults);
 			// Test if the slide is in the slideshow subset, otherwise skip it
 			if ('subset' in parameters && parameters['subset'].length>0) {
 				let ok=false;
 				if (parameters['subset'].includes(''+(index+1)) || parameters['subset'].includes(element.id)) ok=true;
-				if (!ok && 'groups' in element.dataset) for (group of element.dataset['groups'].split(',')) {
+				if (!ok && 'groups' in element.dataset) for (const group of element.dataset['groups'].split(',')) {
 					if (parameters['subset'].includes(group)) ok=true;
 					break;
 				}
@@ -1166,32 +1351,43 @@ function prepare_slides() {
 			// Test if the slide is in the slideshow hidden subset, if this is the case, skip it
 			if ('hidden' in parameters && parameters['hidden'].length>0 && (parameters['hidden'].includes(''+(index+1)) || parameters['hidden'].includes(element.id))) return;
 			// Insert slide in array
-			// If the slide starts a new section, also inserts an outline slide
-			if (outlines && 'section' in element.dataset) 
-				slides.push({'id':'outline',
-					'background':(('background' in outlines.dataset)?outlines.dataset['background']:''),
-					'animation':(('animation' in outlines.dataset)?outlines.dataset['animation']:''),
-					'navigation':!compare(outlines.dataset['navigation'],'false'),
-					'footer':!compare(outlines.dataset['footer'],'false'),
-					'numfragments':0,
-					'section':element.dataset['section']});
+			let slideo = process_slide(element);
 			slides.push(slideo);
 		});
 	}
-	compose_outline_slide(); // Fill out outline slides
-	if (outlines) slides.splice(1,0,{'id':'outline',
-		'background':(('background' in outlines.dataset)?outlines.dataset['background']:''),
-		'animation':(('animation' in outlines.dataset)?outlines.dataset['animation']:''),
-		'navigation':!compare(outlines.dataset['navigation'],'false'),
-		'footer':!compare(outlines.dataset['footer'],'false'),
-		'numfragments':0,
-		'section':''});
+	compose_outline_slides(); // Fill out outline slides
+	slides.forEach(function(slideo, num) {
+		slideo["num"] = num; // Fill out slides numbers
+		add_components(slideo); // Add components to all slides
+	}); 
 }
 
 /**********************************
  *       Handler functions        *
  **********************************/
 document.addEventListener("DOMContentLoaded",function(event) {
+	// Fill document head
+	let head = document.getElementsByTagName('head')[0];
+	if ("title" in meta && head.getElementsByTagName('title').length == 0) {
+		let title = document.createElement('title');
+		title.textContent = meta.title;
+		head.prepend(title);
+	}
+	if ("description" in meta && head.querySelector('meta[name="description"]')==null) {
+		let bmeta = document.createElement('meta');
+		bmeta.name = "description";
+		bmeta.content = meta.description;
+		head.prepend(bmeta);
+	}
+	let ss = head.querySelector('link[rel="stylesheet"]');
+	if (ss) meta.template_path = ss.getAttribute("href").replace(/[^\/]*$/, "");
+
+	// Initialize metadata
+	if (!("date" in meta)) {
+		let d = new Date().toLocaleDateString(document.documentElement.lang,{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+		meta["date"] = d[0].toUpperCase()+d.slice(1);
+	}
+
 	// Read query string
 	let querys=decodeURI(location.search.substring(1)).split('&');
 	for (let i=0;i<querys.length;++i) {
@@ -1200,10 +1396,15 @@ document.addEventListener("DOMContentLoaded",function(event) {
 	}
 	if ('subset' in parameters && parameters['subset']!='') parameters['subset']=parameters['subset'].split(',');
 	if ('hidden' in parameters && parameters['hidden']!='') parameters['hidden']=parameters['hidden'].split(',');
+
 	// Disable outline stylesheet
 	for (let i=0;i<document.styleSheets.length;++i) if (document.styleSheets[i].title=='outlinesheet') document.styleSheets[i].disabled=true;
+
+	// Preprocess the document
+	process_slideshow();
+	create_structure();
+
 	// Load external SVG files
-	let promises=[];
 	Array.from(document.querySelectorAll('div [data-file]')).forEach(function(element) {
 		promises.push(new Promise(function(resolve,reject) {
 			let xhttp=new XMLHttpRequest();
@@ -1217,6 +1418,7 @@ document.addEventListener("DOMContentLoaded",function(event) {
 			xhttp.send();
 		}));
 	});
+
 	// Load configuration file if the 'variant' value is in the request parameters
 	if ('variant' in parameters) {
 		promises.push(new Promise(function(resolve,reject) {
@@ -1231,9 +1433,11 @@ document.addEventListener("DOMContentLoaded",function(event) {
 			xhttp.send();
 		}));
 	}
+
 	// Execute starting handler
 	let fn=window['onSlidesStart'];
 	if (fn) promises.push(new Promise(fn));
+
 	// Wait for everything to continue
 	Promise.all(promises).then(afterLoad);
 });
@@ -1241,28 +1445,12 @@ document.addEventListener("DOMContentLoaded",function(event) {
 function afterLoad() {
 	window.name="parentpres";
 	syncUrl=document.documentElement.dataset['synchronize'];
-	// Create background layers
-	document.body.insertAdjacentHTML('afterbegin','<div id="newbackground"></div>');
-	document.body.insertAdjacentHTML('afterbegin','<div id="background"></div>');
-	
-	getDate();	// Automatically add date if none is given
 	prepare_slides(parameters); // Prepare the array of slides
 
 	// Get current slide
 	if (location.hash=='') location.hash='#title';
-	if (location.hash=="#title") curslide=0; 
-		else if (location.hash=="#outline") {
-			curslide=getSlideIndex('outline');
-		} else curslide=parseInt(getSlideIndex(location.hash.substring(1)));
-	switch_background(slides[curslide]['background']);
-
-	// Add navigation bar
-	add_navigation_bar();
-	update_navigation_bar(curslide);
-
-	// Add footer bar
-	add_footer();
-	update_footer(curslide);
+	curslide=parseInt(getSlideIndex(location.hash.substring(1)));
+	for (const layer of ["background", "foreground"]) switch_layer(layer, slides[curslide]);
 
 	// Hash change handler
 	window.addEventListener('hashchange',function() {
@@ -1274,14 +1462,11 @@ function afterLoad() {
 			curslide=getSlideIndex(location.hash.substring(1));
 			let curslideo=getSlide(curslide);
 			curslideo.style.visibility='visible';
-			switch_background(slides[curslide]['background']);
-			update_navigation_bar(curslide,slide);
-			update_footer(curslide);
+			for (const layer of ["background", "foreground"]) switch_layer(layer, slides[curslide]);
 			reset_fragments(curslideo,0);
 		}
 		if (wnotes!=null && !wnotes.closed) {
 			wnotes.location.hash=location.hash;
-			//wnotes.postMessage(getSlide(curslide).getElementsByTagName('h1')[0].innerHTML,'*');
 			wnotes.ratio=curslide/slides.length;
 		}
 		if (!slaveMode && syncUrl && syncName) {
@@ -1375,8 +1560,7 @@ function afterLoad() {
 			case "PageUp": // Page up
 				if (!on_overview) {
 					if (newslide>0) newslide--;
-					if (! ('nooutline' in parameters && parameters['nooutline']=='true')) while (newslide>0 && getSlide(newslide).id!='outline') newslide--;
-					else while (newslide>0 && ! ('section' in slides[newslide])) newslide--;
+					while (newslide>0 && !slides[newslide].element.classList.contains("outline")) newslide--;
 					newfragment=0;
 					switch_slide(newslide,newfragment);
 				}
@@ -1384,8 +1568,7 @@ function afterLoad() {
 			case "PageDown": // Page down
 				if (!on_overview) {
 					if (newslide<slides.length-1) newslide++;
-					if (! ('nooutline' in parameters && parameters['nooutline']=='true')) while (newslide<slides.length-1 && getSlide(newslide).id!='outline') newslide++;
-					else while (newslide<slides.length-1 && ! ('section' in slides[newslide])) newslide++;
+					while (newslide<slides.length-1 && !slides[newslide].element.classList.contains("outline")) newslide++;
 					newfragment=0;
 					switch_slide(newslide,newfragment);
 				}
@@ -1461,4 +1644,15 @@ function afterLoad() {
 		}
 	});
 
+}
+
+/**********************************
+ *     Template initializer       *
+ **********************************/
+/**
+ * Initialize the template and slideshow metadata.
+ * @param {string} pmeta - Metadata of the slideshow. This dictionary should contain at least the following values: title, authors, date, description.
+ */
+function initialize(pmeta) {
+	meta = pmeta;
 }
