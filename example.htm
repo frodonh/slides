@@ -1,0 +1,572 @@
+
+<!DOCTYPE html>
+<html lang="en" data-notes="example_notes.html" data-synchronize="/templates/slides/slides.php">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" title="mainsheet" href="/templates/dewdrop/slides/template.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+	<script src="/templates/slides/slides.js"></script>
+	<script>
+		initialize({
+			"title": "Slides.js",
+			"subtitle": "Example and slideshow",
+			"authors": "François Hissel",
+			"description": "Slides.js reference slideshow"
+		});
+	</script>
+</head>
+<body>
+	
+	<h2 data-short="Slides.js">What is Slides.js ?</h2>
+
+	<section class="content"> 
+		<h1>Slides.js in a nutshell…</h1>
+		<div class="content">
+			<p>Slides.js is an open-source HTML slide deck designed to enforce the use of predefined templates.</p>
+			<p>Slides.js only relies on pure HTML, CSS, and EcmaScript. No third-party library is needed.</p>
+			<p>See the <a class="view-source">source</a> of this web page to get an example.</p>
+		</div>
+	</section>
+
+	<section class="content"> 
+		<h1>Main features</h1>
+		<div class="content">
+			<ul>
+				<li>Automatic sizing of slides based on screen dimensions</li>
+				<li>Overview of slides</li>
+				<li>Presenter notes</li>
+				<li>Export slides to PDF, and view a paged document with the content of the slideshow</li>
+				<li>Automatic synchronization of other viewers based on the presenter current slide</li>
+				<li>Transitions between slides</li>
+				<li>Animations of fragments inside slides</li>
+				<li>Dynamic components inside slides that may be added through CSS only, such as a Beamer-inspired clickable mini-table of contents in the header</li>
+				<li>Background and foreground layers which stay in place during the whole slideshow and are not impacted by transitions</li>
+				<li>Automatic generation of outline slides</li>
+				<li>Keyboard shortcut to other parts of the presentation</li>
+				<li>Templates can easily be created with only bare CSS</li>
+			</ul>
+		</div>
+	</section>
+
+	<section class="content"> 
+		<h1>This is the source of this slideshow</h1>
+		<div class="content">
+			<div class="code-sample" data-language="html" style="height: 60vh">
+			</div>
+		</div>
+	</section>
+
+	<h2 data-short="Slideshow">The slideshow structure</h2>
+
+	<h3>The general configuration</h3>
+
+	<section class="content">
+		<h1>Initialize the slideshow</h1>
+		<div class="content">
+			<div>
+				Include the stylesheets:
+				<dl>
+					<dd><code>title="outlinesheet"</code></dd><dt>Stylesheet used when displaying the outline view</dt>
+					<dd><code>title="mainsheet"</code></dd><dt>Stylesheet used when displaying the normal view of slides</dt>
+				</dl>
+				<pre><code class="language-html">
+&lt;link rel="stylesheet" title="outlinesheet" href="/templates/dewdrop/slides/template_outline.css"&gt;
+&lt;link rel="stylesheet" title="mainsheet" href="/templates/dewdrop/slides/template.css"&gt;
+				</code></pre>
+			</div>
+			<div>
+				Include the main library:
+				<pre><code class="language-html">
+&lt;script src="/templates/slides/slides.js"&gt;&lt;/script&gt;
+				</code></pre>
+			</div>
+			<div>
+				Initialize metadata:
+<pre><code class="language-html">
+&lt;script&gt;
+	initialize({
+		"title": "Slides.js",
+		"subtitle": "Example and slideshow",
+		"authors": "François Hissel",
+		"description": "Slides.js reference slideshow"
+	});
+&lt;/script&gt;
+</code></pre>
+			</div>
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>Initialize metadata</h1>
+		<div class="content">
+			<pre><code class="language-js">
+initialize({
+	"title": "My wonderful slideshow",
+	"subtitle": "Executive board",
+	"authors": "John Doe",
+	"description": "A slideshow for my office"
+});
+			</code></pre>
+
+			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>Key</td><td>Meaning</td></tr>
+				</thead>
+				<tbody>
+					<tr><td>title</td><td>The title of the slideshow. It is used in the title page and as the title of the web page.</td></tr>
+					<tr><td>subtitle</td><td>The subtitle, displayed on the title page.</td></tr>
+					<tr><td>authors</td><td>The authors, displayed on the title page and used in the metadata.</td></tr>
+					<tr><td>description</td><td>Metadata description</td></tr>
+					<tr><td>date</td><td>A date, displayed on the title page. It is automatically retrieved from the system when the slideshow is loaded if it is not provided.</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>General options in html element</h1>
+		<div class="content">
+			<pre><code class="language-html">
+&lt;html lang="en" data-notes="example_notes.html" data-synchronize="/templates/slides/slides.php"&gt;
+			</code></pre>
+			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>Attribute</td><td>Meaning</td></tr>
+				</thead>
+				<tbody>
+					<tr><td>lang</td><td>Language of the presentation, used to customize some automatically generated elements (like the title of the outline slides)</td></tr>
+					<tr><td>data-notes</td><td>URL of the presenter notes page</td></tr>
+					<tr><td>data-synchronize</td><td>URL of a synchronization script. Synchronization is turned on when this attribute is given.</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>General options in body element</h1>
+		<div class="content">
+			<pre><code class="language-html">
+&lt;body data-background-layer="active" data-foreground-layer="active"&gt;
+			</code></pre>
+			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>Attribute</td><td>Meaning</td></tr>
+				</thead>
+				<tbody>
+					<tr><td>data-background-layer</td><td>If active, the background of slides is drawn on its own div layer instead of each slide. The net effect is that it is not animated during transitions between slides. This attribute takes precedence over the CSS <code>--background-layer</code> property.</td></tr>
+					<tr><td>data-foreground-layer</td><td>If active, the foreground of slides is drawn on its own div layer instead of each slide. This attribute takes precedence over the CSS <code>--foreground-layer</code> property.</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</section>
+
+	<h3>The structure</h3>
+	
+	<section class="content">
+		<h1>Headings and slides</h1>
+		<div class="content">
+			<pre><code class="language-html" style="height: 30vh">
+&lt;h2&gt;Outer structure&lt;/h2&gt;
+
+&lt;h3 data-short="Templates"&gt;Slides templates&lt;/h3&gt;
+
+&lt;section class="content"&gt; 
+	&lt;h1&gt;A content slide&lt;/h1&gt;
+	&lt;div class="content"&gt;
+		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+	&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;section class="content"&gt; 
+	&lt;h1&gt;Another content slide&lt;/h1&gt;
+	&lt;div class="content"&gt;
+		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+	&lt;/div&gt;
+&lt;/section&gt;
+			</code></pre>
+
+			<ul>
+				<li>The slideshow is structured in sections, subsections… using <code>&lt;h2&gt;</code>, <code>&lt;h3&gt;</code>,… elements</li>
+				<li>Each slide is represented by a <code>&lt;section&gt;</code> element. Its class defines the template of the slide (see also <a href="#slides-templates">here</a>)</li>
+			</ul>
+		</div>
+	</section>
+	
+	<section class="content">
+		<h1>Headings</h1>
+		<div class="content">
+			<pre><code class="language-html">&lt;h2 data-short="Outer" data-outline="ClassicOutlineSlide"&gt;Outer structure&lt;/h2&gt;</code></pre>
+			<p>HTML attributes and CSS properties:</p>
+
+			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>Elements</td><td>HTML attribute</td><td>CSS property</td><td>Meaning</td></tr>
+				</thead>
+				<tbody>
+					<tr><td>h2, h3, h4, h5, h6</td><td>data-outline</td><td>--outline</td><td>Name of a function to use to compose the outline</td></tr>
+					<tr><td>h2, h3, h4, h5, h6</td><td>data-short</td><td></td><td>Short name for the heading, used in some components</td></tr>
+				</tbody>
+			</table>
+
+			<p>The function should return an object that inherits the OutlineSlide class. It has one mandatory member function:
+			<pre><code class="language-js">compose(structure, element, section)</code></pre>
+			where:
+			<ul>
+				<li><code>structure</code> is the structure of the document (usually a global variable named structure with the tree of headings and slides)</li>
+				<li><code>element</code> is the DOM element on which the outline should be added</li>
+				<li><code>section</code> is the ID of the current slide, used to highlight it in the outline</li>
+			</ul>
+			</p>
+		</div>
+	</section>
+
+	<h3>Transitions</h3>
+
+	<section class="content">
+		<h1>Transitions between slides</h1>
+		<div class="content">
+			The transition between two slides is defined in the destination slide
+			<pre><code class="language-html">&lt;section data-animation="convex"&gt;</code></pre>
+
+			HTML attributes and CSS properties:
+			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>Elements</td><td>HTML attribute</td><td>CSS property</td><td>Meaning</td></tr>
+				</thead>
+				<tbody>
+					<tr><td>section</td><td>data-animation</td><td>--animation</td><td>Name of an animation</td></tr>
+				</tbody>
+			</table>
+
+			The name of the animation may be:
+			<ul>
+				<li>A function <code class="language-js">animate(source, dest, increasing, callback)</code>: in this case, the function is executed with <code>source</code> being the DOM object for the source slide, <code>dest</code> the DOM object for the destination slide, <code>increasing</code> a boolean indicating if the direction of the animation and <code>callback</code> a callback function to execute after the end of the animation</li>
+				<li>A string <code>name</code>: the animation is done in four steps
+					<ul>
+						<li>apply the anim-<em>name</em>-transitions class to both the source and destination slide (generally this class should only define transitions)</li>
+						<li>apply the anim-<em>name</em>-to class to the source slide</li>
+						<li>apply the anim-<em>name</em>-from class to the destination slide</li>
+						<li>remove the classes on both slides after the transitions are complete</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</section>
+
+	<section class="content" data-animation="animate_none">
+		<h1>Predefined transition "none"</h1>
+		<div class="content">
+			<code>data-animation="animate-none"</code>
+
+			Implementation through Javascript function:
+			<pre><code class="language-js">
+function animate_none(source,dest,increasing,callback) {
+	source.style.visibility=null;
+	if (source.dataset["onhide"]) window[source.dataset["onhide"]](source);
+	dest.style.visibility='visible';
+	if (dest.dataset["onshow"]) window[dest.dataset["onshow"]](dest);
+	program_hashchange=true;
+	location.hash="#"+dest.id;
+	dest.style.visibility=null;
+	callback();
+}
+			</code></pre>
+		</div>
+	</section>
+
+	<section class="content" data-animation="fade">
+		<h1>Predefined transition "fade"</h1>
+		<div class="content">
+			<code>data-animation="fade"</code>
+
+			Implementation with CSS classes:
+			<pre><code class="language-css">
+.anim-fade-transitions {
+	opacity: 1;
+	transition: opacity 1s ease-in-out;
+}
+
+.anim-fade-from {
+	opacity: 0 !important;
+}
+
+.anim-fade-to {
+	opacity: 0 !important;
+}
+			</code></pre>
+	</section>
+
+	<section class="content" data-animation="sweep">
+		<h1>Predefined transition "sweep"</h1>
+		<div class="content">
+			<code>data-animation="sweep"</code>
+
+			Implementation with CSS classes:
+			<pre><code class="language-css">
+.anim-sweep-transitions {
+	transition: left 1s ease-in-out;
+}
+
+.anim-sweep-from {
+	left: 100%;
+}
+
+.anim-sweep-to {
+	left: -100%;
+}
+
+			</code></pre>
+	</section>
+	
+	<section class="content" data-animation="rotate">
+		<h1>Predefined transition "rotate"</h1>
+		<div class="content">
+			<code>data-animation="rotate"</code>
+
+			Implementation with CSS classes:
+			<pre><code class="language-css">
+.anim-rotate-transitions {
+	transform-origin: -50% 50%;
+	transition: transform 1s ease-in-out;
+}
+
+.anim-rotate-from {
+	transform: rotate(-90deg);
+}
+
+.anim-rotate-to {
+	transform: rotate(90deg);
+}
+			</code></pre>
+	</section>
+	
+	<section class="content" data-animation="convex">
+		<h1>Predefined transition "convex"</h1>
+		<div class="content">
+			<code style="background-color: transparent">data-animation="convex"</code>
+
+			Implementation with CSS classes:
+			<pre><code class="language-css">
+.anim-convex-transitions {
+	opacity: 1;
+	transform-origin: center center 250px;
+	transition-property: transform, opacity;
+	transition-duration: 1s;
+	transition-timing-function: ease-in-out;
+}
+
+.anim-convex-from {
+	transform: rotateY(-120deg) scale(0.5);
+	opacity: 0 !important;
+}
+
+.anim-convex-to {
+	transform: rotateY(120deg) scale(0.5);
+	opacity: 0 !important;
+}
+			</code></pre>
+	</section>
+	
+	<section class="content" data-animation="takeoff">
+		<h1>Predefined transition "takeoff"</h1>
+		<div class="content">
+			<code>data-animation="takeoff"</code>
+
+			Implementation with CSS classes:
+			<pre><code class="language-css">
+.anim-takeoff-transitions {
+	opacity: 1;
+	transform-origin: center center;
+	transition-property: transform, opacity;
+	transition-duration: 1s;
+	transition-timing-function: ease-in-out;
+}
+
+.anim-takeoff-from {
+	transform: scale(0.2);
+	opacity: 0 !important;
+}
+
+.anim-takeoff-to {
+	transform: scale(5);
+	opacity: 0 !important;
+}
+			</code></pre>
+	</section>
+	
+	<h2 data-short="Slide">The slide structure</h2>
+
+	<h3 id="slides-templates">Slides templates</h3>
+	
+	<section class="title">
+		<h1>A title slide</h1>
+		<div class="authordate">John Doe<br/>July 14<sup>th</sup>, 1789</div>
+		<pre><code class="language-html">
+&lt;section class="title"&gt;
+	&lt;h1&gt;A title slide&lt;br/&gt;&lt;span class="subtitle"&gt;The subtitle&lt;/span&gt;&lt;/h1&gt;
+	&lt;div class="authordate"&gt;John Doe&lt;br/&gt;July 14&lt;sup&gt;th&lt;/sup&gt;, 1789&lt;/div&gt;
+&lt;/section&gt;
+		</code></pre>
+	</section>
+
+	<section class="content">
+		<h1>A content slide</h1>
+		<div class="content">
+			<ul>
+				<li>This is the main type of slide</li>
+				<li>The content will be centered vertically</li>
+			</ul>
+		<pre><code class="language-html">
+&lt;section class="content"&gt;
+	&lt;h1&gt;A content slide&lt;/h1&gt;
+	&lt;div class="content"&gt;
+		&lt;ul&gt;
+			&lt;li&gt;This is the main type of slide&lt;/li&gt;
+			&lt;li&gt;The content will be centered vertically&lt;/li&gt;
+		&lt;/ul&gt;
+	&lt;/div&gt;
+&lt;/section&gt;
+		</code></pre>
+		</div>
+	</section>
+	
+	<section class="content">
+		<h1>A two-columns content slide</h1>
+		<div class="content twocolumns">
+			<div>
+				<ul>
+					<li>Make room for more content with two columns</li>
+					<li>The columns will be automatically centered</li>
+				</ul>
+			</div>
+			<div>
+		<pre><code class="language-html">
+&lt;section class="content"&gt;
+	&lt;h1&gt;A content slide&lt;/h1&gt;
+	&lt;div class="content twocolumns"&gt;
+		&lt;div&gt;
+			&lt;ul&gt;
+				&lt;li&gt;Make room for more content with two columns&lt;/li&gt;
+				&lt;li&gt;The columns will be automatically centered&lt;/li&gt;
+			&lt;/ul&gt;
+		&lt;/div&gt;
+		&lt;div&gt;
+	&lt;pre&gt;&lt;code class="language-html"&gt;
+	&lt;/code&gt;&lt;/pre&gt;
+		&lt;/div&gt;
+	&lt;/div&gt;
+&lt;/section&gt;
+		</code></pre>
+			</div>
+		</div>
+	</section>
+
+	<section class="plain">
+		<h1>A plain slide</h1>
+		<div class="content">
+			<ul>
+				<li>When you want more place, just remove everything</li>
+				<li>Now you can use the full page for your content</li>
+			</ul>
+			<pre><code class="language-html">
+&lt;section class="plain"&gt;
+	&lt;h1&gt;A plain slide&lt;/h1&gt;
+	&lt;div class="content"&gt;
+		&lt;ul&gt;
+			&lt;li&gt;When you want more place, just remove everything&lt;/li&gt;
+			&lt;li&gt;Now you can use the full page for your content&lt;/li&gt;
+		&lt;/ul&gt;
+		&lt;pre&gt;&lt;code class="language-html"&gt;
+		&lt;/code&gt;&lt;/pre&gt;
+	&lt;/div&gt;
+&lt;/section&gt;
+			</code></pre>
+		</div>
+	</section>
+	
+	<section class="focus">
+		<h1>A focus slide</h1>
+	</section>
+
+	<section class="chessboard">
+		<h1>A chessboard slide</h1>
+		<div class="content">
+			<div style="width: 50%">
+				<ul>
+					<li>A chessboard slide holds any number of divs with alternating colors</li>
+					<li>The divs are automatically arranged on a chessboard</li>
+					<li>But you have to specify their widths and to take care of their number</li>
+				</ul>
+			</div>
+			<div style="width: 50%">
+				<pre><code class="language-html">
+&lt;section class="chessboard"&gt;
+	&lt;h1&gt;A chessboard slide&lt;/h1&gt;
+	&lt;div class="content"&gt;
+		&lt;div style="width: 50%"&gt;
+			&lt;ul&gt;
+				&lt;li&gt;A chessboard slide holds any number of divs with alternating colors&lt;/li&gt;
+				&lt;li&gt;The divs are automatically arranged on a chessboard&lt;/li&gt;
+				&lt;li&gt;But you have to specify their widths and to take care of their number&lt;/li&gt;
+			&lt;/ul&gt;
+		&lt;/div&gt;
+		&lt;div&gt;
+			&lt;pre&gt;&lt;code class="language-html"&gt;
+			&lt;/code&gt;&lt;/pre&gt;
+		&lt;/div&gt;
+	&lt;/div&gt;
+&lt;/section&gt;
+				</code></pre>
+			</div>
+		</div>
+	</section>
+
+	<h3>Components of slides</h3>
+	
+	<h3>Background and foreground layers</h3>
+
+	<h2 data-short="Components">The inner components</h2>
+
+	<h3>Blocks</h3>
+
+	<h3>Images</h3>
+
+	<h3>Tables</h3>
+
+	<h2 data-short="Templates">Creating your own template</h2>
+
+	<h2 data-short="Navigation">Navigating the slideshow</h2>
+
+	
+	<section class="content">
+		<h1>Thanks for your interest!</h1>
+		<div class="content qrcode"></div>
+	</section>
+
+</body>
+<script>
+	for (let el of document.getElementsByClassName("code-sample")) {
+		el.append(view_source(el.dataset["selector"], el.dataset["num-lines"], el.dataset["language"]));
+	}
+	function view_source(selector, num_lines, language) {
+		let source;
+		source = selector ? document.querySelector(selector) : document.documentElement;
+		if (!source) return;
+		source = source.outerHTML;
+		if (num_lines) source = source.split("\n", num_lines).join("\n");
+		let pre = document.createElement("pre");
+		let code = document.createElement("code");
+		if (language) code.classList.add("language-"+ language);
+		code.innerHTML = source.replace(/[\u00A0-\u9999<>\&]/g, i => '&#'+i.charCodeAt(0)+';')
+		pre.append(code);
+		return pre;
+	}
+	document.addEventListener("DOMContentLoaded", function(event) {
+		hljs.highlightAll();
+		generate_qr_code("qrcode");
+	});
+</script>
+</html>

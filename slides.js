@@ -22,6 +22,7 @@ var slides=[];
  *  	<dt>element</dt><dd>DOM element of the heading</dd>
  *  	<dt>parts</dt><dd>List of subparts</dd>
  *  	<dt>parent</dt><dd>Parent entry of the element</dd>
+ *  	<dt>target</dt><dd>Target slide of the heading, when a link to the heading is clicked. For a normal slide, it is the very same slide. For a header, it is the outline slide generated for this header if it exists, otherwise the next standard slide</dd>
  *  </dl>
  *
  *  This variable holds the root of the structure. Therefore it should only have one element which is the title of the document and the list of sections.
@@ -43,10 +44,11 @@ var overview_curslide;
 var wnotes=null;
 /** Tell if the sync QR-code is displayed */
 var on_qrcode=false;
-/** Touch event starting point x coordinate */
-var xDown=null;
-/** Touch event starting point y coordinate */
-var yDown=null;
+/** Touch event starting and ending point coordinate */
+var xDown = null;
+var yDown = null;
+var xUp = null;
+var yUp = null;
 /** URL used for synchronization */
 var syncUrl=null;
 /** Name used for synchronization */
@@ -118,6 +120,36 @@ function from_string(arg) {
 }
 
 /**********************************
+ *      General API for users     *
+ **********************************/
+/**
+ * Generate a QR code image that can be added to a slide
+ *
+ * @param {string} qrclass - A class name. All the DOM elements with this class will be replaced by the QR-Code.
+ * @param {string} prompt - Prompt string to use at the top of the QR-Code.
+ * @returns - DOM object for the QR-code
+ */
+function generate_qr_code(qrclass, prompt=null) {
+	const prompts = {
+		"fr": "Retrouvez ce diaporama sur :",
+		"en": "This slideshow is available at:"
+	};
+	if (!prompt) {
+		const lang = document.documentElement.lang;
+		prompt = lang in prompts ? prompts[lang] : prompts["en"];
+	}
+	let uri = window.location.protocol + '//' + window.location.hostname + window.location.pathname + window.location.search;
+	let encodeduri = encodeURIComponent(uri);
+	Array.from(document.getElementsByClassName(qrclass)).forEach(function(el) {
+		el.innerHTML = `
+			<p style="text-align:center">${prompt}<br/><a href="${uri}">${uri}</a></p>
+			<figure class="centered">
+				<img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeduri}" />
+			</figure>`;
+	});
+}
+
+/**********************************
  *   Background and foreground    *
  **********************************/
 /**
@@ -126,26 +158,26 @@ function from_string(arg) {
  * @param {slideo} New slide object
  */
 function switch_layer(layer, slideo) {
+	if (!config[layer+"Layer"]) return;
 	let oldlayer = document.getElementById(layer);
 	let newlayer = document.getElementById('new'+layer);
-	if (oldlayer && slideo[layer] == oldlayer.dataset[layer]) {
+	if (oldlayer && (slideo[layer] == oldlayer.dataset[layer] || "force" in oldlayer.dataset)) {
 		if ((layer+"-components") in slideo) for (let comp of slideo[layer+"-components"]) comp.update(oldlayer, slideo);
 		return;
 	}
 	newlayer.innerHTML = '';
-	newlayer.dataset[layer] = slideo[layer];
-	if (slideo[layer]) 
+	newlayer.removeAttribute("style");
+	oldlayer.id = "temp";
+	newlayer.id = layer;
+	oldlayer.id = "new" + layer;
+	if (slideo && layer in slideo) {
+		newlayer.dataset[layer] = slideo[layer];
 		for (let comp of eval(slideo[layer]).toReversed()) {
 			comp.add_to(newlayer, slideo);
+			if (comp.isDynamic) newlayer.dataset["force"] = "true";
 		}
+	}
 	oldlayer.style.opacity = '0';
-	newlayer.addEventListener('transitionend',function(event) {
-		setTimeout(function() {
-			oldlayer.id = "temp";
-			newlayer.id = layer;
-			oldlayer.id = "new" + layer;
-		},20);
-	},{capture:false, once:true});
 	setTimeout(function() {
 		newlayer.style.opacity = '1';
 	},20);
@@ -396,18 +428,39 @@ class ImageBackgroundObject extends Component {
 	constructor(path) {
 		super()
 		this.componentName = 'component-imagebackground';
-		this.path = (path.startsWith('/')) ? path : (meta.template_path + path);
-		this.url = ''; // Actual URL of the background used
+		if (typeof path === 'string' || path instanceof String) path = [ path ];
+		this.path = path.map((el)=>(el.startsWith('/')) ? el : (meta.template_path + el));
+		if (this.path.length>1) this.isDynamic = true;
 	}
 
 	add_to(slide, slideo=null) {
 		super.add_to(slide, slideo);
-		if (typeof this.path === 'string' || this.path instanceof String) this.url=this.path; else this.url=this.path[Math.floor(Math.random()*this.path.length)];
-		slide.style.backgroundImage = 'url(' + this.url + ')';
+		let url = this.path.length==1 ? this.path[0] : this.path[Math.floor(Math.random()*this.path.length)];
+		slide.style.backgroundImage = 'url(' + url + ')';
 	}
 
 }
 function ImageBackground(path) {return new ImageBackgroundObject(path);}
+
+class ColorBackgroundObject extends Component {
+	/**
+	 * Constructor of the background object
+	 *
+	 * @param {string} color - Name of a color (as supported by CSS)
+	 */
+	constructor(color) {
+		super()
+		this.componentName = 'component-colorbackground';
+		this.background = color;
+	}
+
+	add_to(slide, slideo=null) {
+		super.add_to(slide, slideo);
+		slide.style.backgroundColor = this.background;
+	}
+
+}
+function ColorBackground(color) {return new ColorBackgroundObject(color);}
 
 // Navigation bars
 class MinitocObject extends Component {
@@ -518,23 +571,13 @@ function generate_html_from_structure(struct, tags=null, section=null, custom_na
 	for (const entry of struct) if (!tags || tags.includes(entry.element.tagName)) {
 		let li = document.createElement("li");
 		li.classList.add(entry.element.tagName.toLowerCase());
-		let id;
-		if (entry.element.tagName == 'SECTION') {
-			id = entry.element.id;
-		} else if ("outline_slide" in entry) {
-			id = entry.outline_slide.id;
-		} else {
-			let sibling = entry.element;
-			do { sibling = sibling.nextElementSibling; } while (sibling && sibling.tagName != 'SECTION');
-			if (sibling) id = sibling.id;
-		}
 		let sname = custom_name(entry);
 		if (Array.isArray(sname)) sname = (section == entry.element.id) ? sname[1] : sname[0];
 		let a = document.createElement("a");
-		a.href = "#" + id;
+		a.href = "#" + entry.target.id;
 		a.innerHTML = sname;
 		li.append(a);
-		if (section == id) li.classList.add("current");
+		if (section == entry.target.id) li.classList.add("current");
 		let spart = generate_html_from_structure(entry.parts, tags, section, custom_name); 
 		if (spart) li.append(spart);
 		ul.appendChild(li);
@@ -574,6 +617,11 @@ class OutlineSlide {
  * Classic model of outline slide using the "content" class of slides (title and unordered list of sections)
  */
 class ClassicOutlineSlideObject extends OutlineSlide {
+	static outline_title = {
+		"fr" : "Sommaire",
+		"en" : "Outline"
+	};
+
 	/**
 	 * Compose an outline slide. 
 	 *
@@ -584,7 +632,8 @@ class ClassicOutlineSlideObject extends OutlineSlide {
 	 */
 	compose(struct, element, section=null) {
 		let h = document.createElement("h1");
-		h.textContent = "Sommaire";
+		const lang = document.documentElement.lang;
+		h.textContent = ClassicOutlineSlideObject.outline_title[lang ? lang : "en"];
 		element.append(h);
 		let outline = document.createElement("div");
 		outline.classList.add("content")
@@ -819,9 +868,9 @@ function close_overview(newslidenum=null) {
  *        Slide movement          *
  **********************************/
 /**
- * This function is executed when the user performs an action to call for the next slide (swipe towards left side, right button).
+ * This function is executed when the user performs an action to call for the next fragment (swipe towards left side, right button).
  */
-function to_next_slide() {
+function to_next_fragment() {
 	if (!on_overview) {
 		let newslide=curslide;
 		let newfragment=curfragment;
@@ -839,9 +888,9 @@ function to_next_slide() {
 }
 
 /**
- * This function is executed when the user performs an action to call for the previous slide (swipe towards right side, left button).
+ * This function is executed when the user performs an action to call for the previous fragment (swipe towards right side, left button).
  */
-function to_previous_slide() {
+function to_previous_fragment() {
 	if (!on_overview) {
 		let newslide=curslide;
 		let newfragment=curfragment;
@@ -853,6 +902,36 @@ function to_previous_slide() {
 			}
 		} else {
 			newfragment--;
+			switch_slide(newslide,newfragment);
+		}
+	}
+}
+
+/**
+ * This function is executed when the user performs an action to call for the next slide (swipe towards up side, down button).
+ */
+function to_next_slide() {
+	if (!on_overview) {
+		let newslide=curslide;
+		let newfragment=curfragment;
+		if (curslide<slides.length-1) {
+			newslide++;
+			newfragment=0;
+			switch_slide(newslide,newfragment);
+		}
+	}
+}
+
+/**
+ * This function is executed when the user performs an action to call for the previous slide (swipe towards bottom side, up button).
+ */
+function to_previous_slide() {
+	if (!on_overview) {
+		let newslide=curslide;
+		let newfragment=curfragment;
+		if (curslide>0) {
+			newslide--;
+			newfragment=slides[newslide]['numfragments'];
 			switch_slide(newslide,newfragment);
 		}
 	}
@@ -919,12 +998,16 @@ function handleTouchMove(evt) {
  * @param {object} evt - Event object
  */
 function handleTouchEnd(evt) {
-	if (xDown==null || yDown==null || xUp==null || yUp==null) return;
+	if (!xDown || !yDown || !xUp || !yUp) return;
 	if (Math.abs(xUp-xDown)>Math.abs(yUp-yDown)) {
 		if (Math.abs(xUp-xDown)>200) {
-			if (xUp>xDown) to_previous_slide(); else to_next_slide();
+			if (xUp>xDown) to_previous_fragment(); else to_next_fragment();
 		}
-	} 
+	} else {
+		if (Math.abs(yUp-yDown)>200) {
+			if (yUp>yDown) to_previous_slide(); else to_next_slide();
+		}
+	}
 }
 
 /**********************************
@@ -1113,6 +1196,7 @@ function create_structure() {
 		if (el.tagName == 'SECTION') {
 			entry.level = parents.length;
 			entry.name = el.querySelector('h1').innerHTML;
+			entry.target = el;
 		} else {
 			entry.name = el.innerHTML;	
 			entry.level = Number.parseInt(el.tagName.substring(1));
@@ -1125,6 +1209,16 @@ function create_structure() {
 				oslide.dataset["level"] = entry.level;
 				el.insertAdjacentElement('afterend', oslide);
 				entry.outline_slide = oslide;
+				entry.target = oslide;
+			} else {
+				let sibling = entry.element;
+				do { sibling = sibling.nextElementSibling; } while (sibling && (sibling.tagName != 'SECTION' || sibling.classList.contains("outline")));
+				if (sibling) entry.target = sibling;
+			}
+			if (el.id && entry.target) {
+				let save_id = el.id;
+				el.removeAttribute("id");
+				entry.target.id = save_id;
 			}
 			parents[entry.level] = entry.parts;
 			parents.length = entry.level + 1;
@@ -1196,8 +1290,8 @@ function process_slide(element) {
 	};
 	let properties = window.getComputedStyle(element);
 	for (const prop of ["background", "foreground", "animation", "components", "autofragment"]) {
-		if (element.dataset["data-"+prop]) {
-			slide[prop] = element.dataset["data-"+prop].replace(/'/g, '"');
+		if (element.dataset[prop]) {
+			slide[prop] = element.dataset[prop].replace(/'/g, '"');
 		} else {
 			const val = properties.getPropertyValue('--'+prop).replace(/^"|"$/g, "");
 			if (val) slide[prop] = val.replace(/'/g, '"');
@@ -1256,12 +1350,6 @@ function process_slide(element) {
 			}
 		}
 	}
-	// Add section and subsection data
-	if ('section' in element.dataset && element.dataset['section']!='') {
-		slide['section']=element.dataset['section'];
-		if ('ssection' in element.dataset && element.dataset['ssection']!='') slide['ssection']=element.dataset['ssection'];
-	}
-	if ('subsection' in element.dataset && element.dataset['subsection']!='') slide['subsection']=element.dataset['subsection'];
 	return slide;
 }
 
@@ -1292,8 +1380,10 @@ function add_components(slideo) {
 		slideo["slide-components"].push(comp);
 	}
 	if (slideo["background"]) for (const comp of eval(slideo['background'])) {
-		if (!("background-components" in slideo)) slideo["background-components"] = [];
-		if (config.backgroundLayer) slideo["background-components"].push(comp);
+		if (config.backgroundLayer) {
+			if (!("background-components" in slideo)) slideo["background-components"] = [];
+			slideo["background-components"].push(comp);
+		}
 		else comp.add_to(slideo.element, slideo);
 	}
 	if (slideo["foreground"]) for (const comp of eval(slideo['foreground'])) {
@@ -1379,6 +1469,8 @@ document.addEventListener("DOMContentLoaded",function(event) {
 		bmeta.content = meta.description;
 		head.prepend(bmeta);
 	}
+
+	// Read some attributes
 	let ss = head.querySelector('link[rel="stylesheet"]');
 	if (ss) meta.template_path = ss.getAttribute("href").replace(/[^\/]*$/, "");
 
@@ -1507,7 +1599,7 @@ function afterLoad() {
 		switch (e.key) {
 			case "ArrowRight":case " ":	// Right arrow, Space
 				if (!on_overview) {
-					to_next_slide();
+					to_next_fragment();
 				} else {
 					if (overview_curslide<slides.length-1) {
 						getSlide(overview_curslide).classList.remove('targetted');
@@ -1524,7 +1616,7 @@ function afterLoad() {
 				break;
 			case "ArrowLeft":	// Left arrow
 				if (!on_overview) {
-					to_previous_slide();
+					to_previous_fragment();
 				} else {
 					if (overview_curslide>0) {
 						getSlide(overview_curslide).classList.remove('targetted');
@@ -1541,20 +1633,12 @@ function afterLoad() {
 				break;
 			case "ArrowUp":	// Up arrow
 				if (!on_overview) {
-					if (curslide>0) {
-						newslide--;
-						newfragment=slides[newslide]['numfragments'];
-						switch_slide(newslide,newfragment);
-					}
+					to_previous_slide();
 				}
 				break;
 			case "ArrowDown":	// Down arrow
 				if (!on_overview) {
-					if (curslide<slides.length-1) {
-						newslide++;
-						newfragment=0;
-						switch_slide(newslide,newfragment);
-					}
+					to_next_slide();
 				}
 				break;
 			case "PageUp": // Page up

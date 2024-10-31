@@ -219,7 +219,7 @@ body {
                 display: block;
                 list-style-type: none;
                 padding: 0;
-                margin: -1vh 0 0 0;
+                margin: -0.3em 0 0 0;
                 li { 
                     display: inline-block; 
                     &.h3 {
@@ -229,7 +229,7 @@ body {
                     &.section {
                         font-size: 0px;
                         a::before {
-                            font-size: 0.8rem;
+                            font-size: 1rem;
                             content: "\25cb";
                         }
                         &.current a::before {
@@ -393,28 +393,10 @@ body>section, #thumblayer>div.wthumb>section {
         --background: "";
         --foreground: "";
 
-        h1 {
-            position: absolute;
-            left: 45%;
-            width: 51%;
-            bottom: 26%;
-            color: map.get($theme, "primary-darker");
-            font: bold 180% sans-serif;
-
-            .subtitle {
-                color: map.get($theme, "secondary-darker");
-                font: italic 80% sans-serif;
-            }
+        .h1 {
         }
 
         .authordate {
-            position: absolute;
-            left: 45%;
-            width: 51%;
-            top: 78%;
-            color: map.get($theme, "secondary-darker");
-            font-size: 120%;
-            line-height: 1.5;
         }
     }
 
@@ -423,49 +405,18 @@ body>section, #thumblayer>div.wthumb>section {
         display: flex;
         flex-flow: column nowrap;
         --background: "";
-        --foreground: "['Minitoc()', 'ClassicFooter()']";
+        --foreground: "[Minitoc(), ClassicFooter()]";
 
         & > h1 {
-            position: relative;
-            padding: 1.5vh 0px 0.8vh 0px;
-            text-align: center;
-            font: bold 180% sans-serif;
-            color: map.get($theme, "primary-darker");
-            flex: none;
-            margin: 8vh 5vw 0.6vw 5vw;
+			flex: none;
         }
 
         & > .content {
-            border-width: 0.6vh 0;
-            border-style: solid;
-            border-color: map.get($theme, "primary-darker");
-            padding: 1.2vw 2.4vw;
-            margin: 0 5vw 6vh 5vw;
-            min-height: 0;
             flex: auto;
             display: flex;
             position: relative;
             flex-flow: column nowrap;
-            justify-content: center;
-
-            figure.centered {
-                display: flex;
-                flex-flow: column nowrap;
-                flex: auto;
-                overflow: hidden;
-                position: relative;
-
-                svg,img {
-                    margin: auto;
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    bottom: 0;
-                    left: 0;
-                    max-width: 100%;
-                    max-height: 100%;
-                }
-            }
+            justify-content: space-evenly;
 
             &.autocolumns {
                 flex-wrap: wrap;
@@ -488,7 +439,7 @@ body>section, #thumblayer>div.wthumb>section {
                     display: flex;
                     position: relative;
                     flex-flow: column nowrap;
-                    justify-content: center;
+                    justify-content: space-evenly;
                     box-sizing : border-box;
                     width: 45%;
                 }
@@ -508,6 +459,23 @@ body>section, #thumblayer>div.wthumb>section {
 	&.plain {
 		display: block;
 		position: relative;
+		h1 { margin-top: 0px; }
+	}
+
+	&.focus {
+		display: flex;
+		flex-flow: column nowrap;
+		justify-content: center;
+		--background: "[ColorBackground('var(--primary-darker)')]";
+		
+		h1 {
+			color: white;
+			font-size: 2.5em;
+			font-weight: bold;
+			text-align: center;
+			flex: initial;
+		}
+
 	}
 
     // Outline slide
@@ -517,13 +485,11 @@ body>section, #thumblayer>div.wthumb>section {
         & > div > ul > li {
             padding-bottom: 0.2vh;
             padding-right: 1.2vw;
+
+			&:not(.current) { opacity: 0.5; }
         }
 
-        .not-current {
-            opacity: 0.5;
-        }
-
-        .current {
+        div.content .current {
             opacity: 1;
             background-color: map.get($theme, "primary-lighter");
             @include shadowed;
@@ -533,13 +499,63 @@ body>section, #thumblayer>div.wthumb>section {
         @extend %hiddenLinks;
     }
 
+	// A chessboard slide with alternating colors
+	&.chessboard {
+        display: flex;
+        flex-flow: column nowrap;
+        --background: "";
+        --foreground: "[Minitoc(), ClassicFooter()]";
+
+        & > h1 {
+			flex: none;
+        }
+
+        & > .content {
+            flex: auto;
+            display: flex;
+            position: relative;
+            flex-flow: row wrap;
+            justify-content: flex-start;
+			align-items: stretch;
+
+			div {
+				padding: 0.5em;
+				box-sizing: border-box;
+			}
+
+			div:nth-child(odd) {
+				background-color: map.get($theme, "primary-darker");
+				&, & ul > li, & ul > li::before { color: white; }
+			}
+		}
+	}
+
 
     // Inner structure
 	p,table,img,object {
 		margin: 2.8vh 0;
 	}
 
-	ul {
+	figure.centered {
+		display: flex;
+		flex-flow: column nowrap;
+		flex: auto;
+		overflow: hidden;
+		position: relative;
+
+		svg,img {
+			margin: auto;
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			max-width: 100%;
+			max-height: 100%;
+		}
+	}
+
+	div.content ul {
 		margin: 0.2em 0;
 		padding-inline-start: 2.2em;
 
