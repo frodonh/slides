@@ -300,21 +300,22 @@ function animate_none(source,dest,increasing,callback) {
 }
 
 /**
- * Animation for a transition between two slides: this function applies CSS transitions.
- * The transition is applied by adding and removing classes to the slide, with names like 'anim-sweep-from', 'anim-sweep-to', 'anim-sweep-transitions' where 'sweep' is the name read from the name argument.
- * @param {object} source - DOM object for the old slide
- * @param {object} dest - DOM object for the new slide
- * @param {boolean} increasing - Direction of the animation
+ * Generic animation function
  *
- * @param {function} callback - Callback function called when the animation ends
- * @param {string} name - Name of the animation
+ * This function executes a sequence of DOM modifications to run a transition between two slides.
+ * @param {object} source - DOM object for the source slide
+ * @param {object} dest - DOM object for the destination slide
+ * @param {array} sequence - Array of three functions which are executed in a sequence
+ * @param {function} callback_at_dest_end - Callback function used to clean up the destination DOM object after the end of the transitions
+ * @param {function} callback_at_source_end - Callback function used to clean up the source DOM object after the end of the transitions
+ * @param {function} callback - General callback function when all animations are over
+ * @param {number} max_delay - Maximum delay of the animations. After this delay, the source and destination objectfs are cleaned up with the two corresponding callbacks.
  */
-function animate_css(source,dest,increasing,callback,name) {
-	dest.classList.add(increasing ? ('anim-'+name+'-from') : ('anim-'+name+'-to'));
+function generic_animate(source, dest, sequence, callback_at_dest_end, callback_at_source_end, callback, max_delay) {
+	sequence[0]();
 	// Timeouts are needed, otherwise the browser changes the order of the events
 	setTimeout(function() {
-		source.classList.add('anim-'+name+'-transitions');
-		dest.classList.add('anim-'+name+'-transitions');
+		sequence[1]();
 		let destfinish=false;
 		let sourcefinish=false;
 		// Callbacks at end of animations
@@ -323,7 +324,7 @@ function animate_css(source,dest,increasing,callback,name) {
 			if (destfinish) return;
 			destfinish=true;
 			dest.removeEventListener('transitionend',destend);
-			dest.classList.remove('anim-'+name+'-transitions');
+			callback_at_dest_end();
 			if (dest.dataset["onshow"]) window[dest.dataset["onshow"]](dest);
 			program_hashchange=true;
 			location.hash="#"+dest.id;
@@ -335,10 +336,9 @@ function animate_css(source,dest,increasing,callback,name) {
 			if (sourcefinish) return;
 			sourcefinish=true;
 			source.removeEventListener('transitionend',sourceend);
-			source.classList.remove('anim-'+name+'-transitions');
+			callback_at_source_end();
 			if (source.dataset["onhide"]) window[source.dataset["onhide"]](source);
 			source.style.visibility=null;
-			source.classList.remove(increasing ? ('anim-'+name+'-to') : ('anim-'+name+'-from'));
 		}
 		setTimeout(function() {
 			// Set callbacks
@@ -348,15 +348,87 @@ function animate_css(source,dest,increasing,callback,name) {
 			setTimeout(function() {
 				//console.log('animate : source='+source.id+' dest='+dest.id);
 				dest.style.visibility='visible';
-				source.classList.add(increasing ? ('anim-'+name+'-to') : ('anim-'+name+'-from'));
-				dest.classList.remove(increasing ? ('anim-'+name+'-from') : ('anim-'+name+'-to'));
+				sequence[2]();
 				setTimeout(function() {
 					destend();
 					sourceend();
-				},1200);
+				}, max_delay);
 			},20);
 		},20);
 	},20);
+}
+
+/**
+ * Animation for a transition between two slides: this function applies CSS transitions.
+ * The transition is applied by adding and removing classes to the slide, with names like 'anim-sweep-from', 'anim-sweep-to', 'anim-sweep-transitions' where 'sweep' is the name read from the name argument.
+ * @param {object} source - DOM object for the old slide
+ * @param {object} dest - DOM object for the new slide
+ * @param {boolean} increasing - Direction of the animation
+ *
+ * @param {function} callback - Callback function called when the animation ends
+ * @param {string} name - Name of the animation
+ */
+function animate_css(source,dest,increasing,callback,name) {
+	generic_animate(source, dest, [
+		() => dest.classList.add(increasing ? ('anim-'+name+'-from') : ('anim-'+name+'-to')),
+		() => {
+			source.classList.add('anim-'+name+'-transitions');
+			dest.classList.add('anim-'+name+'-transitions');
+		},
+		() => {
+			source.classList.add(increasing ? ('anim-'+name+'-to') : ('anim-'+name+'-from'));
+			dest.classList.remove(increasing ? ('anim-'+name+'-from') : ('anim-'+name+'-to'));
+		}],
+		() => dest.classList.remove('anim-'+name+'-transitions'),
+		() => {
+			source.classList.remove('anim-'+name+'-transitions');
+			source.classList.remove(increasing ? ('anim-'+name+'-to') : ('anim-'+name+'-from'));
+		},
+		callback, 1200);
+}
+
+function animate_sponge(source, dest, increasing, callback) {
+	let mask = document.getElementById("tempmask");
+	if (!mask) return;
+	mask.innerHTML = "";
+	let maskb = document.getElementById("tempmaskb");
+	if (!maskb) return;
+	maskb.innerHTML = "";
+	let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+	rect.setAttribute("width", "100%");
+	rect.setAttribute("height", "100%");
+	rect.style.fill = "black";
+	let rectb = rect.cloneNode(true);
+	rectb.style.fill = "white";
+	mask.append(rect);
+	maskb.append(rectb);
+	let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+	path.setAttribute("d", "m 0.148148,0.633333 c 0.0,0.0 -0.023569,-0.17619 0.047138,-0.242857 L 0.272727,0.32381 0.626263,0.138095 0.747475,0.42381 0.52862,0.328571 0.178451,0.571429 c 0.0,0.0 -0.131313,0.157143 0.026936,0.119048 L 0.447811,0.614286 0.579125,0.42381 0.888889,0.228571 0.707071,0.590476 0.582492,0.552381 0.521886,0.747619 0.03367,0.871429 0.074074,0.438095 0.050505,0.22381 0.043771,0.042857 0.424242,0.333333 0.939394,0.066667 0.956229,0.952381 0.043771,0.961905 0.047138,0.895238 0.888889,0.895238 0.43771,0.809524 0.905724,0.8 0.572391,0.704762 0.912458,0.666667 0.59596,0.614286 0.909091,0.466667 c 0.0,0.0 0.063973,-0.47619 -0.013468,-0.366667 l -0.087542,0.119048 c 0.0,0.0 0.148148,0.395238 0.030303,0.17619 L 0.713805,0.180952 c 0.0,0.0 0.292929,-0.142857 0.077441,-0.142857 L 0.424242,0.033333 c 0.0,0.0 -0.309764,0.004762 -0.313131,0.052381 -0.003367,0.042857 0.276094,0.080952 0.276094,0.080952 0.0,0.0 -0.279461,-0.066667 -0.279461,0.02381 L 0.107744,0.295238 0.531987,0.138095 0.117845,0.414286 0.077441,0.795238 0.461279,0.719048 0.252525,0.542857 0.612795,0.233333 0.397306,0.852381 0.104377,0.87619 0.023569,0.428571 0.016835,0.047619 0.373737,0.533333 0.902357,0.57619 0.299663,0.37619");
+	path.style.stroke = "white";
+	path.style.fill = "none";
+	path.style.strokeWidth = 0.15;
+	path.style.strokeDasharray = 20;
+	path.style.strokeDashoffset = "20";
+	mask.append(path);
+	let pathb = path.cloneNode(true);
+	pathb.style.stroke = "black";
+	maskb.append(pathb);
+	setTimeout(() => {
+		generic_animate(source, dest, [
+			() => {
+				source.style.maskImage = "url(#tempmaskb)";
+				dest.style.maskImage = "url(#tempmask)";
+			},
+			() => {
+				path.style.transition = "stroke-dashoffset 5s linear 0s";
+				pathb.style.transition = "stroke-dashoffset 5s linear 0s";
+			},
+			() => {
+				path.style.strokeDashoffset = "0";
+				pathb.style.strokeDashoffset = "0";
+			}
+		], () => dest.style.removeProperty("mask-image"), () => source.style.removeProperty("mask-image"), callback, 5200);
+	}, 20);
 }
 
 /**
@@ -372,7 +444,7 @@ function apply_animation(source,dest,increasing,callback) {
 	let name;
 	let destid=getSlideIndex(dest.id);
 	if (slides[destid]["animation"] && slides[destid]['animation']!='') {
-		fn=window[slides[destid]["animation"]];
+		fn=window["animate_"+slides[destid]["animation"]];
 		if (!fn) {
 			name=slides[destid]["animation"];
 			fn=animate_css;

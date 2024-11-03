@@ -86,7 +86,6 @@ body>section {
 		transform: scale(5);
 		opacity: 0 !important;
 	}
-
 }
 
 /********************************************/
@@ -155,22 +154,22 @@ body {
 
 #background {
 	opacity: 1;
-	z-index: -1;
+	z-index: -2;
 }
 
 #foreground {
 	opacity: 1;
-    z-index: 1;
+    z-index: 2;
 }
 
 #newbackground {
 	opacity: 0;
-	z-index: -1;
+	z-index: -2;
 }
 
 #newforeground {
 	opacity: 0;
-    z-index: 1;
+    z-index: 2;
 }
 
 /********************************************/
@@ -186,7 +185,6 @@ body {
 	display: flex;
 	top: 0;
 	left: 0;
-	z-index: 10;
 	flex-flow: row nowrap;
 	justify-content: center;
 
@@ -458,7 +456,6 @@ body>section, #thumblayer>div.wthumb>section {
     // Plain slide
 	&.plain {
 		display: block;
-		position: relative;
 		h1 { margin-top: 0px; }
 	}
 
@@ -485,9 +482,9 @@ body>section, #thumblayer>div.wthumb>section {
         & > div > ul > li {
             padding-bottom: 0.2vh;
             padding-right: 1.2vw;
-
-			&:not(.current) { opacity: 0.5; }
         }
+
+		& > div:has(.current) ul > li:not(.current) { opacity: 0.5; }
 
         div.content .current {
             opacity: 1;
@@ -514,16 +511,29 @@ body>section, #thumblayer>div.wthumb>section {
             flex: auto;
             display: flex;
             position: relative;
-            flex-flow: row wrap;
+            flex-flow: column nowrap;
             justify-content: flex-start;
 			align-items: stretch;
 
 			div {
-				padding: 0.5em;
+				margin: 0;
 				box-sizing: border-box;
 			}
 
-			div:nth-child(odd) {
+			& > div {
+				flex: auto;
+				display: flex;
+				flex-flow: row nowrap;
+				& > div { 
+					flex: 0 1 100%; 
+					padding: 0.5em;
+					display: flex;
+					flex-flow: column nowrap;
+					justify-content: center;
+				}
+			}
+
+			& > div:nth-child(odd) > div:nth-child(odd), & > div:nth-child(even) > div:nth-child(even), &.reversed > div:nth-child(odd) > div:nth-child(even), &.reversed > div:nth-child(even) > div:nth-child(odd) {
 				background-color: map.get($theme, "primary-darker");
 				&, & ul > li, & ul > li::before { color: white; }
 			}
@@ -684,7 +694,7 @@ body>section, #thumblayer>div.wthumb>section {
 /*             Inner components             */
 /********************************************/
 // Generic styles
-.block,.infoblock {
+.block,.infoblock,.warningblock {
 	margin: 1.56vh 0vw;
 	padding: 0;
 	border-radius: 0.6vmax;
@@ -701,7 +711,7 @@ body>section, #thumblayer>div.wthumb>section {
 	}
 
 	.content {
-		padding: 0.78vh 1.2vw 0.78vh 1.2vw;
+		padding: 0.78vh 0.6vw 0.78vh 0.6vw;
 	}
 
 	li:first-child {
@@ -709,24 +719,40 @@ body>section, #thumblayer>div.wthumb>section {
 	}
 }
 
-.infoblock {
-	background-color: map.get($theme, "secondary-lighter");
-	padding-left: 2em;
+@mixin alertblock($color, $symbol) {
+	background-color: map.get($theme, "#{$color}-lighter");
 	position: relative;
 
+	h1 {
+		padding-left: 3.5rem;
+		background-image: linear-gradient(to bottom,map.get($theme, "secondary-light") 0%,map.get($theme, "secondary-light") 80%,map.get($theme, "#{$color}-lighter") 100%);
+	}
+
+	.content {
+		padding-left: 3.5rem;
+	}
+
 	.content::before {
-		content:"i";
+		content: $symbol;
 		color: white;
 		font: italic 1.5em serif;
 		border-radius: 1em;
-		background-color: map.get($theme, "secondary-darker");
+		background-color: map.get($theme, "#{$color}-darker");
 		position: absolute;
-		left: 0.1em;
+		left: 0.3em;
 		top: 50%;
 		transform: translateY(-50%);
-		width: 1em;
+		width: 1.3em;
 		text-align: center;
 	}
+}
+
+.infoblock {
+	@include alertblock(secondary, "i");
+}
+
+.warningblock {
+	@include alertblock(tertiary, "!");
 }
 
 strong {

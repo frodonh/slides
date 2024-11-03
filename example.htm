@@ -19,6 +19,10 @@
 	</script>
 </head>
 <body>
+	<svg viewBox="0 0 1 1" width="0" height="0">
+		<mask id="tempmask" maskContentUnits="objectBoundingBox"></mask>
+		<mask id="tempmaskb" maskContentUnits="objectBoundingBox"></mask>
+	</svg>
 	
 	<h2 data-short="Slides.js">What is Slides.js ?</h2>
 
@@ -145,7 +149,7 @@ initialize({
 		</div>
 	</section>
 
-	<section class="content">
+	<section id="body-options" class="content">
 		<h1>General options in body element</h1>
 		<div class="content">
 			<pre><code class="language-html">
@@ -156,7 +160,7 @@ initialize({
 					<tr><td>Attribute</td><td>Meaning</td></tr>
 				</thead>
 				<tbody>
-					<tr><td>data-background-layer</td><td>If active, the background of slides is drawn on its own div layer instead of each slide. The net effect is that it is not animated during transitions between slides. This attribute takes precedence over the CSS <code>--background-layer</code> property.</td></tr>
+					<tr><td>data-background-layer</td><td>If active, the background of slides is drawn on its own div layer instead of each slide. The net effect is that it is not animated during transitions between slides. This attribute takes precedence over the CSS <code>--background-layer</code> property. See also <a href="#backfore">here</a> for more explainations about background and foreground layers.</td></tr>
 					<tr><td>data-foreground-layer</td><td>If active, the foreground of slides is drawn on its own div layer instead of each slide. This attribute takes precedence over the CSS <code>--foreground-layer</code> property.</td></tr>
 				</tbody>
 			</table>
@@ -211,7 +215,7 @@ initialize({
 				</tbody>
 			</table>
 
-			<p>The function should return an object that inherits the OutlineSlide class. It has one mandatory member function:
+			<p>The composition function should return an object that inherits the OutlineSlide class. It has one mandatory member function:
 			<pre><code class="language-js">compose(structure, element, section)</code></pre>
 			where:
 			<ul>
@@ -228,7 +232,7 @@ initialize({
 	<section class="content">
 		<h1>Transitions between slides</h1>
 		<div class="content">
-			The transition between two slides is defined in the destination slide
+			The transition between two slides is defined in the destination slide. It can be setup either inline or in the CSS stylesheet.
 			<pre><code class="language-html">&lt;section data-animation="convex"&gt;</code></pre>
 
 			HTML attributes and CSS properties:
@@ -256,10 +260,10 @@ initialize({
 		</div>
 	</section>
 
-	<section class="content" data-animation="animate_none">
+	<section class="content" data-animation="none">
 		<h1>Predefined transition "none"</h1>
 		<div class="content">
-			<code>data-animation="animate-none"</code>
+			<code>data-animation="none"</code>
 
 			Implementation through Javascript function:
 			<pre><code class="language-js">
@@ -396,6 +400,24 @@ function animate_none(source,dest,increasing,callback) {
 }
 			</code></pre>
 	</section>
+
+	<section class="content" data-animation="sponge">
+		<h1>Predefined transition "sponge"</h1>
+		<div class="content">
+			<code>data-animation="sponge"</code>
+
+			Implementation with Javascript and CSS classes (see the source code).
+
+			To use this animation, you have to add the following code at the beginning of your body. (Unfortunately, it is not possible to add it dynamically with Javascript because the mask-image CSS property requires an existing url.)
+
+			<pre><code class="language-html">
+&lt;svg viewBox="0 0 1 1" width="0" height="0"&gt;
+	&lt;mask id="tempmask" maskContentUnits="objectBoundingBox"&gt;&lt;/mask&gt;
+	&lt;mask id="tempmaskb" maskContentUnits="objectBoundingBox"&gt;&lt;/mask&gt;
+&lt;/svg&gt;
+			</code></pre>
+
+	</section>
 	
 	<h2 data-short="Slide">The slide structure</h2>
 
@@ -494,43 +516,202 @@ function animate_none(source,dest,increasing,callback) {
 	<section class="chessboard">
 		<h1>A chessboard slide</h1>
 		<div class="content">
-			<div style="width: 50%">
-				<ul>
-					<li>A chessboard slide holds any number of divs with alternating colors</li>
-					<li>The divs are automatically arranged on a chessboard</li>
-					<li>But you have to specify their widths and to take care of their number</li>
-				</ul>
-			</div>
-			<div style="width: 50%">
-				<pre><code class="language-html">
+			<div>
+				<div>
+					<ul>
+						<li>A chessboard slide holds any number of divs with alternating colors</li>
+						<li>The divs are automatically arranged on a chessboard</li>
+						<li>The dimensions are computed so that each square has the same width and an optimal height</li>
+						<li>But you have to take care to have the same numbers of cells in each row</li>
+					</ul>
+				</div>
+				<div>
+					<pre><code class="language-html">
 &lt;section class="chessboard"&gt;
-	&lt;h1&gt;A chessboard slide&lt;/h1&gt;
-	&lt;div class="content"&gt;
-		&lt;div style="width: 50%"&gt;
-			&lt;ul&gt;
-				&lt;li&gt;A chessboard slide holds any number of divs with alternating colors&lt;/li&gt;
-				&lt;li&gt;The divs are automatically arranged on a chessboard&lt;/li&gt;
-				&lt;li&gt;But you have to specify their widths and to take care of their number&lt;/li&gt;
-			&lt;/ul&gt;
-		&lt;/div&gt;
-		&lt;div&gt;
+&lt;h1&gt;A chessboard slide&lt;/h1&gt;
+&lt;div class="content"&gt;
+	&lt;div&gt; &lt;div&gt;
+		&lt;ul&gt;
+			&lt;li&gt;A chessboard slide holds any number of divs with alternating colors&lt;/li&gt;
+			&lt;li&gt;The divs are automatically arranged on a chessboard&lt;/li&gt;
+			&lt;li&gt;The dimensions are computed so that each square has the same width and an optimal height&lt;/li&gt;
+			&lt;li&gt;But you have to take care to have the same numbers of cells in each row&lt;/li&gt;
+		&lt;/ul&gt;
+		&lt;/div&gt; &lt;div&gt;
 			&lt;pre&gt;&lt;code class="language-html"&gt;
 			&lt;/code&gt;&lt;/pre&gt;
-		&lt;/div&gt;
-	&lt;/div&gt;
+	&lt;/div&gt; &lt;/div&gt;
+	&lt;div&gt; &lt;div&gt;
+		&lt;ul&gt; &lt;li&gt;Put each cell in a div&lt;/li&gt;
+			&lt;li&gt;Then put each row of cells in a parent div&lt;/li&gt; &lt;/ul&gt;
+		&lt;/div&gt; &lt;div&gt;
+		&lt;ul&gt; &lt;li&gt;The template takes care of everything else&lt;/li&gt; &lt;/ul&gt;
+	&lt;/div&gt; &lt;/div&gt;	
+&lt;/div&gt;
 &lt;/section&gt;
-				</code></pre>
+					</code></pre>
+				</div>
 			</div>
+			<div>
+				<div>
+					<ul>
+						<li>Put each cell in a div</li>
+						<li>Then put each row of cells in a parent div</li>
+					</ul>
+				</div>
+				<div>
+					<ul>
+						<li>The template takes care of everything else</li>
+					</ul>
+				</div>
+			</div>	
 		</div>
 	</section>
 
 	<h3>Components of slides</h3>
-	
-	<h3>Background and foreground layers</h3>
 
-	<h2 data-short="Components">The inner components</h2>
+	<section class="content">
+		<h1>What are components?</h1>
+		<div class="content">
+			Components are dynamically-generated pieces of contents that are automatically added to each slide based on their CSS properties. Components are updated when needed when slides are switched.
+
+			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>Component</td><td>Constructor function</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Mini-Toc</td>
+						<td><code>Minitoc()</code></td>
+						<td>A small clickable outline of the slideshow at the top of the slide</td>
+					</tr>
+					<tr>
+						<td>Footer</td>
+						<td><code>ClassicFooter()</code></td>
+						<td>A footer line at the bottom of the slideshow with three part: the date, the title of the slideshow and the page number</td>
+					</tr>
+					<tr>
+						<td>Image background</td>
+						<td><code>ImageBackground(path)</code></td>
+						<td>A background image for a slide. <code>path</code> can be either a single string which holds the URL of the background image, or an array of strings in which case the image is randomly chosen from the array</td>
+					</tr>
+					<tr>
+						<td>Color background</td>
+						<td><code>ColorBackground(color)</code></td>
+						<td>A color background for a slide. <code>color</code> is the name of the color and must be supported by CSS</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>Adding components to the slides</h1>
+		<div class="content">
+			Components can be added either inline in the HTML file or in the CSS stylesheet. If set in both, the inline attribute takes precedence over the CSS property.<br/>
+
+			HTML attributes and CSS properties:
+			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>Elements</td><td>HTML attribute</td><td>CSS property</td><td>Meaning</td></tr>
+				</thead>
+				<tbody>
+					<tr><td>section</td><td>data-components</td><td>--components</td><td>Array of components constructors</td></tr>
+				</tbody>
+			</table>
+
+			Example of adding components inline:
+			<pre><code class="language-html">
+&lt;section data-components="[Minitoc(), ClassicFooter()]"&gt;
+			</code></pre>
+
+			The same configuration in the CSS stylesheet:
+			<pre><code class="language-css">
+--components: "[Minitoc(), ClassicFooter()]";
+			</code></pre>
+		</div>
+	</section>
+	
+	<section id="backfore" data-components="[Minitoc(),ClassicFooter()]" data-foreground="[]" class="content">
+		<h1>Background and foreground layers</h1>
+		<div class="content">
+			<p>Background and foreground layers are two special layers that are automatically added when the <a href="#body-options">corresponding option</a> is set in the body element.</p>
+
+			Components can be added to foreground and background layers for each slide.
+			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>Elements</td><td>HTML attribute</td><td>CSS property</td><td>Meaning</td></tr>
+				</thead>
+				<tbody>
+					<tr><td>section</td><td>data-background</td><td>--background</td><td>Array of components constructors to add to the background layer</td></tr>
+					<tr><td>section</td><td>data-foreground</td><td>--foreground</td><td>Array of components constructors to add to the foreground layer</td></tr>
+				</tbody>
+			</table>
+
+			<p>When the background or foreground layer is not active, adding a component to this layer has no different effect than adding it as a component of the slide (using the data-components attribute or the --components CSS property). But when those layers are active, they are added to the corresponding layer. The net effect is that they stay in place when the slides are animated during a transition.</p>
+
+			<p>For this slide, the Minitoc and footer are removed from the foreground layer and attached to the slide components. This is why they're taken with the slide when you switch it.</p>
+
+		</div>
+	</section>
+
+	<h2 data-short="Widgets">The inner widgets</h2>
 
 	<h3>Blocks</h3>
+	<section class="content">
+		<h1>Colored blocks</h1>
+		<div class="content">
+			<div class="block">
+				<h1>A standard block</h1>
+				<div class="content">
+					This is a standard block to highlight some content.
+				</div>
+			</div>
+			<pre><code class="language-html">
+&lt;div class="block"&gt;
+	&lt;h1&gt;A standard block&lt;/h1&gt;
+	&lt;div class="content"&gt;
+		This is a standard block to highlight some content.
+	&lt;/div&gt;
+&lt;/div&gt;
+			</code></pre>
+
+			<div class="infoblock">
+				<h1>An information block</h1>
+				<div class="content">
+					This is an informative block.
+				</div>
+			</div>
+			<pre><code class="language-html">
+&lt;div class="infoblock"&gt;
+	&lt;h1&gt;An information block&lt;/h1&gt;
+	&lt;div class="content"&gt;
+		This is an information block.
+	&lt;/div&gt;
+&lt;/div&gt;
+			</code></pre>
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>Colored blocks</h1>
+		<div class="content">
+			<div class="warningblock">
+				<h1>A warning block</h1>
+				<div class="content">
+					This is a warning block.
+				</div>
+			</div>
+			<pre><code class="language-html">
+&lt;div class="warningblock"&gt;
+	&lt;h1&gt;A warning block&lt;/h1&gt;
+	&lt;div class="content"&gt;
+		This is a warning block.
+	&lt;/div&gt;
+&lt;/div&gt;
+			</code></pre>
+		</div>
+	</section>
 
 	<h3>Images</h3>
 
