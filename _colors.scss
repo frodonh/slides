@@ -7,6 +7,7 @@ $theme: map-merge((
     "primary": #A1C51B,
     "secondary": #08508A,
     "tertiary": #e68a00,
+    "quaternary": lime,
     "neutral": #777,
     "palettee": #199fd9,
     "palettef": #ff3399,
@@ -21,7 +22,7 @@ $mods: (
     "lightest": 60%,
 );
 
-$snames: "primary" "secondary" "tertiary" "neutral";
+$snames: "primary" "secondary" "tertiary" "quaternary" "neutral";
 
 $themen: ();
 

@@ -3,13 +3,9 @@
  *	<dl>
  *		<dt>id</dt><dd>id of the slide</dd>
  *		<dt>element</dt><dd>DOM element for the slide</dd>
- *		<dt>animation</dt><dd>Name of the animation used when the slide is displayed (either a function name or a part of a CSS class name)</dd>
+ *		<dt>num</dt><dd>The number of the slide in the slideshow</dd>
  *		<dt>numfragments</dt><dd>Number of fragments in the slide</dd>
- *		<dt>autofragment</dt><dd>Auto-fragment specification</dd>
  *		<dt>groups</dt><dd>Array of groups the slide belongs to</dd>
- *		<dt>background</dt><dd>Background component (a class Constructor)</dd>
- *		<dt>foreground</dt><dd>Foreground component (a class Constructor)</dd>
- *		<dt>components</dt><dd>Array of components added to the slide</dd>
  *	</dl>
  */
 var slides=[];
@@ -161,7 +157,7 @@ function switch_layer(layer, slideo) {
 	if (!config[layer+"Layer"]) return;
 	let oldlayer = document.getElementById(layer);
 	let newlayer = document.getElementById('new'+layer);
-	if (oldlayer && (slideo[layer] == oldlayer.dataset[layer] || "force" in oldlayer.dataset)) {
+	if (oldlayer && (slideo.element.dataset[layer] == oldlayer.dataset[layer] || "force" in oldlayer.dataset)) {
 		if ((layer+"-components") in slideo) for (let comp of slideo[layer+"-components"]) comp.update(oldlayer, slideo);
 		return;
 	}
@@ -170,9 +166,9 @@ function switch_layer(layer, slideo) {
 	oldlayer.id = "temp";
 	newlayer.id = layer;
 	oldlayer.id = "new" + layer;
-	if (slideo && layer in slideo) {
-		newlayer.dataset[layer] = slideo[layer];
-		for (let comp of eval(slideo[layer]).toReversed()) {
+	if (slideo && slideo.element.dataset[layer]) {
+		newlayer.dataset[layer] = slideo.element.dataset[layer];
+		for (let comp of eval(slideo.element.dataset[layer]).toReversed()) {
 			comp.add_to(newlayer, slideo);
 			if (comp.isDynamic) newlayer.dataset["force"] = "true";
 		}
@@ -188,7 +184,7 @@ function switch_layer(layer, slideo) {
  **********************************/
 /**
  * Test if the fragment num is included in the fragspec.
- * @param {string} fragspec - A string which specifies the fragments indexes for which the slide should be displayed. It is a sequence of elementary fragment specifications separated by commas. An elementary fragment sequence is either an individual index (number), either an interval (number-number).<br/>Example : "1,4-7,12".
+ * @param {string} fragspec - A string which specifies the fragments indexes for which the slide should be displayed. It is a sequence of elementary fragment specifications separated by commas. An elementary fragment sequence is either an individual index (number), either an interval (number-number).<br/>Example : "1,4-7,12". It can also hold the special value "start".
  * @returns {boolean} True if the fragment with index num is included in the fragspec, false otherwise.
  */
 function test_frag(fragspec,num) {
@@ -203,29 +199,28 @@ function test_frag(fragspec,num) {
 }
 
 /**
- * Toggle the starting styles to all the fragments of the slide. The starting style is given by adding the classes read from the <tt>data-fstart</tt> attribute.
- * @param {object} slide - DOM element for the slide
- * @param {boolean} on - If true, starting styles are applied. If false, they are removed
- */
-function apply_start_fragments(slide,on) {
-	Array.from(slide.querySelectorAll('[data-fstart]')).forEach(function(element) {
-		let classes=JSON.parse(element.dataset["fstart"]);
-		for (let cl of classes) if (on) element.classList.add(cl); else element.classList.remove(cl);
-	});
-}
-
-/**
  * Apply a class to the objects of a slide according to whether their fragspec includes or not the fragment with index num.
  * If num is in the fragspec of the object, the matching class is added to the object. Otherwise, it is removed.
  * @param {object} slide - DOM element for the slide
- * @param {num} num - Fragment number
+ * @param {number} num - Fragment number, last fragment if num==-1
+ * @param {number} apply_start - If 1, the start fragments are applied. If -1, they are removed. Otherwise, they are left untouched.
  */
-function reset_fragments(slide,num) {
+function reset_fragments(slide, num, apply_start=0) {
 	Array.from(slide.querySelectorAll('[data-fragment]')).forEach(function(element) {
 		let fragspec=JSON.parse(element.dataset["fragment"]);
+		if (num == -1) {
+			let obj = getSlideElement(slide.id);
+			if (!obj) return;
+			num = obj["numfragments"];
+		}
 		Object.getOwnPropertyNames(fragspec).forEach(function(fraglist) {
 			if (fragspec[fraglist]!=null) {
-				if (test_frag(fraglist,num)) {
+				if (fraglist == "start") {
+					fragspec[fraglist].forEarch(function(val) {
+						if (apply_start == 1) element.classList.add(val);
+						else if (apply_start == -1) element.classList.remove(val);
+					});
+				} else if (test_frag(fraglist,num)) {
 					fragspec[fraglist].forEach(function(val) {
 						element.classList.add(val);
 					});
@@ -443,10 +438,10 @@ function apply_animation(source,dest,increasing,callback) {
 	let fn=null;
 	let name;
 	let destid=getSlideIndex(dest.id);
-	if (slides[destid]["animation"] && slides[destid]['animation']!='') {
-		fn=window["animate_"+slides[destid]["animation"]];
+	if (slides[destid].element.dataset["animation"] && slides[destid].element.dataset["animation"]!='') {
+		fn=window["animate_"+slides[destid].element.dataset["animation"]];
 		if (!fn) {
-			name=slides[destid]["animation"];
+			name=slides[destid].element.dataset["animation"];
 			fn=animate_css;
 		} 
 	} else fn=animate_none;
@@ -723,26 +718,21 @@ function ClassicOutlineSlide() {return new ClassicOutlineSlideObject();}
  * Make thumbnails out of the slides. The function scales all slides, displays their final fragments, and places them of a flexbox div.
  */
 function open_print_view() {
+	if (outlinestyle) return;
 	// Wrap all slides in new divs to put them in a flexbox layout, and make them thumbnails
-	for (let slide of slides) {
-		let element=document.getElementById(slide['id']);
-		if (element.classList.contains('thumbnail')) continue;
-		element.classList.add('thumbnail');
-		reset_fragments(element,slide['numfragments']);
-		let wrapper=document.createElement('div');
+	for (let el of document.querySelectorAll("body > section")) {
+		if (el.classList.contains('thumbnail')) continue;
+		el.classList.add('thumbnail');
+		reset_fragments(el, -1);
+		let wrapper = document.createElement('div');
 		wrapper.classList.add('wthumb');
-		element.parentNode.appendChild(wrapper);
-		wrapper.appendChild(element);
+		el.parentNode.insertBefore(wrapper, el);
+		wrapper.appendChild(el);
 	}
-	let nwrapper=document.createElement('div');
-	nwrapper.id='thumblayer';
-	let firstdiv=document.querySelector('body div.wthumb');
-	firstdiv.parentNode.insertBefore(nwrapper,firstdiv);
-	document.querySelectorAll('body div.wthumb').forEach(function(element) {
-		nwrapper.appendChild(element);
-	});
-	// Remove outline slide if visible
-	if (slides[curslide]['id']=='outline') getSlide(curslide).style.display='none';
+	let tl = document.createElement("div");
+	tl.id = "thumblayer";
+	for (let el of document.querySelectorAll("body > div.wthumb, body > h1, body > h2, body > h3, body > h4, body > h5, body > h6")) tl.appendChild(el);
+	document.body.appendChild(tl);
 	// Converts thead tags to tbody with class 'dummy-header'. This is intended to prevent the browser from trying to repeat them several times when printing.
 	document.querySelectorAll('thead').forEach(function(element) {
 		let newel=document.createElement('tbody');
@@ -756,8 +746,9 @@ function open_print_view() {
  * Restore the view to its original state after printing
  */
 function close_print_view() {
+	if (outlinestyle) return;
 	// Unwrap all slides from their flexbox layout
-	document.getElementById('thumblayer').querySelectorAll('div.wthumb').forEach(function(element) {
+	document.querySelectorAll('div.wthumb').forEach(function(element) {
 		element.firstChild.classList.remove('thumbnail');
 		reset_fragments(element,0);
 		let parent=element.parentNode;
@@ -768,8 +759,6 @@ function close_print_view() {
 	let parent=tl.parentNode;
 	while (tl.firstChild) parent.insertBefore(tl.firstChild,tl);
 	parent.removeChild(tl);
-	// Remakes outline slide visible if it is selected
-	if (slides[curslide]['id']=='outline') getSlide(curslide).style.display='flex';
 	// Converts back dummy tbody tags to thead tags 
 	document.querySelectorAll('tbody.dummy-header').forEach(function(element) {
 		let newel=document.createElement('thead');
@@ -793,61 +782,54 @@ function open_overview() {
 	let slideo=getSlide(curslide);
 	let oldpos=slideo.getBoundingClientRect(); // Remember the position of the current slide
 	// Wrap all slides in new divs to put them in a flexbox layout, and make them thumbnails
-	for (let slide of slides) {
-		let element=document.getElementById(slide['id']);
-		if (element.classList.contains('thumbnail')) continue;
-		element.classList.add('thumbnail');
-		let wrapper=document.createElement('div');
+	for (let el of document.querySelectorAll("body > section")) {
+		if (el.classList.contains('thumbnail')) continue;
+		el.classList.add('thumbnail');
+		let wrapper = document.createElement('div');
 		wrapper.classList.add('wthumb');
-		element.parentNode.appendChild(wrapper);
-		wrapper.appendChild(element);
+		el.parentNode.insertBefore(wrapper, el);
+		wrapper.appendChild(el);
 		wrapper.addEventListener('click',function() {
-			close_overview(getSlideIndex(element.id));
+			close_overview(getSlideIndex(el.id));
 		});
 	}
-	let nwrapper=document.createElement('div');
-	nwrapper.id='thumblayer';
-	let firstdiv=document.querySelector('body div.wthumb');
-	firstdiv.parentNode.insertBefore(nwrapper,firstdiv);
-	document.querySelectorAll('body div.wthumb').forEach(function(element) {
-		nwrapper.appendChild(element);
-	});
-	if (slideo.id!='outline') {
-		let wrapper=slideo.parentNode;
-		// Scroll the overview div so that the current slide is visible
-		let tl=document.getElementById('thumblayer');
-		tl.scrollTop=tl.offsetTop+wrapper.offsetTop;
-		wrapper.style.zIndex='30';
-		let newpos=wrapper.getBoundingClientRect();	// Remember the new position of the current slide
-		//let deltal=newpos.left-oldpos.left;
-		//let deltat=newpos.top-oldpos.top;
-		//let deltaw=newpos.width/oldpos.width-1;
-		//let deltah=newpos.height/oldpos.height-1;
-		// Put back the current slide at its original position
-		slideo.classList.remove('thumbnail');
-		slideo.style.position='fixed';
-		slideo.style.transformOrigin='left top';
-		slideo.style.backgroundColor='white';
-		slideo.style.visibility='visible';
+	let tl = document.createElement("div");
+	tl.id = "thumblayer";
+	for (let el of document.querySelectorAll("body > div.wthumb, body > h1, body > h2, body > h3, body > h4, body > h5, body > h6")) tl.appendChild(el);
+	document.body.appendChild(tl);
+	let wrapper=slideo.parentNode;
+	// Scroll the overview div so that the current slide is visible
+	tl.scrollTop=tl.offsetTop+wrapper.offsetTop;
+	wrapper.style.zIndex='30';
+	let newpos=wrapper.getBoundingClientRect();	// Remember the new position of the current slide
+	//let deltal=newpos.left-oldpos.left;
+	//let deltat=newpos.top-oldpos.top;
+	//let deltaw=newpos.width/oldpos.width-1;
+	//let deltah=newpos.height/oldpos.height-1;
+	// Put back the current slide at its original position
+	slideo.classList.remove('thumbnail');
+	slideo.style.position='fixed';
+	slideo.style.transformOrigin='left top';
+	slideo.style.backgroundColor='white';
+	slideo.style.visibility='visible';
+	setTimeout(function() {
+		slideo.classList.add('overview-transition');
+		// Animate the transition while blurring the background
+		slideo.addEventListener('transitionend',function(event) {
+			slideo.style.transform=null;
+			slideo.style.position=null;
+			slideo.style.transformOrigin=null;
+			slideo.style.backgroundColor=null;
+			slideo.style.visibility=null;
+			slideo.classList.add('thumbnail');
+			slideo.classList.remove('overview-transition');
+			wrapper.style.zIndex=null;
+		},{capture:false,once:true});
 		setTimeout(function() {
-			slideo.classList.add('overview-transition');
-			// Animate the transition while blurring the background
-			slideo.addEventListener('transitionend',function(event) {
-				slideo.style.transform=null;
-				slideo.style.position=null;
-				slideo.style.transformOrigin=null;
-				slideo.style.backgroundColor=null;
-				slideo.style.visibility=null;
-				slideo.classList.add('thumbnail');
-				slideo.classList.remove('overview-transition');
-				wrapper.style.zIndex=null;
-			},{capture:false,once:true});
-			setTimeout(function() {
-				slideo.style.transform='translate('+newpos.left+'px, '+newpos.top+'px) scale('+(newpos.width/oldpos.width)+', '+(newpos.height/oldpos.height)+')';
-				getSlide(overview_curslide).classList.add('targetted'); // Add a visual style to the targetted slide in the overview
-			},20);
+			slideo.style.transform='translate('+newpos.left+'px, '+newpos.top+'px) scale('+(newpos.width/oldpos.width)+', '+(newpos.height/oldpos.height)+')';
+			getSlide(overview_curslide).classList.add('targetted'); // Add a visual style to the targetted slide in the overview
 		},20);
-	}
+	},20);
 }
 
 /**
@@ -856,8 +838,9 @@ function open_overview() {
  */
 function close_overview(newslidenum=null) {
 	function remove_overview_wrapper() {
-		document.getElementById('thumblayer').querySelectorAll('div.wthumb').forEach(function(element) {
+		document.querySelectorAll('div.wthumb').forEach(function(element) {
 			element.firstChild.classList.remove('thumbnail');
+			reset_fragments(element,0);
 			let parent=element.parentNode;
 			parent.insertBefore(element.firstChild,element);
 			parent.removeChild(element);
@@ -871,69 +854,60 @@ function close_overview(newslidenum=null) {
 	getSlide(overview_curslide).classList.remove('targetted');	// Remove the visual style of the targetted slide in the overview
 	if (newslidenum==null) newslidenum=curslide;	// If no new slide was selected, the previously active slide will be animated to cover the whole screen
 	let slideo=getSlide(newslidenum);
-	if (slideo.id=='outline') {
-		let cl=document.getElementById('coverlayer');
-		cl.addEventListener('transitionend',function(event) {
-			cl.parentNode.removeChild(cl);
-		});
-		cl.style.opacity='0';
-		remove_overview_wrapper();
-	} else {
-		slideo.parentNode.style.zIndex='30';
-		let oldpos=slideo.getBoundingClientRect();	// Remember the current position of the selected slide
-		//let deltal=oldpos.left;
-		//let deltat=oldpos.top;
-		//let deltaw=oldpos.width/window.innerWidth-1;
-		//let deltah=oldpos.height/window.innerHeight-1;
-		// Detach the selected slide from the flexbox layout
-		slideo.style.position='fixed';
-		slideo.style.transformOrigin='left top';
-		slideo.style.backgroundColor='white';
-		slideo.style.transform='translate('+(oldpos.left)+'px, '+(oldpos.top)+'px) scale('+(oldpos.width/window.innerWidth)+','+(oldpos.height/window.innerHeight)+')';
-		// Animate the selected slide from its position in the overview to the whole screen, while unblurring the background
-		let cl=document.getElementById('coverlayer');
-		cl.addEventListener('transitionend',function(event) {
-			cl.parentNode.removeChild(cl);
-		});
-		cl.style.opacity='0';
+	slideo.parentNode.style.zIndex='30';
+	let oldpos=slideo.getBoundingClientRect();	// Remember the current position of the selected slide
+	//let deltal=oldpos.left;
+	//let deltat=oldpos.top;
+	//let deltaw=oldpos.width/window.innerWidth-1;
+	//let deltah=oldpos.height/window.innerHeight-1;
+	// Detach the selected slide from the flexbox layout
+	slideo.style.position='fixed';
+	slideo.style.transformOrigin='left top';
+	slideo.style.backgroundColor='white';
+	slideo.style.transform='translate('+(oldpos.left)+'px, '+(oldpos.top)+'px) scale('+(oldpos.width/window.innerWidth)+','+(oldpos.height/window.innerHeight)+')';
+	// Animate the selected slide from its position in the overview to the whole screen, while unblurring the background
+	let cl=document.getElementById('coverlayer');
+	cl.addEventListener('transitionend',function(event) {
+		cl.parentNode.removeChild(cl);
+	});
+	cl.style.opacity='0';
+	setTimeout(function() {
+		slideo.classList.add('overview-transition');
+		slideo.addEventListener('transitionend',function(event) {
+			slideo.style.transform=null;
+			slideo.style.position=null;
+			slideo.style.transformOrigin=null;
+			slideo.style.backgroundColor=null;
+			slideo.classList.remove('overview-transition');
+			remove_overview_wrapper();
+			// Prepare the new slide
+			if (newslidenum!=curslide) {
+				let newslideo=getSlide(newslidenum);
+				let slideo=getSlide(curslide);
+				let slide=curslide;
+				curslide=newslidenum;
+				curfragment=0;
+				reset_fragments(newslideo,0);
+				slideo.style.visibility=null;
+				if (slideo.dataset["onhide"]) window[slideo.dataset["onhide"]](slideo);
+				newslideo.style.visibility='visible';
+				if (newslideo.dataset["onshow"]) window[newslideo.dataset["onshow"]](newslideo);
+				program_hashchange=true;
+				location.hash="#"+newslideo.id;
+				newslideo.style.visibility=null;
+				reset_fragments(slideo,0);
+				update_navigation_bar(newslidenum,slide);
+				update_footer(newslidenum);
+				for (let l of ["background", "foreground"]) switch_layer(l, slides[newslidenum]);
+			} else {
+				let e=new Event("hashchange",{bubbles:false, cancelable:true})
+				window.dispatchEvent(e);
+			}
+		},{capture:false,once:true});
 		setTimeout(function() {
-			slideo.classList.add('overview-transition');
-			slideo.addEventListener('transitionend',function(event) {
-				slideo.style.transform=null;
-				slideo.style.position=null;
-				slideo.style.transformOrigin=null;
-				slideo.style.backgroundColor=null;
-				slideo.classList.remove('overview-transition');
-				remove_overview_wrapper();
-				// Prepare the new slide
-				if (newslidenum!=curslide) {
-					let newslideo=getSlide(newslidenum);
-					let slideo=getSlide(curslide);
-					let slide=curslide;
-					curslide=newslidenum;
-					curfragment=0;
-					reset_fragments(newslideo,0);
-					slideo.style.visibility=null;
-					if (slideo.dataset["onhide"]) window[slideo.dataset["onhide"]](slideo);
-					newslideo.style.visibility='visible';
-					if (newslideo.dataset["onshow"]) window[newslideo.dataset["onshow"]](newslideo);
-					program_hashchange=true;
-					location.hash="#"+newslideo.id;
-					newslideo.visibility=null;
-					reset_fragments(slideo,0);
-					update_navigation_bar(newslidenum,slide);
-					update_footer(newslidenum);
-					for (let l of ["background", "foreground"]) switch_layer(l, slides[newslidenum]);
-				} else {
-					let e=new Event("hashchange",{bubbles:false, cancelable:true})
-					window.dispatchEvent(e);
-				}
-			},{capture:false,once:true});
-			setTimeout(function() {
-				slideo.style.transform='translate(0px,0px) scale(1,1)';
-			},20);
+			slideo.style.transform='translate(0px,0px) scale(1,1)';
 		},20);
-	}
+	},20);
 }
 
 /**********************************
@@ -1023,12 +997,10 @@ function switch_slide(newslidenum,newfragmentnum) {
 		curslide=newslidenum;
 		curfragment=newfragmentnum;
 		if (increasing) {
-			reset_fragments(newslideo,0); 
-			apply_start_fragments(newslideo,true);
-		} else reset_fragments(newslideo,slides[newslidenum]['numfragments']);
+			reset_fragments(newslideo, 0, 1); 
+		} else reset_fragments(newslideo, slides[newslidenum]['numfragments'], -1);
 		apply_animation(slideo,newslideo,increasing,function() {
-			reset_fragments(slideo,0);
-			apply_start_fragments(newslideo,false);
+			reset_fragments(slideo, 0, -1);
 			animate_fragment(curslide,0,curslide>slide);
 		});
 		for (const layer of ["background", "foreground"]) switch_layer(layer, slides[newslidenum]);
@@ -1216,7 +1188,7 @@ function closeQrcode() {
 function onNotesLoaded(event) {
 	let titles=document.querySelectorAll('body > section > h1');
 	let num=titles.length;
-	Array.from(wnotes.document.getElementsByTagName('h2')).forEach(function(element) {
+	Array.from(wnotes.document.getElementsByTagName('h1,h2,h3,h4,h5,h6')).forEach(function(element) {
 		let i=0;
 		while (i<num && titles[i].innerHTML!=element.innerHTML) ++i;
 		if (i<num) element.id=titles[i].parentNode.id;
@@ -1319,6 +1291,22 @@ function create_structure() {
 	}
 }
 
+/** Read CSS properties and add them to data attributes
+ *
+ * @param {object} element - Element on which the function should be applied
+ */
+function css_to_data(element) {
+	let properties = window.getComputedStyle(element);
+	for (const prop of ["background", "foreground", "animation", "components", "autofragment"]) {
+		if (!element.dataset[prop]) {
+			let val = properties.getPropertyValue('--'+prop);
+			if (val) val = val.replace(/^"|"$/g, "");
+			if (val && val != "") element.dataset[prop] = val;
+		}
+		if (element.dataset[prop]) element.dataset[prop] = element.dataset[prop].replace(/'/g, '"');
+	}
+}
+
 /** Pre-process the HTML code. This function does several things:
  *	<ul>
  *		<li>it replaces single quotes by double quotes in JSON attributes</li>
@@ -1327,13 +1315,16 @@ function create_structure() {
  */
 function process_slideshow() {
 	// Replace quotes in JSON attributes
-	for (const val of ['fragment','fanim','fstart','autofragment','background','foreground','animation','components']) {
+	for (const val of ['fragment','fanim','autofragment','background','foreground','animation','components']) {
 		Array.from(document.querySelectorAll('[data-'+val+']')).forEach(function(element) {
 			let attr=element.dataset[val];
 			attr=attr.replace(/'/g,'"');
 			element.dataset[val]=attr;
 		});
 	}
+
+	// Replace CSS properties with the corresponding data attributes
+	document.body.querySelectorAll("section, section *").forEach(css_to_data);
 
 	// Read some configuration options from the CSS or the inline document
 	// Then update it with user-provided configuration options
@@ -1355,19 +1346,48 @@ function process_slideshow() {
  * @returns {object} - Object describing the slide
  */
 function process_slide(element) {
+	// Generate fragment specification while processing auto-fragments
+	function generate_fragment(element, i, fragbefore, fragafter, fragcurrent, fraganim) {
+		let fragmentp={};
+		if (i>0 && fragbefore) {
+			if (i>1) fragmentp['0-'+(i-1).toString()]=fragbefore;
+			else fragmentp['0']=fragbefore;
+		}
+		if (fragcurrent) fragmentp[i.toString()]=fragcurrent;
+		if (fragafter) fragmentp[(i+1).toString()+'-']=fragafter;
+		element.dataset['fragment']=JSON.stringify(fragmentp);
+		if (fraganim!=null) {
+			let fragmenta={};
+			fragmenta[i.toString()]=fraganim;
+			element.dataset['fanim']=JSON.stringify(fragmenta);
+		}
+	}
 	// Create slide object and get properties
 	let slide = {
 		'id': element.id,
 		'element': element
 	};
-	let properties = window.getComputedStyle(element);
-	for (const prop of ["background", "foreground", "animation", "components", "autofragment"]) {
-		if (element.dataset[prop]) {
-			slide[prop] = element.dataset[prop].replace(/'/g, '"');
-		} else {
-			const val = properties.getPropertyValue('--'+prop).replace(/^"|"$/g, "");
-			if (val) slide[prop] = val.replace(/'/g, '"');
+	// Autogenerate fragments based on slide section <tt>autofragment</tt> attribute
+	if ("autofragment" in element.dataset) {
+		let fragspec = JSON.parse(element.dataset["autofragment"]);
+		if (fragspec.length>1) {
+			let fragbefore = ("before" in fragspec[1]) ? fragspec[1]["before"] : ['invisible'];
+			let fragafter = ("after" in fragspec[1]) ? fragspec[1]["after"] : null;
+			let fragcurrent = ("current" in fragspec[1]) ? fragspec[1]["current"] : null;
+			let fraganim = ("animation" in fragspec[1]) ? fragspec[1]["animation"] : null;
+			element.querySelectorAll(fragspec[0]).forEach(function(el, i) {
+				generate_fragment(el, i, fragbefore, fragafter, fragcurrent, fraganim);
+			});
 		}
+	} else { // Otherwise autogenerate fragments based on HTML elements <tt>autofragment</tt> attributes
+		element.querySelectorAll("[data-autofragment]").forEach(function(obj, i) {
+			let fragspec = JSON.parse(obj.dataset["autofragment"]);
+			let fragbefore = ("before" in fragspec) ? fragspec["before"] : ['invisible'];
+			let fragafter = ("after" in fragspec) ? fragspec["after"] : null;
+			let fragcurrent = ("current" in fragspec) ? fragspec["current"] : null;
+			let fraganim = ("animation" in fragspec) ? fragspec["animation"] : null;
+			generate_fragment(obj, i, fragbefore, fragafter, fragcurrent, fraganim);
+		});
 	}
 	// Count fragments in slide by first parsing the <tt>data-fragment</tt> and <tt>data-fanim</tt> attributes of objects. The total number of fragments is the highest fragment number referenced by those attributes.
 	slide['numfragments'] = 0;
@@ -1390,38 +1410,6 @@ function process_slide(element) {
 		}
 		slide['numfragments'] = max;
 	}
-	// Autogenerate fragments
-	if ("autofragment" in slide) {
-		let fragspec=JSON.parse(slide["autofragment"]);
-		let fragbefore=['invisible'];
-		let fragafter=null;
-		let fragcurrent=null;
-		let fraganim=null;
-		if (fragspec.length>1) {
-			if (fragspec[1].length>=4) fraganim=fragspec[1][3];
-			if (fragspec[1].length>=3) fragafter=fragspec[1][2];
-			if (fragspec[1].length>=2) fragbefore=fragspec[1][0];
-			if (fragspec[1].length>=1) fragcurrent=fragspec[1][(fragspec[1].length>=2)?1:0];
-		}
-		let elements=element.querySelectorAll(fragspec[0]);
-		numfragments=elements.length-1;
-		for (let i=0;i<elements.length;++i) {
-			let fragmentp={};
-			if (i>0) {
-				if (i>1) fragmentp['0-'+(i-1).toString()]=fragbefore;
-				else fragmentp['0']=fragbefore;
-			}
-			fragmentp[i.toString()]=fragcurrent;
-			if (i<elements.length-2) fragmentp[(i+1).toString()+'-'+(elements.length-1).toString()]=fragafter;
-			else if (i<elements.length-1) fragmentp[(i+1).toString()]=fragafter;
-			elements[i].dataset['fragment']=JSON.stringify(fragmentp);
-			if (fraganim!=null) {
-				let fragmenta={};
-				fragmenta[i.toString()]=fraganim;
-				elements[i].dataset['fanim']=JSON.stringify(fragmenta);
-			}
-		}
-	}
 	return slide;
 }
 
@@ -1436,6 +1424,7 @@ function compose_outline_slides() {
 			if (!outlinestyle) return;
 			let element = window[outlinestyle]();
 			element.compose(structure[0].parts, entry.outline_slide);
+			css_to_data(entry.outline_slide);
 		}
 	});
 }
@@ -1446,19 +1435,19 @@ function compose_outline_slides() {
  * @param {object} slideo - Slide object, relative to the {@link slides} array
  */
 function add_components(slideo) {
-	if (slideo["components"]) for (const comp of eval(slideo["components"])) {
+	if (slideo.element.dataset["components"]) for (const comp of eval(slideo.element.dataset["components"])) {
 		comp.add_to(slideo.element, slideo);
 		if (!("slide-components" in slideo)) slideo["slide-components"] = [];
 		slideo["slide-components"].push(comp);
 	}
-	if (slideo["background"]) for (const comp of eval(slideo['background'])) {
+	if (slideo.element.dataset["background"]) for (const comp of eval(slideo.element.dataset['background'])) {
 		if (config.backgroundLayer) {
 			if (!("background-components" in slideo)) slideo["background-components"] = [];
 			slideo["background-components"].push(comp);
 		}
 		else comp.add_to(slideo.element, slideo);
 	}
-	if (slideo["foreground"]) for (const comp of eval(slideo['foreground'])) {
+	if (slideo.element.dataset["foreground"]) for (const comp of eval(slideo.element.dataset['foreground'])) {
 		if (config.foregroundLayer) {
 			if (!("foreground-components" in slideo)) slideo["foreground-components"] = [];
 			slideo["foreground-components"].push(comp);
@@ -1476,7 +1465,6 @@ function prepare_slides() {
 		// Give an id to the slide
 		let id="slide-"+(index+1);
 		if (!element.id) element.id=id;
-		if ('#'+id==location.hash) element.style.visibility='visible';
 	});
 	if ('outline' in parameters) {
 		for (let slidespec of parameters['outline']) {
@@ -1610,11 +1598,7 @@ function afterLoad() {
 	window.name="parentpres";
 	syncUrl=document.documentElement.dataset['synchronize'];
 	prepare_slides(parameters); // Prepare the array of slides
-
-	// Get current slide
 	if (location.hash=='') location.hash='#title';
-	curslide=parseInt(getSlideIndex(location.hash.substring(1)));
-	for (const layer of ["background", "foreground"]) switch_layer(layer, slides[curslide]);
 
 	// Hash change handler
 	window.addEventListener('hashchange',function() {
@@ -1622,10 +1606,8 @@ function afterLoad() {
 			program_hashchange=false;
 		} else {
 			let slide=curslide;
-			getSlide(curslide).style.visibility=null;
 			curslide=getSlideIndex(location.hash.substring(1));
 			let curslideo=getSlide(curslide);
-			curslideo.style.visibility='visible';
 			for (const layer of ["background", "foreground"]) switch_layer(layer, slides[curslide]);
 			reset_fragments(curslideo,0);
 		}
@@ -1637,6 +1619,11 @@ function afterLoad() {
 			signal(syncUrl,syncName,location.hash);
 		}
 	});
+
+	// Get current slide and force hashchange event
+	curslide=parseInt(getSlideIndex(location.hash.substring(1)));
+	for (const layer of ["background", "foreground"]) switch_layer(layer, slides[curslide]);
+	if (location.hash != "#title") setTimeout(()=>location.hash = location.hash,20); // Force hash change event to make CSS :target selector work on dynamically-generated IDs
 
 	// Pull mode, synchronize with presenter
 	if (syncUrl) {
@@ -1681,7 +1668,7 @@ function afterLoad() {
 						let oslideo=getSlide(overview_curslide);
 						oslideo.classList.add('targetted');
 						oslideo=oslideo.parentNode;
-						let tl=document.getElementById('thumblayer');
+						let tl = document.getElementById("thumblayer");
 						if (oslideo.offsetTop+oslideo.offsetHeight>tl.offsetHeight+tl.scrollTop) tl.scrollTop+=tl.offsetHeight/2;
 					}
 				}
@@ -1698,7 +1685,7 @@ function afterLoad() {
 						let oslideo=getSlide(overview_curslide);
 						oslideo.classList.add('targetted');
 						oslideo=oslideo.parentNode;
-						let tl=document.getElementById('thumblayer');
+						let tl = document.getElementById("thumblayer");
 						if (oslideo.offsetTop<tl.scrollTop) tl.scrollTop-=tl.offsetHeight/2;
 					}
 				}
@@ -1755,7 +1742,7 @@ function afterLoad() {
 				break;
 			case "n":	// 'n'
 				if (wnotes==null || wnotes.closed) {
-					wnotes=window.open(document.documentElement.dataset['notes']+"#"+getSlide(curslide).id,"Notes","left=0, top=0, status=no, menubar=no, toolbar=no, location=no, directories=no, copyhistory=no, width='+w+', height='+h', fullscreen=yes");
+					wnotes=window.open(document.documentElement.dataset['notes']+"?origin="+encodeURIComponent(location.href)+"#"+getSlide(curslide).id,"Notes","left=0, top=0, status=no, menubar=no, toolbar=no, location=no, directories=no, copyhistory=no, width='+w+', height='+h', fullscreen=yes");
 					wnotes.onload=onNotesLoaded;
 				} else {
 					wnotes.close();

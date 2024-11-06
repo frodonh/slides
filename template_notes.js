@@ -4,6 +4,8 @@ var ratio=null;
 var timeElement=null;
 var elapsedElement=null;
 var ratioElement=null;
+var nextElement=null;
+var parameters=[];
 
 function twoDigits(n) {
 	let s='0'+n;
@@ -56,12 +58,24 @@ document.addEventListener("message",function(event) {
 },false);
 
 document.addEventListener("DOMContentLoaded",function(event) {
+	// Read query string
+	let querys=decodeURIComponent(location.search.substring(1)).split('&');
+	for (let i=0;i<querys.length;++i) {
+		let varval=querys[i].split('=');
+		parameters[varval[0]]=varval[1];
+	}
+	// Add events when the hash is changed
+	window.addEventListener('hashchange',function() {
+		document.getElementById("next").getElementsByTagName("iframe")[0].contentWindow.location.hash = location.hash;
+	});
+	// Creates the structure
 	let wrapper=document.createElement('div');
 	wrapper.id='notes';
-	elements=document.body.children;
+	elements=document.body.childNodes;
 	while (elements.length && elements[0].tagName!='SCRIPT') wrapper.appendChild(elements[0]);
 	document.body.insertAdjacentElement('afterbegin',wrapper);
-	document.body.insertAdjacentHTML('beforeend','<aside><div id="next"></div><div class="space"></div><div class="counter" id="time"><h1>Heure</h1></p></div><div class="counter" id="elapsed"><h1>Temps passé</h1><p></p></div><div class="counter" id="ratio"><h1><span class="early">Avance</span>/<span class="late">Retard</span></h1><p></p></div></aside>');
+	document.body.insertAdjacentHTML('beforeend',`<aside><div id="next"><iframe src="${parameters.origin}"></iframe></div><div class="space"></div><div class="counter" id="time"><h1>Heure</h1></p></div><div class="counter" id="elapsed"><h1>Temps passé</h1><p></p></div><div class="counter" id="ratio"><h1><span class="early">Avance</span>/<span class="late">Retard</span></h1><p></p></div></aside>`);
+	// Read duration
 	let dur=document.documentElement.dataset['duration'];
 	if (dur) {
 		let reg=/^(?:(\d+) *h)? *(?:(\d+) *(?:mn|min))? *(?:(\d+) *(?:s))? *$/i;
@@ -73,8 +87,10 @@ document.addEventListener("DOMContentLoaded",function(event) {
 			if (res[3]) duration+=res[3];
 		}
 	} else document.getElementById('ratio').style.display='none';
+	// Look for some elements
 	timeElement=document.getElementById('time').getElementsByTagName('p')[0];
 	elapsedElement=document.getElementById('elapsed').getElementsByTagName('p')[0];
 	ratioElement=document.getElementById('ratio').getElementsByTagName('p')[0];
+	nextElement=document.getElementById('ratio').getElementsByTagName('iframe')[0];
 	setInterval(updateClocks,1000);
 });

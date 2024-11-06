@@ -5,6 +5,20 @@
 @import 'colors';
 
 /********************************************/
+/*            Custom properties             */
+/********************************************/
+// This is needed to deactive inheritance on custom properties. Empty strings are filtered out in the Javascript script
+* {
+	--autofragment: "";
+	--animation: "";
+	--components: "";
+	--background: "";
+	--foreground: "";
+	--background-layer: "";
+	--foreground-layer: "";
+}
+
+/********************************************/
 /*               Animations                 */
 /********************************************/
 body>section {
@@ -603,6 +617,27 @@ body>section, #thumblayer>div.wthumb>section {
 		}
 	}
 
+	div.content dl {
+		display: grid;
+		grid-template-columns: max-content auto;
+		column-gap: 2em;
+		row-gap: 0.3em;
+
+		dt {
+			grid-column-start: 1;
+			max-width: 25vw;
+		}
+
+		dd {
+			grid-column-start: 2;
+			margin: 0;
+		}
+
+		&.rightheader dt {
+			justify-self: end;
+		}
+	}
+
 }
 
 /********************************************/
@@ -622,6 +657,10 @@ body>section, #thumblayer>div.wthumb>section {
 	justify-content: space-between;
 	align-items: center;
 	z-index: 20;
+
+    & > h1, & > h2, & > h3, & > h4, & > h5, & > h6 {
+        display: none;
+    }
 }
 
 #coverlayer {
@@ -694,57 +733,64 @@ body>section, #thumblayer>div.wthumb>section {
 /*             Inner components             */
 /********************************************/
 // Generic styles
-.block,.infoblock,.warningblock {
+@mixin alertblock($color, $symbol:null) {
 	margin: 1.56vh 0vw;
 	padding: 0;
 	border-radius: 0.6vmax;
 	@include shadowed;
-	background-color: map.get($theme, "primary-lighter");
-	
+	background-color: map.get($theme, "#{$color}-lighter");
+	position: relative;
+
 	h1 {
-		padding: 0.47vh 0.6vw 0.78vh 0.6vw;
+		padding-top: 0.47vh;
+		padding-bottom: 0.78vh;
+		padding-right: 0.6vw;
+		@if $symbol {
+			padding-left: 3.5rem;
+		} @else {
+			padding-left: 0.6vw;
+		}
 		margin: 0 0 0 0;
 		border-radius: 0.6vmax 0.6vmax 0 0;
 		font: bold 120% sans-serif;
-		color: map.get($theme, "primary-darker");
-		background-image: linear-gradient(to bottom,map.get($theme, "secondary-light") 0%,map.get($theme, "secondary-light") 80%,map.get($theme, "primary-lighter") 100%);
+		color: white;
+		background-image: linear-gradient(to bottom,map.get($theme, "#{$color}-darker") 0%,map.get($theme, "#{$color}-darker") 80%,map.get($theme, "#{$color}-lighter") 100%);
 	}
 
 	.content {
-		padding: 0.78vh 0.6vw 0.78vh 0.6vw;
+		padding-top: 0.78vh;
+		padding-bottom: 0.78vh;
+		padding-right: 0.6vw;
+		@if $symbol {
+			padding-left: 3.5rem;
+		} @else {
+			padding-left: 0.6vw;
+		}
 	}
 
 	li:first-child {
 		margin-top: -0.78vh;
 	}
+
+	@if $symbol {
+		.content::before {
+			content: $symbol;
+			color: white;
+			font-size: italic 1.5em serif;
+			border-radius: 1em;
+			background-color: map.get($theme, "#{$color}-darkest");
+			position: absolute;
+			left: 0.3em;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 1.3em;
+			text-align: center;
+		}
+	}
 }
 
-@mixin alertblock($color, $symbol) {
-	background-color: map.get($theme, "#{$color}-lighter");
-	position: relative;
-
-	h1 {
-		padding-left: 3.5rem;
-		background-image: linear-gradient(to bottom,map.get($theme, "secondary-light") 0%,map.get($theme, "secondary-light") 80%,map.get($theme, "#{$color}-lighter") 100%);
-	}
-
-	.content {
-		padding-left: 3.5rem;
-	}
-
-	.content::before {
-		content: $symbol;
-		color: white;
-		font: italic 1.5em serif;
-		border-radius: 1em;
-		background-color: map.get($theme, "#{$color}-darker");
-		position: absolute;
-		left: 0.3em;
-		top: 50%;
-		transform: translateY(-50%);
-		width: 1.3em;
-		text-align: center;
-	}
+.block {
+	@include alertblock(primary);
 }
 
 .infoblock {
@@ -795,13 +841,13 @@ table {
 	border: 1px solid grey;
 	border-collapse: collapse;
 
-	thead,tfoot {
+	&:not(.plain) thead,&:not(.plain) tfoot {
 		background-color: map.get($theme, "primary-darker");
 		color: white;
 		font-weight: bold;
 	}
 
-	tbody.dummy-header {
+	&:not(.plain) tbody.dummy-header {
 		font-weight: bold;
 		color: map.get($theme, "primary-darker");
 	}
@@ -810,7 +856,7 @@ table {
 		border-bottom: 1px solid grey;
 	}
 
-	tbody tr:nth-child(even) {
+	&:not(.plain) tbody tr:nth-child(even) {
 		background-color: map.get($theme, "primary-lighter");
 	}
 
@@ -826,7 +872,7 @@ table {
 		padding-inline-start: 1.2em;
 	}
 
-	&.headcolumn {
+	&:not(.plain).headcolumn {
 		td:first-child {
 			background: map.get($theme, "primary-darker");
 			font-weight: bold;
@@ -877,46 +923,27 @@ table {
 	#thumblayer {
 		height: auto;
 		position: relative;
-		top: -2vh;
+		top: -1.8vh;
 	}
 	
 	.wthumb {
 		page-break-inside: avoid;
 		width: 98vw;
-		height: 95vh;
+		height: 95.8vh;
 		margin-bottom: 4vh;
-
-		&:hover {
-			left: 0;
-			top: 0;
-			z-index: 21;
-
-			.thumbnail {
-				transform: scale(0.98, 0.95);
-			}
-		}
 	}
 	
 	#thumblayer>div.wthumb>section.thumbnail {
 		position: relative;
 		transform-origin: left top;
-		transform: scale(0.98, 0.95);
+		transform: scale(0.98, 0.958);
 	}
 
-	#minitoc,#footer {
-		visibility: hidden;
-	}
-
-	#background {
+	#background, #newbackground, #foreground, #newforeground {
 		background-image: none !important;
 	}
 	
 	* {
 		animation:none !important;
-	}
-
-	.block {
-		border: 1px solid black;	
-		background-color: white;
 	}
 }

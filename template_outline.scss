@@ -1,0 +1,435 @@
+@use "sass:map";
+@import "colors";
+
+// Mixins
+@mixin shadowed {
+	box-shadow: 1.5vw 1.2vh 1.2vmax rgba(0,0,0,0.5);
+}
+
+%hiddenLinks {
+	a {
+		text-decoration: none;
+		color: inherit;
+
+		&:hover {
+			color: inherit;
+		}
+
+		&:visited {
+			color: inherit;
+		}
+	}
+}
+
+/********************************************/
+/*     Background and foreground layers     */
+/********************************************/
+#background,#foreground,#newbackground,#newforeground {
+	display: none;
+}
+
+/********************************************/
+/*            Outer components              */
+/********************************************/
+// Navigation bars
+.component-minitoc {
+	display: none;
+}
+
+// Footers
+.component-classicfooter {
+	display: none;
+}
+
+
+/********************************************/
+/*              General styles              */
+/********************************************/
+// General declarations
+ul {
+	margin: 0;
+}
+
+p + ul {
+	margin: -2.3vh 0 0 0;
+}
+
+/********************************************/
+/*              Slide layout                */
+/********************************************/
+// Slide page
+body>section {
+    // Title slide
+    &#title {
+		h1 {
+			color: map.get($theme, "primary-dark");
+			font: bold 180% sans-serif;
+			text-align: center;
+
+			.subtitle {
+				color: map.get($theme, "secondary-dark");
+				font: italic 80% sans-serif;
+				text-align: center;
+			}
+		}
+
+		.authordate {
+			color: map.get($theme, "secondary-dark");
+			font-size: 120%;
+			line-height: 1.5;
+			text-align: center;
+		}
+    }
+
+    // Regular content slide (title + content)
+    &.content {
+        & > h1 {
+			font: bold 180% sans-serif;
+			color: map.get($theme, "primary-dark");
+        }
+
+        & > .content {
+
+            &.twocolumns {
+                display: flex;
+                flex-flow: row nowrap;
+                align-items: center;
+                justify-content: space-between;
+
+                & > div {
+                    min-height:0;
+                    flex: auto;
+                    box-sizing : border-box;
+                    width: 45%;
+                }
+
+                & > div:first-child {
+                    margin-right: 1em;
+                }
+            }
+
+            &.plain {
+                margin-top: 8vh;		
+            }
+        }
+    }
+
+    // Plain slide
+	&.plain {
+	}
+
+	&.focus {
+		h1 {
+			font-size: 2.5em;
+			font-weight: bold;
+			text-align: center;
+		}
+	}
+
+    // Outline slide
+    &.outline {
+		display: none;
+    }
+
+	// A chessboard slide with alternating colors
+	&.chessboard {
+        display: flex;
+        flex-flow: column nowrap;
+
+        & > h1 {
+			flex: none;
+        }
+
+        & > .content {
+            flex: auto;
+            display: flex;
+            position: relative;
+            flex-flow: column nowrap;
+            justify-content: flex-start;
+			align-items: stretch;
+
+			div {
+				margin: 0;
+				box-sizing: border-box;
+				border: 1px solid map.get($theme, "primary");
+			}
+
+			& > div {
+				flex: auto;
+				display: flex;
+				flex-flow: row nowrap;
+				& > div { 
+					flex: 0 1 100%; 
+					padding: 0.5em;
+					display: flex;
+					flex-flow: column nowrap;
+					justify-content: center;
+				}
+			}
+		}
+	}
+
+
+    // Inner structure
+	p,table,img,object {
+		margin: 2.8vh 0;
+	}
+
+	figure.centered {
+		display: flex;
+		flex-flow: column nowrap;
+		flex: auto;
+		overflow: hidden;
+		position: relative;
+
+		svg,img {
+			margin: auto;
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			max-width: 100%;
+			max-height: 100%;
+		}
+	}
+
+	div.content ul {
+		margin: 0.2em 0;
+		padding-inline-start: 2.2em;
+
+		& > li {
+			list-style-type: none;
+			padding-left: 0.4em;
+			text-indent: -0.7em;
+			line-height: 1;
+			
+			&::before {
+				content: "• ";
+				font-size: 200%;
+				margin-right: 0.35em;
+				color: map.get($theme, "primary-darker");
+				display: inline-block;
+				vertical-align: -0.1em;
+				height: 0.8em;
+			}
+
+			li {
+				font-size: 0.9em;
+				text-indent: -0.8em;
+				padding-left: 1em;
+				padding-bottom: 1.25vh;
+
+				&::before {
+					font-size: 1em;
+					content: "✗ ";
+				}
+			}
+
+			li:last-child {
+				padding-bottom: 0px;
+			}
+		}
+	}
+
+	div.content dl {
+		display: grid;
+		grid-template-columns: max-content auto;
+		column-gap: 2em;
+		row-gap: 0.3em;
+
+		dt {
+			grid-column-start: 1;
+			max-width: 25vw;
+		}
+
+		dd {
+			grid-column-start: 2;
+			margin: 0;
+		}
+
+		&.rightheader dt {
+			justify-self: end;
+		}
+	}
+
+}
+
+/********************************************/
+/*             Inner components             */
+/********************************************/
+// Generic styles
+@mixin alertblock($color, $symbol:null) {
+	margin: 1.56vh 0vw;
+	padding: 0;
+	border-radius: 0.6vmax;
+	@include shadowed;
+	background-color: map.get($theme, "#{$color}-lighter");
+	position: relative;
+
+	h1 {
+		padding-top: 0.47vh;
+		padding-bottom: 0.78vh;
+		padding-right: 0.6vw;
+		@if $symbol {
+			padding-left: 3.5rem;
+		} @else {
+			padding-left: 0.6vw;
+		}
+		margin: 0 0 0 0;
+		border-radius: 0.6vmax 0.6vmax 0 0;
+		font: bold 120% sans-serif;
+		color: white;
+		background-image: linear-gradient(to bottom,map.get($theme, "#{$color}-darker") 0%,map.get($theme, "#{$color}-darker") 80%,map.get($theme, "#{$color}-lighter") 100%);
+	}
+
+	.content {
+		padding-top: 0.78vh;
+		padding-bottom: 0.78vh;
+		padding-right: 0.6vw;
+		@if $symbol {
+			padding-left: 3.5rem;
+		} @else {
+			padding-left: 0.6vw;
+		}
+	}
+
+	li:first-child {
+		margin-top: -0.78vh;
+	}
+
+	@if $symbol {
+		.content::before {
+			content: $symbol;
+			color: white;
+			font-size: italic 1.5em serif;
+			border-radius: 1em;
+			background-color: map.get($theme, "#{$color}-darkest");
+			position: absolute;
+			left: 0.3em;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 1.3em;
+			text-align: center;
+		}
+	}
+}
+
+.block {
+	@include alertblock(primary);
+}
+
+.infoblock {
+	@include alertblock(secondary, "i");
+}
+
+.warningblock {
+	@include alertblock(tertiary, "!");
+}
+
+
+strong {
+	color: map.get($theme, "primary-dark");
+	font-weight: bold;
+}
+
+blockquote {
+	font-style: italic;
+	margin: 0;
+	padding: 1.2em 0 0 4.2vw;
+	position: relative;
+	
+	&::before {
+		content: "\201C";
+		color: map.get($theme, "secondary-dark");
+		font-size: 4em;
+		position: absolute;
+		left: 0px;
+		top: -1.56vh;
+	}
+}
+
+cite {
+	display: block;
+	text-align: right;
+}
+
+.shadowed {
+	@include shadowed;
+}
+
+figure {
+	margin: 0;
+}
+
+table {
+	display: table;
+	text-align: center;
+	border: 1px solid grey;
+	border-collapse: collapse;
+
+	&:not(.plain) thead,&:not(.plain) tfoot {
+		background-color: map.get($theme, "primary-darker");
+		color: white;
+		font-weight: bold;
+	}
+
+	&:not(.plain) tbody.dummy-header {
+		font-weight: bold;
+		color: map.get($theme, "primary-darker");
+	}
+
+	thead,tr,tfoot,tbody.dummy-header {
+		border-bottom: 1px solid grey;
+	}
+
+	&:not(.plain) tbody tr:nth-child(even) {
+		background-color: map.get($theme, "primary-lighter");
+	}
+
+	img {
+		margin: 0;
+	}
+
+	td {
+		padding: 0.2em;
+	}
+	
+	ul {
+		padding-inline-start: 1.2em;
+	}
+
+	&:not(.plain).headcolumn {
+		td:first-child {
+			background: map.get($theme, "primary-darker");
+			font-weight: bold;
+			color: white;
+		}
+	}
+
+	&.fullwidth {
+		width: 100%;
+	}
+
+	&.grid {
+		td {
+			border: 1px solid map.get($theme, "primary-darker");
+		}
+		thead td {
+			border: 1px solid white;
+		}
+		thead {
+			border-style: hidden;
+		}
+	}
+
+	&.leftaligned {
+		td {
+			text-align: left;
+		}
+		thead td,tbody.dummy-header td {
+			text-align: center;
+		}
+	}
+}
+

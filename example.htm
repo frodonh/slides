@@ -1,11 +1,12 @@
 
 <!DOCTYPE html>
-<html lang="en" data-notes="example_notes.html" data-synchronize="/templates/slides/slides.php">
+<html lang="en" data-notes="example_notes.htm" data-synchronize="/templates/slides/slides.php">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<link rel="stylesheet" title="mainsheet" href="/templates/dewdrop/slides/template.css">
+	<link rel="alternate stylesheet" title="outlinesheet" href="/templates/dewdrop/slides/template_outline.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 	<script src="/templates/slides/slides.js"></script>
@@ -17,6 +18,33 @@
 			"description": "Slides.js reference slideshow"
 		});
 	</script>
+<style>
+body>section div .code-sample, #thumblayer>div.wthumb>section div .code-sample { overflow: auto auto; }
+body>section pre, #thumblayer>div.wthumb>section pre { 
+	margin: 0px;
+	tab-size: 2;
+}
+body>section code, #thumblayer>div.wthumb>section code { 
+	background-color: #f3f3f3;
+	font-size: 0.7em;
+	text-wrap: wrap;
+}
+key {
+	display: inline-block;
+	min-width: 1.5em;
+	min-height: 1.5em;
+	line-height: 1.5em;
+	padding: 0.1em;
+	text-align: center;
+	vertical-align: middle;
+	border: 1px solid black;
+	background-color: #f3f3f3ff;
+	box-shadow: 0.3vw 0.2vh 0.2vmax rgba(0,0,0,0.5);
+}
+#autofragments-elements ul > li {
+	--autofragment: "{'before':['semivisible'],'current':['pulse'],'animation':'fragment_cssanim'}";
+}
+</style>
 </head>
 <body>
 	<svg viewBox="0 0 1 1" width="0" height="0">
@@ -26,11 +54,19 @@
 	
 	<h2 data-short="Slides.js">What is Slides.js ?</h2>
 
-	<section class="content"> 
-		<h1>Slides.js in a nutshell…</h1>
+	<section id="nutshell" class="content"> 
+		<h1>Design guidelines</h1>
 		<div class="content">
-			<p>Slides.js is an open-source HTML slide deck designed to enforce the use of predefined templates.</p>
-			<p>Slides.js only relies on pure HTML, CSS, and EcmaScript. No third-party library is needed.</p>
+			<ul>
+				<li>Lightweight: relies only on pure HTML, CSS, Ecmascript, with no third-party library</li>
+				<li>Adaptive elements to support all screen ratios, and always use the full viewport</li>
+				<li>Support convenient features: presenter screen, automatic synchronization of audience devices, outline view,…</li>
+				<li>Designed to enforce the use of predefined templates, including color themes</li>
+				<li>Enforce a strong separation between content and style: it is usually not needed to include any style attribute in the HTML code</li>
+				<li>Make it easy to create custom templates, using only CSS (or Sass), even for animations, transitions, dynamic components</li>
+				<li>Make it easy to develop new components and animations, in a few lines of Javascript</li>
+				<li>Heavily inspired by the wonderful <a href="https://touying-typ.github.io/">Typst Touying package</a>.</li>
+			</ul>
 			<p>See the <a class="view-source">source</a> of this web page to get an example.</p>
 		</div>
 	</section>
@@ -73,8 +109,8 @@
 			<div>
 				Include the stylesheets:
 				<dl>
-					<dd><code>title="outlinesheet"</code></dd><dt>Stylesheet used when displaying the outline view</dt>
-					<dd><code>title="mainsheet"</code></dd><dt>Stylesheet used when displaying the normal view of slides</dt>
+					<dt><code>title="outlinesheet"</code></dt><dd>Stylesheet used when displaying the outline view</dd>
+					<dt><code>title="mainsheet"</code></dt><dd>Stylesheet used when displaying the normal view of slides</dd>
 				</dl>
 				<pre><code class="language-html">
 &lt;link rel="stylesheet" title="outlinesheet" href="/templates/dewdrop/slides/template_outline.css"&gt;
@@ -142,7 +178,7 @@ initialize({
 				</thead>
 				<tbody>
 					<tr><td>lang</td><td>Language of the presentation, used to customize some automatically generated elements (like the title of the outline slides)</td></tr>
-					<tr><td>data-notes</td><td>URL of the presenter notes page</td></tr>
+					<tr><td>data-notes</td><td>URL of the presenter notes page. See also <a href="#presenter-notes">here</a></td></tr>
 					<tr><td>data-synchronize</td><td>URL of a synchronization script. Synchronization is turned on when this attribute is given.</td></tr>
 				</tbody>
 			</table>
@@ -227,9 +263,32 @@ initialize({
 		</div>
 	</section>
 
+	<section class="content">
+		<h1>Slides</h1>
+		<div class="content">
+			<pre><code class="language-html">&lt;section id="myslide" data-animation="fade"&gt;…&lt;/section&gt;</code></pre>
+			<p>HTML attributes and CSS properties:</p>
+
+			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>Elements</td><td>HTML attribute</td><td>CSS property</td><td>Meaning</td></tr>
+				</thead>
+				<tbody>
+					<tr><td>section</td><td>id</td><td></td><td>Identifier of the slide. If none is provided, it is automatically generated.</td></tr>
+					<tr><td>section</td><td>data-animation</td><td>--animation</td><td>Name of the animation. See also <a href="#animation">here</a></td></tr>
+					<tr><td>section</td><td>data-components</td><td>--components</td><td>Array of components constructors. See also <a href="#components">here</a></td></tr>
+					<tr><td>section</td><td>data-background</td><td>--background</td><td>Array of components constructors to add to the background layer. See also <a href="#backfore">here</a></td></tr>
+					<tr><td>section</td><td>data-foreground</td><td>--foreground</td><td>Array of components constructors to add to the foreground layer. See also <a href="#backfore">here</a></td></tr>
+					<tr><td>section</td><td>data-numfragment</td><td></td><td>Fragment specification. See also <a href="#fragment">here</a></td></tr>
+				</tbody>
+			</table>
+
+		</div>
+	</section>
+
 	<h3>Transitions</h3>
 
-	<section class="content">
+	<section id="animation" class="content">
 		<h1>Transitions between slides</h1>
 		<div class="content">
 			The transition between two slides is defined in the destination slide. It can be setup either inline or in the CSS stylesheet.
@@ -418,7 +477,7 @@ function animate_none(source,dest,increasing,callback) {
 			</code></pre>
 
 	</section>
-	
+
 	<h2 data-short="Slide">The slide structure</h2>
 
 	<h3 id="slides-templates">Slides templates</h3>
@@ -605,7 +664,7 @@ function animate_none(source,dest,increasing,callback) {
 		</div>
 	</section>
 
-	<section class="content">
+	<section id="components" class="content">
 		<h1>Adding components to the slides</h1>
 		<div class="content">
 			Components can be added either inline in the HTML file or in the CSS stylesheet. If set in both, the inline attribute takes precedence over the CSS property.<br/>
@@ -652,6 +711,169 @@ function animate_none(source,dest,increasing,callback) {
 
 			<p>For this slide, the Minitoc and footer are removed from the foreground layer and attached to the slide components. This is why they're taken with the slide when you switch it.</p>
 
+		</div>
+	</section>
+
+	<h3 id="fragment">Fragments</h3>
+	<section class="content">
+		<h1>Fragments</h1>
+		<div class="content">
+			<p data-fragment="{'0':['invisible'],'2-':['semivisible']}">Fragments are pieces of slides which are displayed or animated when browsing the slideshow. Every HTML element can be animated.</p>
+
+			<p data-fragment="{'0-1':['invisible'],'3-':['semivisible']}">Fragments are added with the <code>data-fragment</code> attribute on the element. This attribute holds a <strong>fragment specification</strong>, which is a JSON dictionary (where double quotes are replaced by single quotes). The key is a slide specification and the value if an array of classes to apply to the corresponding elements.</p>
+
+			<pre data-fragment="{'0-2':['invisible'],'4-':['semivisible']}"><code class="language-html">
+&lt;p data-fragment="{'0':['invisible'],'2-':['semivisible']}"&gt;Fragments are pieces of slides which are displayed or animated when browsing the slideshow. Every HTML element can be animated.&lt;/p&gt;
+
+&lt;p data-fragment="{'0-1':['invisible'],'3-':['semivisible']}"&gt;Fragments are added with the &lt;var&gt;data-fragment&lt;/var&gt; attribute on the element. This attribute may hold a &lt;strong&gt;fragment specification&lt;/strong&gt;, which is a JSON dictionary (where double quotes are replaced by single quotes). The key is a slide specification and the value if an array of classes to apply to the corresponding elements.&lt;/p&gt;
+
+&lt;pre data-fragment="{'0-2':['invisible']}"&gt;&lt;code class="language-html"&gt;
+&lt;/code&gt;&lt;/pre&gt;
+			</code></pre>
+
+			<p data-fragment="{'0-3':['invisible'],'5-':['semivisible']}">The <strong>slide specification</strong> is a string with a comma-separated list of intervals ; each interval has the form <code>min-max</code> or can hold a single <code>num</code> value. The classes are applied when the fragment number is between <code>min</code> and <code>max</code>, or when the fragment number is <code>num</code>. Fragment number 0 is the first fragment. The slide specification may also be the keyword <code>"start"</code> ; in this case, the classes are applied to the slide <em>before</em> it appears on the screen. This is mostly useful when applying an animation to the first fragment, in order to set the initial state.</p>
+
+			<p data-fragment="{'0-4':['invisible']}">When <code>data-numfragment</code> is included in the slide <code>section</code> attribute, it stands for the number of fragments in the current slide. If it is not given, it is automatically calculated as the maximum fragment number in the fragment specifications (but it may be wrong).</p>
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>Fragments</h1>
+		<div class="content">
+			<p>When <code>data-numfragment</code> is included in the slide <code>section</code> attribute, it stands for the number of fragments in the current slide. If it is not given, it is automatically calculated as the maximum fragment number in the fragment specifications (but it may be wrong).</p>
+
+			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>Elements</td><td>HTML attribute</td><td>CSS property</td><td>Meaning</td></tr>
+				</thead>
+				<tbody>
+					<tr><td>Any</td><td>data-fragment</td><td></td><td>Fragment specification, classes to apply on the element based on the fragment number</td></tr>
+					<tr><td>section</td><td>data-numfragment</td><td></td><td>Number of fragments in the slide</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>Fragments animation</h1>
+		<div class="content">
+			<p class="pulse" data-fanim="{'0': 'fragment_cssanim'}">Fragments can also be animated.</p>
+
+			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>Elements</td><td>HTML attribute</td><td>CSS property</td><td>Meaning</td></tr>
+				</thead>
+				<tbody>
+					<tr><td>Any</td><td>data-fanim</td><td></td><td>Fragment animation specification, function to animate the element based on the fragment number</td></tr>
+				</tbody>
+			</table>
+
+			<p class="pulse" data-fanim="{'1': 'fragment_cssanim'}">The <strong>fragment animation specification</strong> is a JSON dictionary which keys are slides specifications and which values are names of animation functions. Currently, a single animation function is defined: <code>fragment_cssanim</code>, which runs the CSS animations defined on the element.</p>
+
+			<div class="pulse" data-fanim="{'2': 'fragment_cssanim'}">
+				CSS stylesheet:
+				<pre><code class="language-css">
+@keyframes pulsebox {
+	from { transform: scale(1); }
+	50% { transform: scale(1.2); }
+	to { transform: scale(1); }
+}
+.pulse { animation: 1s ease-in-out pulsebox running; }
+				</code></pre>
+
+				HTML code:
+				<pre><code class="language-html">
+&lt;p class="pulse" data-fanim="{'0': 'fragment_cssanim'}"&gt;Fragments can also be animated.&lt;/p&gt;
+&lt;p class="pulse" data-fanim="{'1': 'fragment_cssanim'}"&gt;The &lt;strong&gt;fragment animation specification&lt;/strong&gt; is a JSON dictionary which keys are slides specifications and which values are names of animation functions. Currently, a single animation function is defined: &lt;code&gt;fragment_cssanim&lt;/code&gt;, which runs the CSS animations defined on the element&lt;/p&gt;
+				</code></pre>
+			</div>
+		</div>
+	</section>
+
+	<section class="content" data-autofragment="['.content ul>li',{'before':['semivisible'],'current':['pulse'],'animation':'fragment_cssanim'}]">
+		<h1>Auto-fragments</h1>
+		<div class="content">
+			<ul>
+				<li>Auto-fragments automatically generate fragments on slides based on CSS selectors or data-attributes</li>
+				<li>Auto-fragments may be added on any element below and including the slide <code>section</code> element
+					<ul>
+						<li>When they are added in the slide <code>section</code> element, they are specified by a two elements array. The first element is a CSS selector to identify all the elements in the slide for which a fragment has to be generated. The second is an auto-fragment specification</li>
+						<li>When they are added to an element below the <code>section</code> element, they are specified by a single auto-fragment specification. A fragment is generated only for the corresponding element. In this case, it is mostly useful when added in the CSS stylesheet.</li>
+					</ul>
+				</li>
+			</ul>
+			<table class="shadowed" style="width:90%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>Elements</td><td>HTML attribute</td><td>CSS property</td><td>Meaning</td></tr>
+				</thead>
+				<tbody>
+					<tr><td>section</td><td>data-autofragment</td><td>--autofragment</td><td>JSON array with two elements: a CSS selector and an auto-fragment specification</td></tr>
+					<tr><td>Any below section</td><td>data-autofragment</td><td>--autofragment</td><td>Auto-fragment specification</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</section>
+
+	<section class="content" data-autofragment="['.content ul>li',{'before':['semivisible'],'current':['pulse'],'animation':'fragment_cssanim'}]">
+		<h1>Auto-fragments for slides element</h1>
+		<div class="content">
+			<ul>
+				<li>An <strong>auto-fragment specification</strong> is a JSON dictionary which may hold four keys:
+					<ul>
+						<li><code>before</code>: Array of names of classes to apply on the element before the current fragment is active</li>
+						<li><code>current</code>: Array of names of classes to apply when the current fragment is active</li>
+						<li><code>after</code>: Array of names of classes to apply after the current fragment has been active</li>
+						<li><code>animation</code>: Name of function used to activate an animation when the current fragment has just been active</li>
+					</ul>
+				</li>
+				<li>Fragments are generated in four steps:
+					<ul>
+						<li>Browse all elements in the current slide matching the given selector ;</li>
+						<li>Each element is made « active » in turn in a numbered fragment ;</li>
+						<li>Generate a fragment specification for the active element: for all previous fragments, the classes in <code>before</code> are applied ; for the current fragment, the classes in <code>current</code> are applied ; and for the next fragments, the classes in <code>after</code> are applied ;</li>
+						<li>Generate a fragment animation specification for the active element.</li>
+					</ul>
+				</li>
+			</ul>
+			<pre><code class="language-html">
+&lt;section class="content" data-autofragment="['.content ul&gt;li',{'before':['semivisible'],'current':['pulse'],'animation':'fragment_cssanim'}]"&gt;
+	&lt;h1&gt;Auto-fragments for slides element&lt;/h1&gt;
+	&lt;div class="content"&gt;
+		&lt;ul&gt;
+			&lt;li&gt;An &lt;strong&gt;auto-fragment specification&lt;/strong&gt; is a JSON dictionary which may hold four keys:
+				&lt;ul&gt;
+					&lt;li&gt;&lt;code&gt;before&lt;/code&gt;: Array of names of classes to apply on the element before the current fragment is active&lt;/li&gt;
+					&lt;li&gt;&lt;code&gt;current&lt;/code&gt;: Array of names of classes to apply when the current fragment is active&lt;/li&gt;
+			</code></pre>
+		</div>
+	</section>
+
+	<section id="autofragments-elements" class="content">
+		<h1>Auto-fragments for elements inside slides</h1>
+		<div class="content">
+			<ul>
+				<li>Auto-fragments may also be applied on elements inside slides</li>
+				<li>In this case, they are set by a single auto-fragment specification (without the CSS selector used in slides auto-fragment specifications)</li>
+				<li>Fragments are generated in the same way as for slides auto-fragment specifications, but this way offers more accurate fine-tuning</li>
+				<li>While it is possible, there is absolutely no benefit of using <code>data-autofragment</code> attributes inline in HTML code when you can also use <code>data-fragment</code> which offers even more customization. On the other hand, this attribute is well suited for CSS stylesheets.</li>
+			</ul>
+
+			CSS stylesheet:
+			<pre><code class="language-css">
+#autofragments-elements ul > li {
+	--autofragment: "{'before':['semivisible'],'current':['pulse'],'animation':'fragment_cssanim'}";
+}
+			</code></pre>
+
+			HTML code:
+			<pre><code class="language-html">
+&lt;section id="autofragments-elements" class="content"&gt;
+	&lt;h1&gt;Auto-fragments for elements inside slides&lt;/h1&gt;
+	&lt;div class="content"&gt;
+		&lt;ul&gt;
+			&lt;li&gt;Auto-fragments may also be applied on elements inside slides&lt;/li&gt;
+			&lt;li&gt;In this case, they are set by a single auto-fragment specification (without the CSS selector used in slides auto-fragment specifications)&lt;/li&gt;
+			</code></pre>
 		</div>
 	</section>
 
@@ -713,13 +935,197 @@ function animate_none(source,dest,increasing,callback) {
 		</div>
 	</section>
 
-	<h3>Images</h3>
+	<section class="content">
+		<h1>Citations</h1>
+		<div class="content">
+			<div class="block">
+				<h1>De l'intérêt des citations</h1>
+				<div class="content">
+					<blockquote>
+						Une citation sans références est à peu près aussi utile qu'une horloge sans aiguilles.
+					</blockquote>
+					<cite>Samuel Johnson</cite>
+				</div>
+			</div>
+			<pre><code class="language-html">
+&lt;div class="block"&gt;
+&lt;h1&gt;De l'intérêt des citations&lt;/h1&gt;
+&lt;div class="content"&gt;
+	&lt;blockquote&gt;
+		Une citation sans références est à peu près aussi utile qu'une horloge sans aiguilles.
+	&lt;/blockquote&gt;
+	&lt;cite&gt;Samuel Johnson&lt;/cite&gt;
+&lt;/div&gt;
+			</code></pre>
+		</div>
+	</section>
 
-	<h3>Tables</h3>
+	<section class="content">
+		<h1>Images</h1>
+		<div class="content">
+			<p>Images can be automatically centered with the class <code>centered</code>. A shadow may be added with the class <code>shadowed</code></p>
 
-	<h2 data-short="Templates">Creating your own template</h2>
+			<figure class="centered">
+				<svg class="shadowed" style="width: 60vw; height: 40vh">
+					<rect width="100%" height="100%" stroke="var(--secondary-dark)" fill="var(--secondary-lighter)" />
+					<line x1="0" y1="0" x2="100%" y2="100%" stroke="var(--secondary-dark)" />
+					<line x1="100%" y1="0" x2="0" y2="100%" stroke="var(--secondary-dark)" />
+				</svg>
+			</figure>
+
+			<pre><code class="language-html">
+&lt;figure class="centered"&gt;
+	&lt;svg class="shadowed" style="width: 60vw; height: 40vh"&gt;
+		&lt;rect width="100%" height="100%" stroke="var(--secondary-dark)" fill="var(--secondary-lighter)" /&gt;
+		&lt;line x1="0" y1="0" x2="100%" y2="100%" stroke="var(--secondary-dark)" /&gt;
+		&lt;line x1="100%" y1="0" x2="0" y2="100%" stroke="var(--secondary-dark)" /&gt;
+	&lt;/svg&gt;
+&lt;/figure&gt;
+			</code></pre>
+
+		</div>
+	</section>
+	
+	<section class="content">
+		<h1>Tables</h1>
+		<div class="content">
+			Tables are designed according to the color theme, and can also be shadowed.
+
+			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>Class name</td><td>Class effect</td></tr>
+				</thead>
+				<tbody>
+					<tr><td>headcolumn</td><td>The first column has a background color to make it stand out as a head column</td></tr>
+					<tr><td>fullwidth</td><td>The table takes up the full width</td></tr>
+					<tr><td>grid</td><td>The table has a visible grid</td></tr>
+					<tr><td>leftaligned</td><td>The table cells are left-aligned (except for the head row)</td></tr>
+				</tbody>
+			</table>
+			<pre><code>
+&lt;table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto"&gt;
+	&lt;thead&gt;
+		&lt;tr&gt;&lt;td&gt;Class name&lt;/td&gt;&lt;td&gt;Class effect&lt;/td&gt;&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+		&lt;tr&gt;&lt;td&gt;headcolumn&lt;/td&gt;&lt;td&gt;The first column has a background color to make it stand out as a head column&lt;/td&gt;&lt;/tr&gt;
+		&lt;tr&gt;&lt;td&gt;fullwidth&lt;/td&gt;&lt;td&gt;The table takes up the full width&lt;/td&gt;&lt;/tr&gt;
+		&lt;tr&gt;&lt;td&gt;grid&lt;/td&gt;&lt;td&gt;The table has a visible grid&lt;/td&gt;&lt;/tr&gt;
+		&lt;tr&gt;&lt;td&gt;leftaligned&lt;/td&gt;&lt;td&gt;The table cells are left-aligned (except for the head row)&lt;/td&gt;&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+			</code></pre>
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>Predefined colors</h1>
+		<div class="content">
+			Color themes are automatically generated when the basis colors are selected in the template. Colors can be used with one of the following methods:
+
+			<ul>
+				<li>in Sass templates, use <code>map.get($theme, "primary-light")</code></li>
+				<li>in CSS and HTML, use <code>var(--primary-light)</code></li>
+			</ul>
+
+			<table id="colortable" class="shadowed">
+			</table>
+		</div>
+	</section>
 
 	<h2 data-short="Navigation">Navigating the slideshow</h2>
+
+	<section class="content">
+		<h1>Navigation</h1>
+		<div class="content">
+			<dl class="rightheader">
+				<dt><key>→</key></dt> <dd>Display next slide fragment, or next slide if there is no more fragment</dd>
+				<dt><key>←</key></dt> <dd>Display previous slide fragment, or previous slide if there is no more fragment</dd>
+				<dt><key>↓</key></dt> <dd>Display next slide</dd>
+				<dt><key>↑</key></dt> <dd>Display previous slide</dd>
+				<dt><key>PageDown</key></dt> <dd>Move to next outline (section, subsection…)</dd>
+				<dt><key>PageUp</key></dt> <dd>Move to previous outline (section, subsection…)</dd>
+				<dt><key>Home</key></dt> <dd>Move to the start of the slideshow</dd>
+				<dt><key>End</key></dt> <dd>Move to the end of the slideshow</dd>
+				<dt><key>N</key></dt> <dd>Open presenter notes</dd>
+				<dt><key>S</key></dt> <dd>Set synchronize mode</dd>
+				<dt><key>Shift</key><key>S</key></dt> <dd>Display synchronization URL (when in synchronize mode)</dd>
+				<dt><key>O</key></dt> <dd>Open outline view</dd>
+				<dt><key>P</key></dt> <dd>Toggle document view</dd>
+			</dl>
+
+			It is also possible to navigate slides by swiping leftwards, rightwards, upwards or downwards when on a mobile device.
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>Outline view</h1>
+		<div class="content">
+			The outline view displays small versions of slides in a grid and allows to quickly jump to another slide.
+			<dl class="rightheader">
+				<dt><key>O</key></dt> <dd>Open the outline view</dd>
+				<dt><key>←</key></dt> <dd>Select the previous slide</dd>
+				<dt><key>→</key></dt> <dd>Select the next slide</dd>
+				<dt><key>Enter</key></dt> <dd>Close the outline view and switch to the selected slide</dd>
+			</dl>
+
+			A new slide can also be selected by clicking on it.
+		</div>
+	</section>
+
+	<section id="presenter-notes" class="content">
+		<h1>Presenter notes</h1>
+		<div class="content">
+			<ul>
+			<li>The presenter notes are displayed on a new window, so that they can be moved to another screen.</li>
+			<li>The presenter notes displays the current time and tells if you are late or early based on the talk duration you provide.</li>
+			<li>The notes are on a single page. The content is scrolled automatically according to the current position in the slideshow. There are two ways for this to work:
+				<ul>
+					<li>either the identifiers of headings of the presenter notes pages should match the identifiers of slides in the slideshow (custom ids or auto-generated ids) ; </li>
+					<li>or one of the heading content of the presenter notes pages should match the title of a slide.</li>
+				</ul></li>
+			</ul>
+
+			<dl class="rightheader">
+				<dt><key>N</key></dt> <dd>Toggle the presenter notes. The URL must be configured in the HTML tag</dd>
+				<dt><key>;</key></dt> <dd>Scroll down the presenter notes without leaving the slideshow</dd>
+				<dt><key>,</key></dt> <dd>Scroll up the presenter notes without leaving the slideshow</dd>
+			</dl>
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>Presenter notes</h1>
+		<div class="content">
+			Example of note page:
+			<pre><code class="language-html">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="fr" data-duration="1h"&gt;
+&lt;head&gt;
+	&lt;meta charset="utf-8"&gt;
+	&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+
+	&lt;title&gt;Notes de présentation&lt;/title&gt;
+	&lt;link rel="stylesheet" href="/templates/slides/template_notes.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	&lt;h1&gt;Slides.js&lt;/h1&gt;
+
+	&lt;h2&gt;Slides.js in a nutshell…&lt;/h2&gt;
+	Slides.js is a lightweight framework to generate animated slideshows using templates.
+
+	Templates can be easily developed, using only CSS declarations, even for the animations and dynamic components (outline slides, background images, footer…).
+&lt;/body&gt;
+&lt;script src="/templates/slides/template_notes.js"&gt;&lt;/script&gt;
+&lt;/html&gt;
+			</code></pre>
+
+			<p>The <code>data-duration</code> attribute in the HTML element is used to indicate the target time for the slideshow. An example is <code>data-duration="1h20mn"</code> to tell the slideshow should last one hour and twenty minutes. This is used to estimate if the presenter is late or early in his talk.</p>
+		</div>
+	</section>
+
+
+	<h2 data-short="Templates">Creating your own template</h2>
 
 	
 	<section class="content">
@@ -745,9 +1151,43 @@ function animate_none(source,dest,increasing,callback) {
 		pre.append(code);
 		return pre;
 	}
+	function generate_table_color() {
+		const hues = ["primary", "secondary", "tertiary", "quaternary", "neutral"];
+		const lightnesses = ["lightest", "lighter", "light", "", "dark", "darker", "darkest"];
+		let table = document.getElementById("colortable");
+		table.classList.add("plain");
+		let thead = document.createElement("thead");
+		let tr = document.createElement("tr");
+		tr.append(document.createElement("td"));
+		for (const hue of hues) {
+			let td = document.createElement("td");
+			td.textContent = hue;
+			tr.append(td);
+		}
+		thead.append(tr);
+		table.append(thead);
+		let tbody = document.createElement("tbody");
+		for (const lightness of lightnesses) {
+			let row = document.createElement("tr");
+			let td = document.createElement("td");
+			td.textContent = lightness;
+			row.append(td);
+			for (const hue of hues) {
+				let cell = document.createElement("td");
+				let color = hue + (lightness ? ("-" + lightness) : "");
+				cell.style.backgroundColor = "var(--" + color + ")";
+				if (lightness.startsWith("dark")) cell.style.color = "white";
+				cell.textContent = color;
+				row.append(cell);
+			}
+			tbody.append(row);
+		}
+		table.append(tbody);
+	}
 	document.addEventListener("DOMContentLoaded", function(event) {
 		hljs.highlightAll();
 		generate_qr_code("qrcode");
+		generate_table_color();
 	});
 </script>
 </html>
