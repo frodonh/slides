@@ -797,7 +797,7 @@ body>section, #thumblayer>div.wthumb>section {
 		.content::before {
 			content: $symbol;
 			color: white;
-			font-size: italic 1.5em serif;
+			font: italic 1.5em serif;
 			border-radius: 1em;
 			background-color: map.get($theme, "#{$color}-darkest");
 			position: absolute;
