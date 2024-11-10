@@ -45,6 +45,45 @@
 /********************************************/
 /*              General styles              */
 /********************************************/
+body {
+	font-family: Garamond, serif;
+	counter-reset: h2counter;
+
+	& > h1 {
+		display: none;
+		counter-reset: h2counter;	
+	}
+
+	& > h2 {
+		font-weight: bold;
+		font-size: 140%;
+		color: map-get($theme, "primary-dark");
+		counter-reset: h3counter;
+		border-bottom: 1px solid black;
+		margin-top: 2em;
+		
+		&::before {
+			counter-increment: h2counter;
+			content: counter(h2counter, upper-roman) ". ";
+		}
+	}
+
+	& > h3 {
+		font-style: italic;
+		font-size: 120%;
+		color: map-get($theme, "secondary-dark");
+		
+		&::before {
+			counter-increment: h3counter;
+			content: counter(h3counter, upper-latin) ". ";
+		}
+	}
+
+	& > h4 {
+		font-weight: bold;
+	}
+}
+
 // General declarations
 ul {
 	margin: 0;
@@ -62,13 +101,13 @@ body>section {
     // Title slide
     &#title {
 		h1 {
-			color: map.get($theme, "primary-dark");
-			font: bold 180% sans-serif;
+			font-weight: bold;
+			font-size: 120%;
 			text-align: center;
 
 			.subtitle {
 				color: map.get($theme, "secondary-dark");
-				font: italic 80% sans-serif;
+				font: italic 80% serif;
 				text-align: center;
 			}
 		}
@@ -84,8 +123,8 @@ body>section {
     // Regular content slide (title + content)
     &.content {
         & > h1 {
-			font: bold 180% sans-serif;
-			color: map.get($theme, "primary-dark");
+			font-weight: bold;
+			font-size: 120%;
         }
 
         & > .content {
@@ -120,8 +159,8 @@ body>section {
 
 	&.focus {
 		h1 {
-			font-size: 2.5em;
 			font-weight: bold;
+			font-size: 120%;
 			text-align: center;
 		}
 	}
@@ -278,7 +317,7 @@ body>section {
 		}
 		margin: 0 0 0 0;
 		border-radius: 0.6vmax 0.6vmax 0 0;
-		font: bold 120% sans-serif;
+		font-weight: bold;
 		color: white;
 		background-image: linear-gradient(to bottom,map.get($theme, "#{$color}-darker") 0%,map.get($theme, "#{$color}-darker") 80%,map.get($theme, "#{$color}-lighter") 100%);
 	}

@@ -1,0 +1,8 @@
+@use 'sass:color';
+// Colors
+$theme: (
+  "primary": color.scale(#4A21A9FF, $lightness: 20%),
+  "secondary": color.scale(#B64A0DFF, $lightness: 20%),
+  "tertiary": color.scale(#FF3399FF, $lightness: 20%),
+  "quaternary": olive,
+);

@@ -19,7 +19,7 @@
 }
 
 /********************************************/
-/*               Animations                 */
+/*               Transitions                */
 /********************************************/
 body>section {
 	// Slide-animation: fade
@@ -103,6 +103,27 @@ body>section {
 }
 
 /********************************************/
+/*                Animations                */
+/********************************************/
+@keyframes pulsebox {
+	from {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.2);
+	}
+	to {
+		transform: scale(1);
+	}
+}
+.pulse {
+	animation-play-state: running;
+	animation-name: pulsebox;
+	animation-duration: 1s;
+	animation-timing-function: ease-in-out;
+}
+
+/********************************************/
 /*                 Mixins                   */
 /********************************************/
 @mixin shadowed {
@@ -140,7 +161,7 @@ body {
 	height: 100vh;
 	overflow: hidden;
 	margin: 0;
-	font: 2.8vh sans-serif;
+	font: 2.2vmin sans-serif;
     --background-layer: "active"; // May be "active" or "inactive". When active, the background of the slides is added to a separate background layer, and is not attached to the slide (therefore it does not move with the slides animation. When inactive, the background is added to each slide.
     --foreground-layer: "active";
 

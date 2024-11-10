@@ -1,0 +1,148 @@
+@use "sass:map";
+@import "colors";
+@import '../template.scss';
+
+body {
+	font-family: Helvetica, sans serif;
+	font-size: 2.2vmin;
+	--background-layer: "active";
+	--foreground-layer: "active";
+}
+
+/********************************************/
+/*              Slide layout                */
+/********************************************/
+body>section, #thumblayer>div.wthumb>section {
+    // Title slide
+    &#title, &.title {
+        --animation: "convex";
+		display: flex;
+		flex-flow: column nowrap;
+		justify-content: center;
+
+        h1 {
+			margin: 0 auto;
+            width: 70%;
+            text-align: center;
+			padding: 1em;
+			background-color: map.get($theme, "neutral-lighter");
+			border-radius: 30px;
+
+            .subtitle {
+                color: map.get($theme, "secondary");
+                font: italic 80% sans-serif;
+            }
+        }
+
+        .authordate {
+			margin: 10vh 0;
+			font-size: 80%;
+			color: map.get($theme, "primary-light");
+			text-align: center;
+        }
+    }
+
+    // Regular content slide
+	&.content {
+        --foreground: "[Minitoc(), ClassicFooter()]";
+        --animation: "convex";
+
+        & > h1 {
+            position: relative;
+            padding: 2vh 2vw 2vh 2vw;
+            text-align: left;
+            font: bold 180% sans-serif;
+            color: map.get($theme, "primary-darker");
+            flex: none;
+            margin: 8vh 5vw 0.6vw 5vw;
+        }
+
+	    & > .content {
+            border-width: 0.6vh 0 0 0;
+            padding: 1.2vh 2.4vw;
+            margin: 0 5vw 6vh 5vw;
+        }
+    }
+
+	// Chessboard slide
+	&.chessboard {
+        --foreground: "[Minitoc()]";
+        --animation: "convex";
+
+        & > h1 {
+            position: relative;
+            padding: 2vh 2vw 2vh 2vw;
+            text-align: left;
+            font: bold 180% sans-serif;
+            color: map.get($theme, "primary-darker");
+            flex: none;
+            margin: 8vh 5vw 0.6vw 5vw;
+        }
+
+	    & > .content {
+            border-width: 0.6vh 0 0 0;
+            margin: 0;
+        }
+	}
+
+	// Plain slide
+	&.plain {
+		--animation: "convex";
+	}
+
+	// Focus slide
+	&.focus {
+		--animation: "convex";
+	}
+
+    &.outline div.content .current {
+		background-color: map.get($theme, "primary-lightest");
+    }
+
+    // Inner structure
+	div.content ul>li {
+		color: map.get($theme, "primary");
+		line-height: 1.2;
+		margin-top: 0.3em;
+
+		&::before {
+			content: "• ";
+			font-size: 200%;
+			margin-right: 0.35em;
+			color: map.get($theme, "primary");
+			display: inline-block;
+			vertical-align: -0.1em;
+			height: 0.8em;
+		}
+
+		li {
+			color: map.get($theme, "secondary");
+			padding-bottom: 0;
+
+			&::before {
+				content: "✗ ";
+				color: map.get($theme, "secondary");
+			}
+		}
+	}
+}
+
+/********************************************/
+/*               Components                 */
+/********************************************/
+.component-classicfooter {
+	box-sizing: border-box;
+	position: fixed;
+	bottom: 1vh;
+	height: auto;
+	left: 0;
+	margin: 0 1.2vw;
+}
+
+/********************************************/
+/*             Inner components             */
+/********************************************/
+
+/********************************************/
+/*                Fragments                 */
+/********************************************/

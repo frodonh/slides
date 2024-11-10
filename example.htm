@@ -5,11 +5,11 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<link rel="stylesheet" title="mainsheet" href="/templates/dewdrop/slides/template.css">
-	<link rel="alternate stylesheet" title="outlinesheet" href="/templates/dewdrop/slides/template_outline.css">
+	<link rel="stylesheet" title="mainsheet" href="dewdrop/template.css">
+	<link rel="alternate stylesheet" title="outlinesheet" href="dewdrop/template_outline.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-	<script src="/templates/slides/slides.js"></script>
+	<script src="slides.js"></script>
 	<script>
 		initialize({
 			"title": "Slides.js",
@@ -235,7 +235,7 @@ initialize({
 		</div>
 	</section>
 	
-	<section class="content">
+	<section id="heading-options" class="content">
 		<h1>Headings</h1>
 		<div class="content">
 			<pre><code class="language-html">&lt;h2 data-short="Outer" data-outline="ClassicOutlineSlide"&gt;Outer structure&lt;/h2&gt;</code></pre>
@@ -252,18 +252,36 @@ initialize({
 			</table>
 
 			<p>The composition function should return an object that inherits the OutlineSlide class. It has one mandatory member function:
-			<pre><code class="language-js">compose(structure, element, section)</code></pre>
+			<pre><code class="language-js">compose(entry, structure)</code></pre>
 			where:
 			<ul>
+				<li><code>entry</code> is the structure node of the current heading</li>
 				<li><code>structure</code> is the structure of the document (usually a global variable named structure with the tree of headings and slides)</li>
-				<li><code>element</code> is the DOM element on which the outline should be added</li>
-				<li><code>section</code> is the ID of the current slide, used to highlight it in the outline</li>
 			</ul>
 			</p>
 		</div>
 	</section>
 
 	<section class="content">
+		<h1>Headings</h1>
+		<div class="content">
+			<p>Currenty, two outline styles (which can be used in <code>data-outline</code>are defined:</p>
+
+			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>Composition function</td><td>Outline style</td></tr>
+				</thead>
+				<tbody>
+					<tr><td>ClassicOutlineSlide()</td><td>The title is a generic name (like "Outline" or "Sommaire"), the contents are a tree of sections and subsections</td></tr>
+					<tr><td>FocusOutlineSlide()</td><td>The title is the name of the current heading, the contents are the list of subsections at the level immediately below the heading level</td></tr>
+				</tbody>
+			</table>
+
+			<p>All outline slides have the <code>outline</code> and a <code>data-level</code> attribute with the nesting level of the current heading (1 for h1, 2 for h2…).</p>
+		</div>
+	</section>
+
+	<section id="slide-options" class="content">
 		<h1>Slides</h1>
 		<div class="content">
 			<pre><code class="language-html">&lt;section id="myslide" data-animation="fade"&gt;…&lt;/section&gt;</code></pre>
@@ -279,7 +297,8 @@ initialize({
 					<tr><td>section</td><td>data-components</td><td>--components</td><td>Array of components constructors. See also <a href="#components">here</a></td></tr>
 					<tr><td>section</td><td>data-background</td><td>--background</td><td>Array of components constructors to add to the background layer. See also <a href="#backfore">here</a></td></tr>
 					<tr><td>section</td><td>data-foreground</td><td>--foreground</td><td>Array of components constructors to add to the foreground layer. See also <a href="#backfore">here</a></td></tr>
-					<tr><td>section</td><td>data-numfragment</td><td></td><td>Fragment specification. See also <a href="#fragment">here</a></td></tr>
+					<tr><td>section</td><td>data-numfragment</td><td></td><td>Number of fragment. See also <a href="#fragment">here</a></td></tr>
+					<tr><td>section</td><td>data-autofragment</td><td></td><td>Auto-fragment specification. See also <a href="#fragment">here</a></td></tr>
 				</tbody>
 			</table>
 
@@ -659,6 +678,11 @@ function animate_none(source,dest,increasing,callback) {
 						<td><code>ColorBackground(color)</code></td>
 						<td>A color background for a slide. <code>color</code> is the name of the color and must be supported by CSS</td>
 					</tr>
+					<tr>
+						<td>HTML Element</td>
+						<td><code>SimpleElement(string)</code></td>
+						<td>An element prepended to the slide. <code>string</code> may be any valid HTML code. Classes defined in the CSS slideshow will apply to the new element.</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
@@ -960,6 +984,8 @@ function animate_none(source,dest,increasing,callback) {
 		</div>
 	</section>
 
+	<h3>Images and tables</h3>
+
 	<section class="content">
 		<h1>Images</h1>
 		<div class="content">
@@ -1018,7 +1044,9 @@ function animate_none(source,dest,increasing,callback) {
 		</div>
 	</section>
 
-	<section class="content">
+	<h3>Predefined colors</h3>
+
+	<section id="colortheme" class="content">
 		<h1>Predefined colors</h1>
 		<div class="content">
 			Color themes are automatically generated when the basis colors are selected in the template. Colors can be used with one of the following methods:
@@ -1040,6 +1068,7 @@ function animate_none(source,dest,increasing,callback) {
 		<div class="content">
 			<dl class="rightheader">
 				<dt><key>→</key></dt> <dd>Display next slide fragment, or next slide if there is no more fragment</dd>
+				<dt><key>Space</key></dt> <dd>Display next slide fragment, or next slide if there is no more fragment</dd>
 				<dt><key>←</key></dt> <dd>Display previous slide fragment, or previous slide if there is no more fragment</dd>
 				<dt><key>↓</key></dt> <dd>Display next slide</dd>
 				<dt><key>↑</key></dt> <dd>Display previous slide</dd>
@@ -1051,7 +1080,8 @@ function animate_none(source,dest,increasing,callback) {
 				<dt><key>S</key></dt> <dd>Set synchronize mode</dd>
 				<dt><key>Shift</key><key>S</key></dt> <dd>Display synchronization URL (when in synchronize mode)</dd>
 				<dt><key>O</key></dt> <dd>Open outline view</dd>
-				<dt><key>P</key></dt> <dd>Toggle document view</dd>
+				<dt><key>P</key></dt> <dd>Toggle document view (printable text document)</dd>
+				<dt>Double click</dt> <dd>Toggle fullscreen mode</dd>
 			</dl>
 
 			It is also possible to navigate slides by swiping leftwards, rightwards, upwards or downwards when on a mobile device.
@@ -1095,6 +1125,35 @@ function animate_none(source,dest,increasing,callback) {
 	</section>
 
 	<section class="content">
+		<h1>Synchronization</h1>
+		<div class="content">
+			<p>The presenter slideshow (<em>master</em>) may be synchronized with the audience devices (<em>slaves</em>) when they are connected on the same presentation. When synchronized, slave devices automatically switch slides to match the master progress. This does not include fragments however.</p>
+			<p>The synchronization mode needs a synchronization script which manages the process through a remote database. The address of the script shall be included in the HTML data attributes.</p>
+			<pre><code class="language-html">
+&lt;html lang="en" data-notes="example_notes.htm" data-synchronize="/templates/slides/slides.php"&gt;
+			</code></pre>
+			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>Elements</td><td>HTML attribute</td><td>CSS property</td><td>Meaning</td></tr>
+				</thead>
+				<tbody>
+					<tr><td>html</td><td>data-synchronize</td><td></td><td>Path of the synchronization script</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>Synchronization</h1>
+		<div class="content">
+			<p>To activate the master synchronization mode, hit <key>S</key> and then an id (any id can be entered, it is mainly useful when two speakers are presenting at the same time).</p>
+			<p>When the synchronization mode is active, hitting <key>Shift</key><key>S</key> displays a link and a QR-Code to connect to the slideshow in slave mode.</p>
+			<p>The synchronization script must have access to a PostgreSQL database at least on version 12. The database must have a table created by the script pgschema.sql.</p>
+		</div>
+	</section>
+
+
+	<section class="content">
 		<h1>Presenter notes</h1>
 		<div class="content">
 			Example of note page:
@@ -1126,6 +1185,258 @@ function animate_none(source,dest,increasing,callback) {
 
 
 	<h2 data-short="Templates">Creating your own template</h2>
+
+	<h3>Creating the template</h3>
+	<section class="content">
+		<h1>Structure of the template</h1>
+		<div class="content">
+			<pre><code class="language-css">
+@use "sass:map"; // Use the map library, needed if you want to use theme colors in you Sass stylesheet
+@import "colors"; // Import a colors definition stylesheet (optional)
+@import "fonts"; // Import a fonts definition stylesheet (optional)
+@import '../template.scss'; // Import main template
+			</code></pre>
+
+			<p>The easiest way to create a new template is to generate it with <a href="https://sass-lang.com">Sass</a>.</p>
+
+			<p>The main template <strong>must</strong> be called after base colors are defined (since it automatically generates variants of those base colors if needed.</p>
+		</div>
+	</section>
+
+	<h3>Customizing the color theme</h3>
+	<section class="content">
+		<h1>Defining color themes</h1>
+		<div class="content">
+			<p>See <a href="#colortheme">here</a> for information about colors. If you use Sass, themes are automatically generated from base colors.</p>
+			
+			<p>Any theme colors may be defined in the Sass or CSS stylesheet. If you use, you may want to define your base colors this way:</p>
+
+			<pre><code class="language-css">
+$theme: (
+  "primary": #00A6E2FF,
+  "secondary": #6AB96FFF,
+  "tertiary": #ED6A53FF,
+  "quaternary": #CC9F72FF,
+  "neutral": #777777FF
+)
+			</code></pre>
+
+			<p>You can also override other color variants or use the predefined ones:</p>
+
+			<pre><code class="language-css">
+$theme: (
+  "primary": #00A6E2FF,
+  "primary-lighter": #99D7F7FF,
+  "secondary": #ED6A53FF
+)
+			</code></pre>
+		</div>
+	</section>
+
+	<h3>CSS stylesheet</h3>
+	<section class="content">
+		<h1>Customize the general look</h1>
+		<div class="content">
+			These are some elements which may be customized through CSS:
+
+			<table class="shadowed" style="width:90%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>CSS selector</td><td>Where it is used in the slideshow</td></tr>
+				</thead>
+				<tbody>
+					<tr><td><code>body</code></td><td>General options (font family and size). Also configure the generation of a background and foreground layer (as shown <a href="#body-options">here</a>).</td></tr>
+					<tr><td><code>body &gt; h1</code>, <code>body &gt; h2</code>…</td><td>Automatic generation of outlines at the start of new sections or at the beginning of the slideshow(as show <a href="heading-options">here</a>).</td></tr>
+				</tbody>
+			</table>
+
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>Customize the look of slides</h1>
+		<div class="content">
+			<p>Some options can be configured for every slide, whatever their template. In this case, they can be added to the <code>body>section, #thumblayer&gt;div.wthumb&gt;section</code>.</p>
+
+			<p>See <a href="#slide-options">here</a> for the list of parameters which you can apply on the slide section element.</p>
+			
+			<p>Please always use the two selectors (body and thumblayer) as the second one is used in mini-slides view.</p>
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>Customize the title slide</h1>
+		<div class="content">
+			<p>The title slide is automatically generated at the beginning of the slideshow based on the given metadata. It may be configured by the <code>body&gt;section#title, #thumblayer&gt;div.wthumb&gt;section#title</code> selector.</p>
+
+			<table class="shadowed" style="width:90%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>CSS selector</td><td>Where it is used in the slideshow</td></tr>
+				</thead>
+				<tbody>
+					<tr><td><code>& &gt; h1</code></td><td>Title of the slideshow</td></tr>
+					<tr><td><code>& &gt; h1 .subtitle</code></td><td>Subtitle of the slideshow</td></tr>
+					<tr><td><code>& .authordate</code></td><td>Date and author block</td></tr>
+				</tbody>
+			</table>
+
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>Customize the slides</h1>
+		<div class="content">
+			<p>There are several slides styles. Each style has an associated class which is applied to the slide <code>section</code> element. They may be configured using the following selectors:</p>
+
+			<table class="shadowed" style="width:90%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>CSS selector</td><td>Slide style</td></tr>
+				</thead>
+				<tbody>
+					<tr><td><code>body&gt; section.content</code></td><td>General content slide</td></tr>
+					<tr><td><code>body &gt; section.focus</code></td><td>Focus slide (a single title)</td></tr>
+					<tr><td><code>body &gt; section.plain</code></td><td>Plain slide (with no background or foreground)</td></tr>
+					<tr><td><code>body &gt; section.chessboard</code></td><td>Chessboard style slide</td></tr>
+					<tr><td><code>body &gt; section.content.twocolumns</code></td><td>Content slide with two columns</td></tr>
+				</tbody>
+			</table>
+
+			<p>You can of course add your own slide style and use it in your presentation. For the predefined slide styles, the following elements may be configured:</p>
+
+			<table class="shadowed" style="width:90%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>CSS selector</td><td>Where it is used in the slideshow</td></tr>
+				</thead>
+				<tbody>
+					<tr><td><code>& &gt; h1</code></td><td>Title of the slide</td></tr>
+					<tr><td><code>& &gt; .content</code></td><td>Content block of the slide</td></tr>
+				</tbody>
+			</table>
+
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>Customize the outline slides</h1>
+		<div class="content">
+			<p>Outline slides are automatically generated at the beginning of the slideshow or at the start of a section or subsection, when their associated heading element has the <code>--outline</code> attribute set and not empty.</p>
+
+			<p>When they are generated, outline slides have the <code>outline</code> class and have a data-attribute <code>data-level</code> with the level of their associated heading (1 for h1, 2 for h2…)</p>
+
+			<p>Outline slides inherit from content slides. In addition to content slides parameters, the following elements may be configured in outline slides:</p>
+
+			<table class="shadowed" style="width:90%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>CSS selector</td><td>Where it is used in the slideshow</td></tr>
+				</thead>
+				<tbody>
+					<tr><td><code>body &gt; section.outline &gt; div.content .current</code></td><td>Current part of the slideshow. This allows to highlight the current section or subsection on the outline slide.</td></tr>
+				</tbody>
+			</table>
+
+		</div>
+	</section>
+
+	<h3>Creating new components</h3>
+
+	<section class="content">
+		<h1>Creating a new component</h1>
+		<div class="content">
+			To create a new component, you have to do it in a Javascript script, which must be loaded after the main slides.js script file. You have to create a new class and a new function which returns an instance of this class.
+			<pre><code class="language-js">
+class ClassicFooterObject extends Component {
+	constructor(pconfig) {
+		super();
+		this.componentName = 'component-classicfooter';
+		this.config = pconfig;
+	}
+
+	add_to(slide, slideo) {
+		super.add_to(slide, slideo);
+		let footer=document.createElement('footer');
+		footer.classList.add(this.componentName);
+		footer.innerHTML='&lt;div&gt;'+meta["date"]+'&lt;/div&gt;&lt;div&gt;'+meta["title"]+'&lt;/div&gt;&lt;div&gt;'+slideo["num"]+'/'+(slides.length-1)+'&lt;/div&gt;';
+		slide.insertAdjacentElement('afterbegin',footer);
+	}
+
+	update(slide, slideo) {
+		super.update(slide, slideo);
+		let footer=slide.getElementsByClassName(this.componentName)[0];
+		footer.querySelector('div:last-child').innerHTML=slideo["num"]+'/'+(slides.length-1);
+	}
+}
+function ClassicFooter(pconfig) {return new ClassicFooterObject(pconfig);}
+			</code></pre>
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>Creating a new component</h1>
+		<div class="content">
+			<ul>
+				<li>The new class must extend the Component class</li>
+				<li>Its constructor must call the base constructor an it must initialize the <code>componentName</code> member, which is the type of the component</li>
+				<li>The constructor may have parameters and may store them in the class</li>
+				<li>The class must implement two member functions:
+					<ul>
+						<li>add_to(slide, slideo): this function adds the component to the <code>slide</code> DOM element. <code>slideo</code> is the current slide object in the slides array (it may not point to the <code>slide</code> object when the component is added to a different slide, for example to the background or foreground layer. However the function must sometimes know the current slide to customize its effect.</li>
+						<li>update(slide, slideo): this function updates the component on the <code>slide</code> DOM element. <code>slideo</code> is the current slide object in the slides array. This function is used when the component is placed on the background or foreground layer. It is not removed and added when a new slide is displayed but only updated.</li>
+					</ul>
+				</li>
+				<li>The function name is the one which can be used in the CSS <code>--components</code>, <code>--background</code> or <code>--foreground</code> parameters, or in the corresponding HTML attributes <code>data-components</code>, <code>data-background</code> and <code>data-foreground</code>.</li>
+			</ul>
+		</div>
+	</section>
+
+	<h3>Creating new outline styles</h3>
+	<section class="content">
+		<h1>Creating a new outline style</h1>
+		<div class="content">
+			To create a new outline style, you have to do it in a Javascript script, which must be loaded after the main slides.js script file. You have to create a new class and a new function which returns an instance of this class.
+			<pre><code class="language-js">
+class FocusOutlineSlideObject extends OutlineSlide {
+	compose(entry) {
+		let h = document.createElement("h1");
+		h.innerHTML = entry.name;
+		entry.outline_slide.append(h);
+		let outline = document.createElement("div");
+		outline.classList.add("content")
+		entry.outline_slide.append(outline);
+		let spart = generate_html_from_structure(entry.parts, ['H'+(entry.level+1).toString()], entry.outline_slide.id);
+		if (spart) outline.append(spart);
+	}
+}
+function FocusOutlineSlide() {return new FocusOutlineSlideObject();}
+			</code></pre>
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>Creating a new outline style</h1>
+		<div class="content">
+			<ul>
+				<li>The new class must extend the OutlineSlide class</li>
+				<li>The constructor may have parameters and may store them in the class</li>
+				<li>The class must implement one member functions: <code>compose(entry, structure)</code>. This function generates a full slide content (with h1 title and div content) by filling it out with the slideshow outline. It has two parameters:
+					<ul>
+						<li><code>entry</code>: this in an entry in the internal <code>structure</code> object representing the structure of the slideshow. The entry has the following variables set:
+							<dl>
+								<dt>name</dt><dd>Title of the part</dd>
+								<dt>level</dt><dd>Level of the heading (0 for h1, 1 for h2...)</dd>
+								<dt>short</dt><dd>Short title of the part</dd>
+								<dt>element</dt><dd>DOM element of the heading</dd>
+								<dt>parts</dt><dd>List of subparts</dd>
+								<dt>parent</dt><dd>Parent entry of the element</dd>
+								<dt>target</dt><dd>Target slide of the heading, when a link to the heading is clicked. For a normal slide, it is the very same slide. For a header, it is the outline slide generated for this header if it exists, otherwise the next standard slide</dd>
+							</dl>
+						</li>
+						<li><code>structure</code>: full structure of the slideshow. You must use this variable if you want to create a full outline from a sub-heading (the sub-heading does not hold the full outline of the slideshow but only its children headings.</li>
+					</ul>
+				</li>
+				<li>The function name is the one which can be used in the CSS <code>--outline</code> parameter, or in the corresponding <code>data-outline</code> HTML attribute.</li>
+			</ul>
+		</div>
+	</section>
+
 
 	
 	<section class="content">

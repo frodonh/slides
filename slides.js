@@ -529,6 +529,28 @@ class ColorBackgroundObject extends Component {
 }
 function ColorBackground(color) {return new ColorBackgroundObject(color);}
 
+// Elements
+class SimpleElementObject extends Component {
+	/**
+	 * Constructor of a simple element object
+	 *
+	 * @param {string} script - Javascript expression which returns the HTML code of a single element
+	 */
+	constructor(script) {
+		super()
+		this.componentName = 'component-simpleelement';
+		this.code = script;
+	}
+
+	add_to(slide, slideo=null) {
+		super.add_to(slide, slideo);
+		let parser = new DOMParser();
+		let doc = parser.parseFromString(this.code, "text/html");
+		slide.prepend(...doc.body.children);
+	}
+}
+function SimpleElement(script) {return new SimpleElementObject(script);}
+
 // Navigation bars
 class MinitocObject extends Component {
 	constructor(pconfig) {
@@ -660,6 +682,10 @@ function generate_html_from_structure(struct, tags=null, section=null, custom_na
  */
 class OutlineSlide {
 	static index = 0; 	// Static index of the outline, used to give unique IDs to slides
+	static outline_title = {
+		"fr" : "Sommaire",
+		"en" : "Outline"
+	};
 
 	constructor() {
 		if (this.constructor == OutlineSlide)  {
@@ -670,46 +696,63 @@ class OutlineSlide {
 	/**
 	 * Compose an outline slide. 
 	 *
-	 * @param {array} struct - Structure of the document, as describes in the {@link structure} array
-	 * @param {object} element - DOM element where the outline should be added
-	 * @param {string} section - Name of the current section, null for the slideshow general outline slide
+	 * @param {array} entry - Structure of the current heading, an entry in the {@link structure} array
+	 * @param {array} structure - Structure of the full slideshow, usually the {@link structure} array
 	 * @returns {object} - slide object adapted for the {@link slides} array, with an additional entry 'element' holding a reference to the DOM element
 	 */
-	compose(struct, element, section=null) {
+	compose(entry, structure) {
 		throw new Error("Method compose is not implemented.")
 	}
 }
 
 /**
- * Classic model of outline slide using the "content" class of slides (title and unordered list of sections)
+ * Classic model of outline slide: generic title and list of sections and subsections
  */
 class ClassicOutlineSlideObject extends OutlineSlide {
-	static outline_title = {
-		"fr" : "Sommaire",
-		"en" : "Outline"
-	};
-
 	/**
 	 * Compose an outline slide. 
 	 *
-	 * @param {array} struct - Structure of the document, as describes in the {@link structure} array
-	 * @param {object} element - DOM element where the outline should be added
-	 * @param {string} section - Id of the current section, null for the slideshow general outline slide
+	 * @param {array} entry - Structure of the current heading, an entry in the {@link structure} array
+	 * @param {array} structure - Structure of the full slideshow, usually the {@link structure} array
 	 * @returns {object} - slide object adapted for the {@link slides} array, with an additional entry 'element' holding a reference to the DOM element
 	 */
-	compose(struct, element, section=null) {
+	compose(entry, structure) {
 		let h = document.createElement("h1");
 		const lang = document.documentElement.lang;
-		h.textContent = ClassicOutlineSlideObject.outline_title[lang ? lang : "en"];
-		element.append(h);
+		h.textContent = OutlineSlide.outline_title[lang ? lang : "en"];
+		entry.target.append(h);
 		let outline = document.createElement("div");
 		outline.classList.add("content")
-		element.append(outline);
-		let spart = generate_html_from_structure(struct, ['H2', 'H3'], element.id);
+		entry.target.append(outline);
+		let spart = generate_html_from_structure(structure[0].parts, ['H2', 'H3'], entry.target.id);
 		if (spart) outline.append(spart);
 	}
 }
 function ClassicOutlineSlide() {return new ClassicOutlineSlideObject();}
+
+/**
+ * Another model of outline slide: only the title of the current section and the next level headings
+ */
+class FocusOutlineSlideObject extends OutlineSlide {
+	/**
+	 * Compose an outline slide. 
+	 *
+	 * @param {array} entry - Structure of the current heading, an entry in the {@link structure} array
+	 * @param {array} structure - Structure of the full slideshow, usually the {@link structure} array
+	 * @returns {object} - slide object adapted for the {@link slides} array, with an additional entry 'element' holding a reference to the DOM element
+	 */
+	compose(entry) {
+		let h = document.createElement("h1");
+		h.innerHTML = entry.name;
+		entry.target.append(h);
+		let outline = document.createElement("div");
+		outline.classList.add("content")
+		entry.target.append(outline);
+		let spart = generate_html_from_structure(entry.parts, ['H'+(entry.level+1).toString()], entry.target.id);
+		if (spart) outline.append(spart);
+	}
+}
+function FocusOutlineSlide() {return new FocusOutlineSlideObject();}
 
 /**********************************
  *        Printing management     *
@@ -1252,7 +1295,6 @@ function create_structure() {
 				oslide.classList.add("outline");
 				oslide.dataset["level"] = entry.level;
 				el.insertAdjacentElement('afterend', oslide);
-				entry.outline_slide = oslide;
 				entry.target = oslide;
 			} else {
 				let sibling = entry.element;
@@ -1291,6 +1333,10 @@ function create_structure() {
 	}
 }
 
+function quote(str) {
+	return str.replace(/(?<!\\\\)'/g, '"').replace(/\\\\'/g, "'");
+}
+
 /** Read CSS properties and add them to data attributes
  *
  * @param {object} element - Element on which the function should be applied
@@ -1301,9 +1347,8 @@ function css_to_data(element) {
 		if (!element.dataset[prop]) {
 			let val = properties.getPropertyValue('--'+prop);
 			if (val) val = val.replace(/^"|"$/g, "");
-			if (val && val != "") element.dataset[prop] = val;
-		}
-		if (element.dataset[prop]) element.dataset[prop] = element.dataset[prop].replace(/'/g, '"');
+			if (val && val != "") element.dataset[prop] = quote(val);
+		} else element.dataset[prop] = quote(element.dataset[prop]);
 	}
 }
 
@@ -1317,9 +1362,7 @@ function process_slideshow() {
 	// Replace quotes in JSON attributes
 	for (const val of ['fragment','fanim','autofragment','background','foreground','animation','components']) {
 		Array.from(document.querySelectorAll('[data-'+val+']')).forEach(function(element) {
-			let attr=element.dataset[val];
-			attr=attr.replace(/'/g,'"');
-			element.dataset[val]=attr;
+			element.dataset[val]=quote(element.dataset[val]);
 		});
 	}
 
@@ -1418,13 +1461,13 @@ function process_slide(element) {
  */
 function compose_outline_slides() {
 	execute_structure(structure, ["H1", "H2", "H3", "H4", "H5", "H6"], function(entry) {
-		if (entry.outline_slide) {
+		if (entry.target) {
 			let outlinestyle = entry.element.dataset['outline'];
 			if (!outlinestyle) outlinestyle = window.getComputedStyle(entry.element).getPropertyValue('--outline').replace(/^"|"$/g, "");
 			if (!outlinestyle) return;
 			let element = window[outlinestyle]();
-			element.compose(structure[0].parts, entry.outline_slide);
-			css_to_data(entry.outline_slide);
+			element.compose(entry, structure);
+			css_to_data(entry.target);
 		}
 	});
 }
@@ -1505,6 +1548,8 @@ function prepare_slides() {
 			slides.push(slideo);
 		});
 	}
+	let tslide = document.getElementById("title");
+	if (tslide) css_to_data(tslide);
 	compose_outline_slides(); // Fill out outline slides
 	slides.forEach(function(slideo, num) {
 		slideo["num"] = num; // Fill out slides numbers

@@ -1,0 +1,154 @@
+@use "sass:map";
+@import "colors";
+@import "fonts";
+@import '../template.scss';
+
+body {
+	font-family: "Marianne";
+    --background-layer: "active";
+    --foreground-layer: "active";
+
+	& > h1 {
+		--outline: "ClassicOutlineSlide";
+	}
+
+	& > h2 {
+		--outline: "FocusOutlineSlide";
+	}
+}
+
+/********************************************/
+/*            Outer components              */
+/********************************************/
+.component-minitoc > ul >li >ul li.section a::before {
+	font-size: 0.8rem;
+}
+
+/********************************************/
+/*              Slide layout                */
+/********************************************/
+body>section, #thumblayer>div.wthumb>section {
+	--animation: "convex";
+
+    // Title slide
+    &#title {
+        --background: "[ImageBackground('page_courante_couleurs.svg')]";
+
+        h1 {
+			position: absolute;
+			left: 0%;
+			width: 100%;
+			bottom: 26%;
+			top: 34%;
+			color: map.get($theme, "primary-darker");
+			font: bold 180% sans-serif;
+			text-align: center;
+
+			.subtitle {
+				color: map.get($theme, "secondary-darker");
+				font: italic 80% sans-serif;
+			}
+        }
+
+        .authordate {
+			position: absolute;
+			left: 1%;
+			bottom: 2%;
+			top: unset;
+			width: 51%;
+			color: map.get($theme, "primary-darker");
+			font-size: 80%;
+			line-height: 1.5;
+        }
+    }
+
+	&.content > h1, &.chessboard > h1 {
+		position: relative;
+		padding: 1.5vh 0px 2vh 0px;
+		text-align: center;
+		font: bold 180% sans-serif;
+		color: map.get($theme, "primary-darker");
+		margin: 4vh 5vw 0.4vw 5vw;
+		border-bottom: 0.6vh solid map.get($theme, "primary-darker");
+	}
+
+	&.content > .content, &.chessboard > .content {
+		padding: 1.2vh 2.4vw;
+		margin: 0 5vw 6vh 5vw;
+		min-height: 0;
+	}
+
+
+	&.content, &.chessboard {
+        --background: "[ImageBackground('page_courante.svg')]";
+        --foreground: "[Minitoc(), ClassicFooter()]";
+    }
+
+	&.focus {
+		--background: "[ColorBackground('var(--primary-darker)')]";
+		--foreground: "[]";
+	}
+
+	&.plain {
+		--background: "[]";
+		--foreground: "[]";
+	}
+
+	&.outline[data-level="2"] {
+		--components: "[SimpleElement(\\'<div class='outline-image image\\'+Math.floor(Math.random()*6)+\\''></div>\\')]";
+		
+		
+		h1 {
+			margin: 50vh 5vw 0 5vw;
+			font-size: 2.5em;
+			font-weight: bold;
+			color: white;
+			text-align: left;
+			border: none;
+		}
+
+		div.content {
+			display: none;
+		}
+
+		& > div.outline-image {
+			position: absolute;
+			top: 19.2vh;
+			bottom: 7.0vh;
+			left: 3vw;
+			right: 0;
+			background-size: cover;
+
+			@for $i from 0 through 5 {
+				&.image#{$i} { background-image: url("bimage#{$i}.jpg") }
+			}
+		}
+	}
+
+    // Inner structure
+	ul>li {
+		color: map.get($theme, "primary-darker");
+		line-height: 1.2;
+		margin-top: 0.3em;
+
+		&::before {
+			content: "▶ ";
+			font-size: 80%;
+			margin-right: 0.35em;
+			color: map.get($theme, "primary-darker");
+			display: inline-block;
+			vertical-align: 0.1em;
+			height: 1em;
+		}
+
+		li {
+			color: map.get($theme, "secondary-darker");
+			padding-bottom: 0;
+
+			&::before {
+				content: "▶ ";
+				color: map.get($theme, "secondary-darker");
+			}
+		}
+	}
+}
