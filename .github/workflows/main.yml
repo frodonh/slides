@@ -1,0 +1,63 @@
+on:
+  push:
+    paths:
+      - '**.scss'
+
+
+jobs:
+  build_css:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source Git branch
+        uses: actions/checkout@v2
+        with:
+            ref: main
+            fetch-depth: 10
+            submodules: true
+
+      - name: Make destination directory for compiled CSS
+        run: mkdir -vp /tmp/slides/css
+
+      - name: Compile CSS from SCSS files
+        uses: gha-utilities/sass-build@v0.6.0
+        with:
+          source: |
+            - ./template_outline.scss
+            - ./template_notes.scss
+            - ./dewdrop/template.scss
+            - ./dewdrop/template_outline.scss
+            - ./dewdrop/template_notes.scss
+            - ./ofb/template.scss
+          destination: |
+            - /tmp/slides/css/template_outline.scss
+            - /tmp/slides/css/template_notes.scss
+            - /tmp/slides/css/dewdrop/template.scss
+            - /tmp/slides/css/dewdrop/template_outline.scss
+            - /tmp/slides/css/dewdrop/template_notes.scss
+            - /tmp/slides/css/ofb/template.scss
+
+      - name: Checkout destination Git branch
+        uses: actions/checkout@v2
+        with:
+            ref: main
+            fetch-depth: 1
+
+      - name: Move compiled CSS to path within pr-pages branch
+        run: |
+          mv /tmp/slides/css/dewdrop/*.css ./dewdrop/
+          mv /tmp/slides/css/ofb/*.css ./ofb/
+          mv /tmp/slides/css/*.css ./
+
+      - name: Add and Commit changes to pr-pages branch
+        run: |
+          git config --local user.email 'action@github.com'
+          git config --local user.name 'GitHub Action'
+          git add **/*.css
+          git commit -m 'Updates compiled CSS files'
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
