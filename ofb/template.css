@@ -1,0 +1,1236 @@
+@charset "UTF-8";
+@font-face {
+  font-family: "Marianne";
+  src: url("/fonts/Marianne-Thin.otf") format("opentype"), local("Marianne Thin");
+  font-weight: 0 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Marianne";
+  src: url("/fonts/Marianne-ThinItalic.otf") format("opentype"), local("Marianne Thin Italic");
+  font-weight: 0 200;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Marianne";
+  src: url("/fonts/Marianne-Light.otf") format("opentype"), local("Marianne Light");
+  font-weight: 200 350;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Marianne";
+  src: url("/fonts/Marianne-LightItalic.otf") format("opentype"), local("Marianne Light Italic");
+  font-weight: 200 350;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Marianne";
+  src: url("/fonts/Marianne-Regular.otf") format("opentype"), local("Marianne");
+  font-weight: 350 450;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Marianne";
+  src: url("/fonts/Marianne-RegularItalic.otf") format("opentype"), local("Marianne Italic");
+  font-weight: 350 450;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Marianne";
+  src: url("/fonts/Marianne-Medium.otf") format("opentype"), local("Marianne Medium");
+  font-weight: 450 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Marianne";
+  src: url("/fonts/Marianne-MediumItalic.otf") format("opentype"), local("Marianne Medium Italic");
+  font-weight: 450 600;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Marianne";
+  src: url("/fonts/Marianne-Bold.otf") format("opentype"), local("Marianne Bold");
+  font-weight: 600 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Marianne";
+  src: url("/fonts/Marianne-BoldItalic.otf") format("opentype"), local("Marianne Bold Italic");
+  font-weight: 600 800;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Marianne";
+  src: url("/fonts/Marianne-ExtraBold.otf") format("opentype"), local("Marianne ExtraBold");
+  font-weight: 800 1000;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Marianne";
+  src: url("/fonts/Marianne-ExtraBoldItalic.otf") format("opentype"), local("Marianne ExtraBold Italic");
+  font-weight: 800 1000;
+  font-style: italic;
+}
+/********************************************/
+/*                 Colors                   */
+/********************************************/
+:root {
+  --primary-dark: #0083cb;
+}
+
+:root {
+  --primary-darker: #003a76;
+}
+
+:root {
+  --primary-darkest: rgb(0, 66.4, 90.4);
+}
+
+:root {
+  --primary-light: #5bc5f2;
+}
+
+:root {
+  --primary-lighter: #99d7f7;
+}
+
+:root {
+  --primary-lightest: rgb(141.4, 224.8407079646, 255);
+}
+
+:root {
+  --secondary-dark: #a4a64b;
+}
+
+:root {
+  --secondary-darker: #0e823a;
+}
+
+:root {
+  --secondary-darkest: rgb(37.2054794521, 79.1945205479, 39.8630136986);
+}
+
+:root {
+  --secondary-light: #9fca7e;
+}
+
+:root {
+  --secondary-lighter: #c4d89b;
+}
+
+:root {
+  --secondary-lightest: rgb(195.4, 227, 197.4);
+}
+
+:root {
+  --tertiary-dark: rgb(230.9368421053, 55.8105263158, 25.0631578947);
+}
+
+:root {
+  --tertiary-darker: #c2133e;
+}
+
+:root {
+  --tertiary-darkest: rgb(115.8736842105, 27.6210526316, 12.1263157895);
+}
+
+:root {
+  --tertiary-light: #f39655;
+}
+
+:root {
+  --tertiary-lighter: #ffd744;
+}
+
+:root {
+  --tertiary-lightest: rgb(247.8, 195.4, 186.2);
+}
+
+:root {
+  --quaternary-dark: #9a7b67;
+}
+
+:root {
+  --quaternary-darker: #564949;
+}
+
+:root {
+  --quaternary-darkest: rgb(93.4125, 63.6, 33.7875);
+}
+
+:root {
+  --quaternary-light: #eac198;
+}
+
+:root {
+  --quaternary-lighter: rgb(224.4, 197.4, 170.4);
+}
+
+:root {
+  --quaternary-lightest: rgb(234.6, 216.6, 198.6);
+}
+
+:root {
+  --neutral-dark: rgb(95.2, 95.2, 95.2);
+}
+
+:root {
+  --neutral-darker: rgb(71.4, 71.4, 71.4);
+}
+
+:root {
+  --neutral-darkest: rgb(47.6, 47.6, 47.6);
+}
+
+:root {
+  --neutral-light: rgb(146.2, 146.2, 146.2);
+}
+
+:root {
+  --neutral-lighter: rgb(173.4, 173.4, 173.4);
+}
+
+:root {
+  --neutral-lightest: rgb(200.6, 200.6, 200.6);
+}
+
+:root {
+  --primary: #00a6e2;
+}
+
+:root {
+  --secondary: #6ab96f;
+}
+
+:root {
+  --tertiary: #ed6a53;
+}
+
+:root {
+  --quaternary: #cc9f72;
+}
+
+:root {
+  --neutral: #777;
+}
+
+:root {
+  --palettee: #199fd9;
+}
+
+:root {
+  --palettef: #ff3399;
+}
+
+/********************************************/
+/*            Custom properties             */
+/********************************************/
+* {
+  --autofragment: "";
+  --animation: "";
+  --components: "";
+  --background: "";
+  --foreground: "";
+  --background-layer: "";
+  --foreground-layer: "";
+}
+
+/********************************************/
+/*               Transitions                */
+/********************************************/
+body > section.anim-fade-transitions {
+  opacity: 1;
+  transition: opacity 1s ease-in-out;
+}
+body > section.anim-fade-from {
+  opacity: 0 !important;
+}
+body > section.anim-fade-to {
+  opacity: 0 !important;
+}
+body > section.anim-sweep-transitions {
+  transition: left 1s ease-in-out;
+}
+body > section.anim-sweep-from {
+  left: 100%;
+}
+body > section.anim-sweep-to {
+  left: -100%;
+}
+body > section.anim-rotate-transitions {
+  transform-origin: -50% 50%;
+  transition: transform 1s ease-in-out;
+}
+body > section.anim-rotate-from {
+  transform: rotate(-90deg);
+}
+body > section.anim-rotate-to {
+  transform: rotate(90deg);
+}
+body > section.anim-convex-transitions {
+  opacity: 1;
+  transform-origin: center center 250px;
+  transition-property: transform, opacity;
+  transition-duration: 1s;
+  transition-timing-function: ease-in-out;
+}
+body > section.anim-convex-from {
+  transform: rotateY(-120deg) scale(0.5);
+  opacity: 0 !important;
+}
+body > section.anim-convex-to {
+  transform: rotateY(120deg) scale(0.5);
+  opacity: 0 !important;
+}
+body > section.anim-takeoff-transitions {
+  opacity: 1;
+  transform-origin: center center;
+  transition-property: transform, opacity;
+  transition-duration: 1s;
+  transition-timing-function: ease-in-out;
+}
+body > section.anim-takeoff-from {
+  transform: scale(0.2);
+  opacity: 0 !important;
+}
+body > section.anim-takeoff-to {
+  transform: scale(5);
+  opacity: 0 !important;
+}
+
+/********************************************/
+/*                Animations                */
+/********************************************/
+@keyframes pulsebox {
+  from {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+.pulse {
+  animation-play-state: running;
+  animation-name: pulsebox;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+}
+
+/********************************************/
+/*                 Mixins                   */
+/********************************************/
+body > section.outline a, #thumblayer > div.wthumb > section.outline a, #syncstatus a {
+  text-decoration: none;
+  color: inherit;
+}
+body > section.outline a:hover, #thumblayer > div.wthumb > section.outline a:hover, #syncstatus a:hover {
+  color: inherit;
+}
+body > section.outline a:visited, #thumblayer > div.wthumb > section.outline a:visited, #syncstatus a:visited {
+  color: inherit;
+}
+
+/********************************************/
+/*              General styles              */
+/********************************************/
+ul {
+  margin: 0;
+}
+
+p + ul {
+  margin: -2.3vh 0 0 0;
+}
+
+body {
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  font: 2.2vmin sans-serif;
+  --background-layer: "active";
+  --foreground-layer: "active";
+}
+body > h1, body > h2, body > h3, body > h4, body > h5, body > h6 {
+  display: none;
+}
+body > h1, body > h2 {
+  --outline: "ClassicOutlineSlide";
+}
+
+/********************************************/
+/*     Background and foreground layers     */
+/********************************************/
+#background, #foreground, #newbackground, #newforeground {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: opacity 1s ease;
+  pointer-events: none;
+}
+
+#background {
+  opacity: 1;
+  z-index: -2;
+}
+
+#foreground {
+  opacity: 1;
+  z-index: 2;
+}
+
+#newbackground {
+  opacity: 0;
+  z-index: -2;
+}
+
+#newforeground {
+  opacity: 0;
+  z-index: 2;
+}
+
+/********************************************/
+/*            Outer components              */
+/********************************************/
+.component-minitoc {
+  pointer-events: auto;
+  width: 100%;
+  height: 5%;
+  position: absolute;
+  transition: opacity 1s ease;
+  display: flex;
+  top: 0;
+  left: 0;
+  flex-flow: row nowrap;
+  justify-content: center;
+}
+.component-minitoc ul {
+  padding: 0;
+}
+.component-minitoc a {
+  color: inherit;
+}
+.component-minitoc > ul {
+  display: flex;
+  flex-flow: row nowrap;
+}
+.component-minitoc > ul > li {
+  list-style-type: none;
+  margin: 0 1.2vw;
+  font-size: 0.7em;
+  color: #003a76;
+  padding: 0;
+  flex: auto;
+}
+.component-minitoc > ul > li:not(:has(.current)) {
+  opacity: 0.4;
+}
+.component-minitoc > ul > li.current {
+  opacity: 1;
+  background-color: #003a76;
+  color: white;
+}
+.component-minitoc > ul > li > ul {
+  display: block;
+  list-style-type: none;
+  padding: 0;
+  margin: -0.3em 0 0 0;
+}
+.component-minitoc > ul > li > ul li {
+  display: inline-block;
+}
+.component-minitoc > ul > li > ul li.h3 {
+  font-size: 0em;
+  margin-right: 0.5rem;
+}
+.component-minitoc > ul > li > ul li.section {
+  font-size: 0px;
+}
+.component-minitoc > ul > li > ul li.section a::before {
+  font-size: 1rem;
+  content: "○";
+}
+.component-minitoc > ul > li > ul li.section.current a::before {
+  content: "●";
+}
+.component-minitoc a {
+  text-decoration: none;
+  font-size: 1.2em;
+}
+
+.component-classicfooter {
+  display: block;
+  width: calc(100% - 2.4vw);
+  height: 5vh;
+  box-sizing: border-box;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  margin: 0 1.2vw;
+  font-size: 0.7em;
+  color: #003a76;
+}
+.component-classicfooter div:first-child {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.component-classicfooter div:nth-child(2) {
+  text-align: center;
+}
+.component-classicfooter div:last-child {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+/********************************************/
+/*               Synchronization            */
+/********************************************/
+#synchronize {
+  background-color: black;
+  color: white;
+  position: fixed;
+  top: -30px;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  display: block;
+  transition: top 0.5s ease;
+}
+
+#syncstatus {
+  font-size: 0.8em;
+  background-color: black;
+  color: white;
+  position: fixed;
+  padding: 0 0.2em 0.1em 0.2em;
+  top: 0;
+  right: 0;
+  z-index: 100;
+  display: inline-block;
+}
+#syncstatus .active {
+  color: chartreuse;
+  font-weight: bold;
+}
+#syncstatus .inactive {
+  color: inherit;
+  font-weight: inherit;
+}
+
+#qrcode-view {
+  position: absolute;
+  top: 5vh;
+  left: 5vw;
+  background-color: white;
+  width: 90vw;
+  height: 0vh;
+  border-radius: 2px;
+  z-index: 20;
+  display: flex;
+  flex-flow: column nowrap;
+  font-weight: bold;
+  font-size: 0;
+  font-family: sans-serif;
+  transition-duration: 1s;
+  transition-timing-function: ease;
+  transition-property: height, font-size;
+}
+#qrcode-view.active {
+  height: 90vh;
+  font-size: 160%;
+}
+#qrcode-view .title {
+  text-align: center;
+  color: #003a76;
+  flex: 0 1 0;
+}
+#qrcode-view figure {
+  flex: 1;
+  display: flex;
+  flex-flow: column nowrap;
+  overflow: hidden;
+  position: relative;
+}
+#qrcode-view figure img {
+  margin: 0 auto 0 auto;
+  height: 100%;
+}
+#qrcode-view p {
+  text-align: center;
+  font-size: 0.7em;
+}
+
+/********************************************/
+/*              Slide layout                */
+/********************************************/
+body > section, #thumblayer > div.wthumb > section {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  visibility: hidden;
+}
+body > section:target, #thumblayer > div.wthumb > section:target {
+  visibility: visible;
+}
+body > section.overview-transition, #thumblayer > div.wthumb > section.overview-transition {
+  transition: transform 1s ease-in-out;
+}
+body > section#title, #thumblayer > div.wthumb > section#title {
+  --background: "";
+  --foreground: "";
+}
+body > section.content, body > section.outline, #thumblayer > div.wthumb > section.content, #thumblayer > div.wthumb > section.outline {
+  display: flex;
+  flex-flow: column nowrap;
+  --background: "";
+  --foreground: "[Minitoc(), ClassicFooter()]";
+}
+body > section.content > h1, body > section.outline > h1, #thumblayer > div.wthumb > section.content > h1, #thumblayer > div.wthumb > section.outline > h1 {
+  flex: none;
+}
+body > section.content > .content, body > section.outline > .content, #thumblayer > div.wthumb > section.content > .content, #thumblayer > div.wthumb > section.outline > .content {
+  flex: auto;
+  display: flex;
+  position: relative;
+  flex-flow: column nowrap;
+  justify-content: space-evenly;
+}
+body > section.content > .content.autocolumns, body > section.outline > .content.autocolumns, #thumblayer > div.wthumb > section.content > .content.autocolumns, #thumblayer > div.wthumb > section.outline > .content.autocolumns {
+  flex-wrap: wrap;
+}
+body > section.content > .content.autocolumns > p, body > section.outline > .content.autocolumns > p, body > section.content > .content.autocolumns > ul, body > section.outline > .content.autocolumns > ul, body > section.content > .content.autocolumns > div, body > section.outline > .content.autocolumns > div, #thumblayer > div.wthumb > section.content > .content.autocolumns > p, #thumblayer > div.wthumb > section.outline > .content.autocolumns > p, #thumblayer > div.wthumb > section.content > .content.autocolumns > ul, #thumblayer > div.wthumb > section.outline > .content.autocolumns > ul, #thumblayer > div.wthumb > section.content > .content.autocolumns > div, #thumblayer > div.wthumb > section.outline > .content.autocolumns > div {
+  width: calc(50% - 3.6vw);
+  margin: 1.56vh 1.2vw;
+}
+body > section.content > .content.twocolumns, body > section.outline > .content.twocolumns, body > section.content > .content .twocolumns, body > section.outline > .content .twocolumns, #thumblayer > div.wthumb > section.content > .content.twocolumns, #thumblayer > div.wthumb > section.outline > .content.twocolumns, #thumblayer > div.wthumb > section.content > .content .twocolumns, #thumblayer > div.wthumb > section.outline > .content .twocolumns {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+}
+body > section.content > .content.twocolumns > div, body > section.outline > .content.twocolumns > div, body > section.content > .content .twocolumns > div, body > section.outline > .content .twocolumns > div, #thumblayer > div.wthumb > section.content > .content.twocolumns > div, #thumblayer > div.wthumb > section.outline > .content.twocolumns > div, #thumblayer > div.wthumb > section.content > .content .twocolumns > div, #thumblayer > div.wthumb > section.outline > .content .twocolumns > div {
+  min-height: 0;
+  flex: auto;
+  display: flex;
+  position: relative;
+  flex-flow: column nowrap;
+  justify-content: space-evenly;
+  box-sizing: border-box;
+  width: 45%;
+}
+body > section.content > .content.twocolumns > div:first-child, body > section.outline > .content.twocolumns > div:first-child, body > section.content > .content .twocolumns > div:first-child, body > section.outline > .content .twocolumns > div:first-child, #thumblayer > div.wthumb > section.content > .content.twocolumns > div:first-child, #thumblayer > div.wthumb > section.outline > .content.twocolumns > div:first-child, #thumblayer > div.wthumb > section.content > .content .twocolumns > div:first-child, #thumblayer > div.wthumb > section.outline > .content .twocolumns > div:first-child {
+  margin-right: 1em;
+}
+body > section.content > .content.plain, body > section.outline > .content.plain, #thumblayer > div.wthumb > section.content > .content.plain, #thumblayer > div.wthumb > section.outline > .content.plain {
+  margin-top: 8vh;
+}
+body > section.plain, #thumblayer > div.wthumb > section.plain {
+  display: block;
+}
+body > section.plain h1, #thumblayer > div.wthumb > section.plain h1 {
+  margin-top: 0px;
+}
+body > section.focus, #thumblayer > div.wthumb > section.focus {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  --background: "[ColorBackground('var(--primary-darker)')]";
+}
+body > section.focus h1, #thumblayer > div.wthumb > section.focus h1 {
+  color: white;
+  font-size: 2.5em;
+  font-weight: bold;
+  text-align: center;
+  flex: initial;
+}
+body > section.outline > div > ul > li, #thumblayer > div.wthumb > section.outline > div > ul > li {
+  padding-bottom: 0.2vh;
+  padding-right: 1.2vw;
+}
+body > section.outline > div:has(.current) ul > li:not(.current), #thumblayer > div.wthumb > section.outline > div:has(.current) ul > li:not(.current) {
+  opacity: 0.5;
+}
+body > section.outline div.content .current, #thumblayer > div.wthumb > section.outline div.content .current {
+  opacity: 1;
+  background-color: #99d7f7;
+  box-shadow: 1.5vw 1.2vh 1.2vmax rgba(0, 0, 0, 0.5);
+  border-radius: 1.2vmax;
+}
+body > section.chessboard, #thumblayer > div.wthumb > section.chessboard {
+  display: flex;
+  flex-flow: column nowrap;
+  --background: "";
+  --foreground: "[Minitoc(), ClassicFooter()]";
+}
+body > section.chessboard > h1, #thumblayer > div.wthumb > section.chessboard > h1 {
+  flex: none;
+}
+body > section.chessboard > .content, #thumblayer > div.wthumb > section.chessboard > .content {
+  flex: auto;
+  display: flex;
+  position: relative;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+body > section.chessboard > .content div, #thumblayer > div.wthumb > section.chessboard > .content div {
+  margin: 0;
+  box-sizing: border-box;
+}
+body > section.chessboard > .content > div, #thumblayer > div.wthumb > section.chessboard > .content > div {
+  flex: auto;
+  display: flex;
+  flex-flow: row nowrap;
+}
+body > section.chessboard > .content > div > div, #thumblayer > div.wthumb > section.chessboard > .content > div > div {
+  flex: 0 1 100%;
+  padding: 0.5em;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+}
+body > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd), body > section.chessboard > .content > div:nth-child(even) > div:nth-child(even), body > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even), body > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd), #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd), #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(even) > div:nth-child(even), #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even), #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) {
+  background-color: #003a76;
+}
+body > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd), body > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd) ul > li, body > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd) ul > li::before, body > section.chessboard > .content > div:nth-child(even) > div:nth-child(even), body > section.chessboard > .content > div:nth-child(even) > div:nth-child(even) ul > li, body > section.chessboard > .content > div:nth-child(even) > div:nth-child(even) ul > li::before, body > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even), body > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even) ul > li, body > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even) ul > li::before, body > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd), body > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) ul > li, body > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) ul > li::before, #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd), #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd) ul > li, #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd) ul > li::before, #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(even) > div:nth-child(even), #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(even) > div:nth-child(even) ul > li, #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(even) > div:nth-child(even) ul > li::before, #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even), #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even) ul > li, #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even) ul > li::before, #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd), #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) ul > li, #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) ul > li::before {
+  color: white;
+}
+body > section p, body > section table, body > section img, body > section object, #thumblayer > div.wthumb > section p, #thumblayer > div.wthumb > section table, #thumblayer > div.wthumb > section img, #thumblayer > div.wthumb > section object {
+  margin: 2.8vh 0;
+}
+body > section figure.centered, #thumblayer > div.wthumb > section figure.centered {
+  display: flex;
+  flex-flow: column nowrap;
+  flex: auto;
+  overflow: hidden;
+  position: relative;
+}
+body > section figure.centered svg, body > section figure.centered img, #thumblayer > div.wthumb > section figure.centered svg, #thumblayer > div.wthumb > section figure.centered img {
+  margin: auto;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  max-width: 100%;
+  max-height: 100%;
+}
+body > section div.content ul, #thumblayer > div.wthumb > section div.content ul {
+  margin: 0.2em 0;
+  padding-inline-start: 2.2em;
+}
+body > section div.content ul > li, #thumblayer > div.wthumb > section div.content ul > li {
+  list-style-type: none;
+  padding-left: 0.4em;
+  text-indent: -0.7em;
+  line-height: 1;
+}
+body > section div.content ul > li::before, #thumblayer > div.wthumb > section div.content ul > li::before {
+  content: "• ";
+  font-size: 200%;
+  margin-right: 0.35em;
+  color: #003a76;
+  display: inline-block;
+  vertical-align: -0.1em;
+  height: 0.8em;
+}
+body > section div.content ul > li li, #thumblayer > div.wthumb > section div.content ul > li li {
+  font-size: 0.9em;
+  text-indent: -0.8em;
+  padding-left: 1em;
+  padding-bottom: 1.25vh;
+}
+body > section div.content ul > li li::before, #thumblayer > div.wthumb > section div.content ul > li li::before {
+  font-size: 1em;
+  content: "✗ ";
+}
+body > section div.content ul > li li:last-child, #thumblayer > div.wthumb > section div.content ul > li li:last-child {
+  padding-bottom: 0px;
+}
+body > section div.content dl, #thumblayer > div.wthumb > section div.content dl {
+  display: grid;
+  grid-template-columns: max-content auto;
+  column-gap: 2em;
+  row-gap: 0.3em;
+}
+body > section div.content dl dt, #thumblayer > div.wthumb > section div.content dl dt {
+  grid-column-start: 1;
+  max-width: 25vw;
+}
+body > section div.content dl dd, #thumblayer > div.wthumb > section div.content dl dd {
+  grid-column-start: 2;
+  margin: 0;
+}
+body > section div.content dl.rightheader dt, #thumblayer > div.wthumb > section div.content dl.rightheader dt {
+  justify-self: end;
+}
+
+/********************************************/
+/*             Overview layout              */
+/********************************************/
+#thumblayer {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: auto;
+  margin: 0;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+}
+#thumblayer > h1, #thumblayer > h2, #thumblayer > h3, #thumblayer > h4, #thumblayer > h5, #thumblayer > h6 {
+  display: none;
+}
+
+#coverlayer {
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 15;
+  transition: opacity 1s linear;
+}
+
+.wthumb {
+  width: 20vw;
+  height: 20vh;
+  margin: 1vh 1vw;
+  position: relative;
+}
+.wthumb:hover {
+  left: -2vw;
+  top: -2vh;
+  z-index: 21;
+}
+.wthumb:hover .thumbnail {
+  transform: scale(0.25, 0.25);
+}
+
+#thumblayer > div.wthumb > section.thumbnail {
+  visibility: visible;
+  background-color: white;
+  border: 1px solid black;
+  box-shadow: 1.5vw 1.2vh 1.2vmax rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: left top;
+  transform: scale(0.2, 0.2);
+}
+#thumblayer > div.wthumb > section.thumbnail.targetted {
+  border: 20px solid #00a6e2;
+}
+
+/********************************************/
+/*             Fragment styles              */
+/********************************************/
+.visible {
+  visibility: visible;
+  animation-play-state: running;
+}
+
+.invisible {
+  visibility: hidden;
+  animation-play-state: paused;
+}
+
+.semivisible {
+  opacity: 0.2;
+  animation-play-state: running;
+}
+
+/********************************************/
+/*             Inner components             */
+/********************************************/
+.block {
+  margin: 1.56vh 0vw;
+  padding: 0;
+  border-radius: 0.6vmax;
+  box-shadow: 1.5vw 1.2vh 1.2vmax rgba(0, 0, 0, 0.5);
+  background-color: #99d7f7;
+  position: relative;
+}
+.block h1 {
+  padding-top: 0.47vh;
+  padding-bottom: 0.78vh;
+  padding-right: 0.6vw;
+  padding-left: 0.6vw;
+  margin: 0 0 0 0;
+  border-radius: 0.6vmax 0.6vmax 0 0;
+  font: bold 120% sans-serif;
+  color: white;
+  background-image: linear-gradient(to bottom, #003a76 0%, #003a76 80%, #99d7f7 100%);
+}
+.block .content, .block body > section.outline, .block #thumblayer > div.wthumb > section.outline {
+  padding-top: 0.78vh;
+  padding-bottom: 0.78vh;
+  padding-right: 0.6vw;
+  padding-left: 0.6vw;
+}
+.block li:first-child {
+  margin-top: -0.78vh;
+}
+
+.infoblock {
+  margin: 1.56vh 0vw;
+  padding: 0;
+  border-radius: 0.6vmax;
+  box-shadow: 1.5vw 1.2vh 1.2vmax rgba(0, 0, 0, 0.5);
+  background-color: #c4d89b;
+  position: relative;
+}
+.infoblock h1 {
+  padding-top: 0.47vh;
+  padding-bottom: 0.78vh;
+  padding-right: 0.6vw;
+  padding-left: 3.5rem;
+  margin: 0 0 0 0;
+  border-radius: 0.6vmax 0.6vmax 0 0;
+  font: bold 120% sans-serif;
+  color: white;
+  background-image: linear-gradient(to bottom, #0e823a 0%, #0e823a 80%, #c4d89b 100%);
+}
+.infoblock .content, .infoblock body > section.outline, .infoblock #thumblayer > div.wthumb > section.outline {
+  padding-top: 0.78vh;
+  padding-bottom: 0.78vh;
+  padding-right: 0.6vw;
+  padding-left: 3.5rem;
+}
+.infoblock li:first-child {
+  margin-top: -0.78vh;
+}
+.infoblock .content::before, .infoblock body > section.outline::before, .infoblock #thumblayer > div.wthumb > section.outline::before {
+  content: "i";
+  color: white;
+  font: italic 1.5em serif;
+  border-radius: 1em;
+  background-color: rgb(37.2054794521, 79.1945205479, 39.8630136986);
+  position: absolute;
+  left: 0.3em;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.3em;
+  text-align: center;
+}
+
+.warningblock {
+  margin: 1.56vh 0vw;
+  padding: 0;
+  border-radius: 0.6vmax;
+  box-shadow: 1.5vw 1.2vh 1.2vmax rgba(0, 0, 0, 0.5);
+  background-color: #ffd744;
+  position: relative;
+}
+.warningblock h1 {
+  padding-top: 0.47vh;
+  padding-bottom: 0.78vh;
+  padding-right: 0.6vw;
+  padding-left: 3.5rem;
+  margin: 0 0 0 0;
+  border-radius: 0.6vmax 0.6vmax 0 0;
+  font: bold 120% sans-serif;
+  color: white;
+  background-image: linear-gradient(to bottom, #c2133e 0%, #c2133e 80%, #ffd744 100%);
+}
+.warningblock .content, .warningblock body > section.outline, .warningblock #thumblayer > div.wthumb > section.outline {
+  padding-top: 0.78vh;
+  padding-bottom: 0.78vh;
+  padding-right: 0.6vw;
+  padding-left: 3.5rem;
+}
+.warningblock li:first-child {
+  margin-top: -0.78vh;
+}
+.warningblock .content::before, .warningblock body > section.outline::before, .warningblock #thumblayer > div.wthumb > section.outline::before {
+  content: "!";
+  color: white;
+  font: italic 1.5em serif;
+  border-radius: 1em;
+  background-color: rgb(115.8736842105, 27.6210526316, 12.1263157895);
+  position: absolute;
+  left: 0.3em;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.3em;
+  text-align: center;
+}
+
+strong {
+  color: #003a76;
+  font-weight: bold;
+}
+
+blockquote {
+  font-style: italic;
+  margin: 0;
+  padding: 1.2em 0 0 4.2vw;
+  position: relative;
+}
+blockquote::before {
+  content: "“";
+  color: #0e823a;
+  font-size: 4em;
+  position: absolute;
+  left: 0px;
+  top: -1.56vh;
+}
+
+cite {
+  display: block;
+  text-align: right;
+}
+
+.shadowed {
+  box-shadow: 1.5vw 1.2vh 1.2vmax rgba(0, 0, 0, 0.5);
+}
+
+figure {
+  margin: 0;
+}
+
+table {
+  display: table;
+  text-align: center;
+  border: 1px solid grey;
+  border-collapse: collapse;
+}
+table:not(.plain) thead, table:not(.plain) tfoot {
+  background-color: #003a76;
+  color: white;
+  font-weight: bold;
+}
+table:not(.plain) tbody.dummy-header {
+  font-weight: bold;
+  color: #003a76;
+}
+table thead, table tr, table tfoot, table tbody.dummy-header {
+  border-bottom: 1px solid grey;
+}
+table:not(.plain) tbody tr:nth-child(even) {
+  background-color: #99d7f7;
+}
+table img {
+  margin: 0;
+}
+table td {
+  padding: 0.2em;
+}
+table ul {
+  padding-inline-start: 1.2em;
+}
+table:not(.plain).headcolumn td:first-child {
+  background: #003a76;
+  font-weight: bold;
+  color: white;
+}
+table.fullwidth {
+  width: 100%;
+}
+table.grid td {
+  border: 1px solid #003a76;
+}
+table.grid thead td {
+  border: 1px solid white;
+}
+table.grid thead {
+  border-style: hidden;
+}
+table.leftaligned td {
+  text-align: left;
+}
+table.leftaligned thead td, table.leftaligned tbody.dummy-header td {
+  text-align: center;
+}
+
+/********************************************/
+/*             Handouts styles              */
+/********************************************/
+@media print {
+  @page {
+    size: landscape;
+  }
+  body {
+    height: auto;
+    margin: 0;
+    font: 2.4vh sans-serif;
+  }
+  #thumblayer {
+    height: auto;
+    position: relative;
+    top: -1.8vh;
+  }
+  .wthumb {
+    page-break-inside: avoid;
+    width: 98vw;
+    height: 95.8vh;
+    margin-bottom: 4vh;
+  }
+  #thumblayer > div.wthumb > section.thumbnail {
+    position: relative;
+    transform-origin: left top;
+    transform: scale(0.98, 0.958);
+  }
+  #background, #newbackground, #foreground, #newforeground {
+    background-image: none !important;
+  }
+  * {
+    animation: none !important;
+  }
+}
+body {
+  font-family: "Marianne";
+  --background-layer: "active";
+  --foreground-layer: "active";
+}
+body > h1 {
+  --outline: "ClassicOutlineSlide";
+}
+body > h2 {
+  --outline: "FocusOutlineSlide";
+}
+
+/********************************************/
+/*            Outer components              */
+/********************************************/
+.component-minitoc > ul > li > ul li.section a::before {
+  font-size: 0.8rem;
+}
+
+/********************************************/
+/*              Slide layout                */
+/********************************************/
+body > section, #thumblayer > div.wthumb > section {
+  --animation: "convex";
+}
+body > section#title, #thumblayer > div.wthumb > section#title {
+  --background: "[ImageBackground('page_courante_couleurs.svg')]";
+}
+body > section#title h1, #thumblayer > div.wthumb > section#title h1 {
+  position: absolute;
+  left: 0%;
+  width: 100%;
+  bottom: 26%;
+  top: 34%;
+  color: #003a76;
+  font: bold 180% sans-serif;
+  text-align: center;
+}
+body > section#title h1 .subtitle, #thumblayer > div.wthumb > section#title h1 .subtitle {
+  color: #0e823a;
+  font: italic 80% sans-serif;
+}
+body > section#title .authordate, #thumblayer > div.wthumb > section#title .authordate {
+  position: absolute;
+  left: 1%;
+  bottom: 2%;
+  top: unset;
+  width: 51%;
+  color: #003a76;
+  font-size: 80%;
+  line-height: 1.5;
+}
+body > section.content > h1, body > section.outline > h1, body > section.chessboard > h1, #thumblayer > div.wthumb > section.content > h1, #thumblayer > div.wthumb > section.outline > h1, #thumblayer > div.wthumb > section.chessboard > h1 {
+  position: relative;
+  padding: 1.5vh 0px 2vh 0px;
+  text-align: center;
+  font: bold 180% sans-serif;
+  color: #003a76;
+  margin: 4vh 5vw 0.4vw 5vw;
+  border-bottom: 0.6vh solid #003a76;
+}
+body > section.content > .content, body > section.outline > .content, body > section.chessboard > .content, #thumblayer > div.wthumb > section.content > .content, #thumblayer > div.wthumb > section.outline > .content, #thumblayer > div.wthumb > section.chessboard > .content {
+  padding: 1.2vh 2.4vw;
+  margin: 0 5vw 6vh 5vw;
+  min-height: 0;
+}
+body > section.content, body > section.outline, body > section.chessboard, #thumblayer > div.wthumb > section.content, #thumblayer > div.wthumb > section.outline, #thumblayer > div.wthumb > section.chessboard {
+  --background: "[ImageBackground('page_courante.svg')]";
+  --foreground: "[Minitoc(), ClassicFooter()]";
+}
+body > section.focus, #thumblayer > div.wthumb > section.focus {
+  --background: "[ColorBackground('var(--primary-darker)')]";
+  --foreground: "[]";
+}
+body > section.plain, #thumblayer > div.wthumb > section.plain {
+  --background: "[]";
+  --foreground: "[]";
+}
+body > section.outline[data-level="2"], #thumblayer > div.wthumb > section.outline[data-level="2"] {
+  --components: "[SimpleElement(\\'<div class='outline-image image\\'+Math.floor(Math.random()*6)+\\''></div>\\')]";
+}
+body > section.outline[data-level="2"] h1, #thumblayer > div.wthumb > section.outline[data-level="2"] h1 {
+  margin: 50vh 5vw 0 5vw;
+  font-size: 2.5em;
+  font-weight: bold;
+  color: white;
+  text-align: left;
+  border: none;
+}
+body > section.outline[data-level="2"] div.content, #thumblayer > div.wthumb > section.outline[data-level="2"] div.content {
+  display: none;
+}
+body > section.outline[data-level="2"] > div.outline-image, #thumblayer > div.wthumb > section.outline[data-level="2"] > div.outline-image {
+  position: absolute;
+  top: 19.2vh;
+  bottom: 7vh;
+  left: 3vw;
+  right: 0;
+  background-size: cover;
+}
+body > section.outline[data-level="2"] > div.outline-image.image0, #thumblayer > div.wthumb > section.outline[data-level="2"] > div.outline-image.image0 {
+  background-image: url("bimage0.jpg");
+}
+body > section.outline[data-level="2"] > div.outline-image.image1, #thumblayer > div.wthumb > section.outline[data-level="2"] > div.outline-image.image1 {
+  background-image: url("bimage1.jpg");
+}
+body > section.outline[data-level="2"] > div.outline-image.image2, #thumblayer > div.wthumb > section.outline[data-level="2"] > div.outline-image.image2 {
+  background-image: url("bimage2.jpg");
+}
+body > section.outline[data-level="2"] > div.outline-image.image3, #thumblayer > div.wthumb > section.outline[data-level="2"] > div.outline-image.image3 {
+  background-image: url("bimage3.jpg");
+}
+body > section.outline[data-level="2"] > div.outline-image.image4, #thumblayer > div.wthumb > section.outline[data-level="2"] > div.outline-image.image4 {
+  background-image: url("bimage4.jpg");
+}
+body > section.outline[data-level="2"] > div.outline-image.image5, #thumblayer > div.wthumb > section.outline[data-level="2"] > div.outline-image.image5 {
+  background-image: url("bimage5.jpg");
+}
+body > section ul > li, #thumblayer > div.wthumb > section ul > li {
+  color: #003a76;
+  line-height: 1.2;
+  margin-top: 0.3em;
+}
+body > section ul > li::before, #thumblayer > div.wthumb > section ul > li::before {
+  content: "▶ ";
+  font-size: 80%;
+  margin-right: 0.35em;
+  color: #003a76;
+  display: inline-block;
+  vertical-align: 0.1em;
+  height: 1em;
+}
+body > section ul > li li, #thumblayer > div.wthumb > section ul > li li {
+  color: #0e823a;
+  padding-bottom: 0;
+}
+body > section ul > li li::before, #thumblayer > div.wthumb > section ul > li li::before {
+  content: "▶ ";
+  color: #0e823a;
+}
+
+/*# sourceMappingURL=template.css.map */

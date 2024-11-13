@@ -1,0 +1,361 @@
+/********************************************/
+/*                 Colors                   */
+/********************************************/
+:root {
+  --primary-dark: rgb(128.8, 157.6, 21.6);
+}
+
+:root {
+  --primary-darker: rgb(96.6, 118.2, 16.2);
+}
+
+:root {
+  --primary-darkest: rgb(64.4, 78.8, 10.8);
+}
+
+:root {
+  --primary-light: rgb(190.65, 227.4214285714, 53.7785714286);
+}
+
+:root {
+  --primary-lighter: rgb(206.7375, 234.3160714286, 104.0839285714);
+}
+
+:root {
+  --primary-lightest: rgb(222.825, 241.2107142857, 154.3892857143);
+}
+
+:root {
+  --secondary-dark: rgb(6.4, 64, 110.4);
+}
+
+:root {
+  --secondary-darker: rgb(4.8, 48, 82.8);
+}
+
+:root {
+  --secondary-darkest: rgb(3.2, 32, 55.2);
+}
+
+:root {
+  --secondary-light: rgb(11.9890410959, 119.8904109589, 206.8109589041);
+}
+
+:root {
+  --secondary-lighter: rgb(48.5671232877, 156.2712328767, 243.0328767123);
+}
+
+:root {
+  --secondary-lightest: rgb(117.3780821918, 189.1808219178, 247.0219178082);
+}
+
+:root {
+  --tertiary-dark: rgb(184, 110.4, 0);
+}
+
+:root {
+  --tertiary-darker: rgb(138, 82.8, 0);
+}
+
+:root {
+  --tertiary-darkest: rgb(92, 55.2, 0);
+}
+
+:root {
+  --tertiary-light: rgb(255, 165.4, 31);
+}
+
+:root {
+  --tertiary-lighter: rgb(255, 187.8, 87);
+}
+
+:root {
+  --tertiary-lightest: rgb(255, 210.2, 143);
+}
+
+:root {
+  --quaternary-dark: #00cc00;
+}
+
+:root {
+  --quaternary-darker: #009900;
+}
+
+:root {
+  --quaternary-darkest: #006600;
+}
+
+:root {
+  --quaternary-light: #33ff33;
+}
+
+:root {
+  --quaternary-lighter: #66ff66;
+}
+
+:root {
+  --quaternary-lightest: #99ff99;
+}
+
+:root {
+  --neutral-dark: rgb(95.2, 95.2, 95.2);
+}
+
+:root {
+  --neutral-darker: rgb(71.4, 71.4, 71.4);
+}
+
+:root {
+  --neutral-darkest: rgb(47.6, 47.6, 47.6);
+}
+
+:root {
+  --neutral-light: rgb(146.2, 146.2, 146.2);
+}
+
+:root {
+  --neutral-lighter: rgb(173.4, 173.4, 173.4);
+}
+
+:root {
+  --neutral-lightest: rgb(200.6, 200.6, 200.6);
+}
+
+:root {
+  --primary: #A1C51B;
+}
+
+:root {
+  --secondary: #08508A;
+}
+
+:root {
+  --tertiary: #e68a00;
+}
+
+:root {
+  --quaternary: lime;
+}
+
+:root {
+  --neutral: #777;
+}
+
+:root {
+  --palettee: #199fd9;
+}
+
+:root {
+  --palettef: #ff3399;
+}
+
+svg {
+  .fill-primary-dark: rgb(128.8, 157.6, 21.6);
+  .stroke-primary-dark: rgb(128.8, 157.6, 21.6);
+}
+
+svg {
+  .fill-primary-darker: rgb(96.6, 118.2, 16.2);
+  .stroke-primary-darker: rgb(96.6, 118.2, 16.2);
+}
+
+svg {
+  .fill-primary-darkest: rgb(64.4, 78.8, 10.8);
+  .stroke-primary-darkest: rgb(64.4, 78.8, 10.8);
+}
+
+svg {
+  .fill-primary-light: rgb(190.65, 227.4214285714, 53.7785714286);
+  .stroke-primary-light: rgb(190.65, 227.4214285714, 53.7785714286);
+}
+
+svg {
+  .fill-primary-lighter: rgb(206.7375, 234.3160714286, 104.0839285714);
+  .stroke-primary-lighter: rgb(206.7375, 234.3160714286, 104.0839285714);
+}
+
+svg {
+  .fill-primary-lightest: rgb(222.825, 241.2107142857, 154.3892857143);
+  .stroke-primary-lightest: rgb(222.825, 241.2107142857, 154.3892857143);
+}
+
+svg {
+  .fill-secondary-dark: rgb(6.4, 64, 110.4);
+  .stroke-secondary-dark: rgb(6.4, 64, 110.4);
+}
+
+svg {
+  .fill-secondary-darker: rgb(4.8, 48, 82.8);
+  .stroke-secondary-darker: rgb(4.8, 48, 82.8);
+}
+
+svg {
+  .fill-secondary-darkest: rgb(3.2, 32, 55.2);
+  .stroke-secondary-darkest: rgb(3.2, 32, 55.2);
+}
+
+svg {
+  .fill-secondary-light: rgb(11.9890410959, 119.8904109589, 206.8109589041);
+  .stroke-secondary-light: rgb(11.9890410959, 119.8904109589, 206.8109589041);
+}
+
+svg {
+  .fill-secondary-lighter: rgb(48.5671232877, 156.2712328767, 243.0328767123);
+  .stroke-secondary-lighter: rgb(48.5671232877, 156.2712328767, 243.0328767123);
+}
+
+svg {
+  .fill-secondary-lightest: rgb(117.3780821918, 189.1808219178, 247.0219178082);
+  .stroke-secondary-lightest: rgb(117.3780821918, 189.1808219178, 247.0219178082);
+}
+
+svg {
+  .fill-tertiary-dark: rgb(184, 110.4, 0);
+  .stroke-tertiary-dark: rgb(184, 110.4, 0);
+}
+
+svg {
+  .fill-tertiary-darker: rgb(138, 82.8, 0);
+  .stroke-tertiary-darker: rgb(138, 82.8, 0);
+}
+
+svg {
+  .fill-tertiary-darkest: rgb(92, 55.2, 0);
+  .stroke-tertiary-darkest: rgb(92, 55.2, 0);
+}
+
+svg {
+  .fill-tertiary-light: rgb(255, 165.4, 31);
+  .stroke-tertiary-light: rgb(255, 165.4, 31);
+}
+
+svg {
+  .fill-tertiary-lighter: rgb(255, 187.8, 87);
+  .stroke-tertiary-lighter: rgb(255, 187.8, 87);
+}
+
+svg {
+  .fill-tertiary-lightest: rgb(255, 210.2, 143);
+  .stroke-tertiary-lightest: rgb(255, 210.2, 143);
+}
+
+svg {
+  .fill-quaternary-dark: #00cc00;
+  .stroke-quaternary-dark: #00cc00;
+}
+
+svg {
+  .fill-quaternary-darker: #009900;
+  .stroke-quaternary-darker: #009900;
+}
+
+svg {
+  .fill-quaternary-darkest: #006600;
+  .stroke-quaternary-darkest: #006600;
+}
+
+svg {
+  .fill-quaternary-light: #33ff33;
+  .stroke-quaternary-light: #33ff33;
+}
+
+svg {
+  .fill-quaternary-lighter: #66ff66;
+  .stroke-quaternary-lighter: #66ff66;
+}
+
+svg {
+  .fill-quaternary-lightest: #99ff99;
+  .stroke-quaternary-lightest: #99ff99;
+}
+
+svg {
+  .fill-neutral-dark: rgb(95.2, 95.2, 95.2);
+  .stroke-neutral-dark: rgb(95.2, 95.2, 95.2);
+}
+
+svg {
+  .fill-neutral-darker: rgb(71.4, 71.4, 71.4);
+  .stroke-neutral-darker: rgb(71.4, 71.4, 71.4);
+}
+
+svg {
+  .fill-neutral-darkest: rgb(47.6, 47.6, 47.6);
+  .stroke-neutral-darkest: rgb(47.6, 47.6, 47.6);
+}
+
+svg {
+  .fill-neutral-light: rgb(146.2, 146.2, 146.2);
+  .stroke-neutral-light: rgb(146.2, 146.2, 146.2);
+}
+
+svg {
+  .fill-neutral-lighter: rgb(173.4, 173.4, 173.4);
+  .stroke-neutral-lighter: rgb(173.4, 173.4, 173.4);
+}
+
+svg {
+  .fill-neutral-lightest: rgb(200.6, 200.6, 200.6);
+  .stroke-neutral-lightest: rgb(200.6, 200.6, 200.6);
+}
+
+svg {
+  .fill-primary: #A1C51B;
+  .stroke-primary: #A1C51B;
+}
+
+svg {
+  .fill-secondary: #08508A;
+  .stroke-secondary: #08508A;
+}
+
+svg {
+  .fill-tertiary: #e68a00;
+  .stroke-tertiary: #e68a00;
+}
+
+svg {
+  .fill-quaternary: lime;
+  .stroke-quaternary: lime;
+}
+
+svg {
+  .fill-neutral: #777;
+  .stroke-neutral: #777;
+}
+
+svg {
+  .fill-palettee: #199fd9;
+  .stroke-palettee: #199fd9;
+}
+
+svg {
+  .fill-palettef: #ff3399;
+  .stroke-palettef: #ff3399;
+}
+
+/********************************************/
+/*             SVG declarations             */
+/********************************************/
+svg .shadowed {
+  filter: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" version="1.1"><filter id="shadow" x="0" y="0" width="200%" height="200%">    <feOffset result="off" in="SourceGraphic" dx="10" dy="10" />    <feColorMatrix result="matout" in="off" type="matrix" values="0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0" />    <feGaussianBlur result="blur" in="matout" stdDeviation="5" />    <feBlend in="SourceGraphic" in2="blur" mode="normal" /></filter></svg>#shadow');
+}
+svg .end-arrow {
+  marker-end: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" version="1.1"><marker id="arrow" markerWidth="5" markerHeight="5" refX="2" refY="1.5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,3 L4.5,1.5 z" fill="context-fill" /></marker></svg>#arrow');
+}
+svg .svgbox {
+  rx: 10;
+  ry: 10;
+  stroke: #A1C51B;
+  fill: rgb(206.7375, 234.3160714286, 104.0839285714);
+  filter: url("#shadow");
+}
+svg .hcentertext {
+  text-anchor: middle;
+}
+svg .hvcentertext {
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+/*# sourceMappingURL=svgtemplate.css.map */

@@ -1,0 +1,259 @@
+@charset "UTF-8";
+:root {
+  --primary-dark: rgb(128.8, 157.6, 21.6);
+}
+
+:root {
+  --primary-darker: rgb(96.6, 118.2, 16.2);
+}
+
+:root {
+  --primary-darkest: rgb(64.4, 78.8, 10.8);
+}
+
+:root {
+  --primary-light: rgb(190.65, 227.4214285714, 53.7785714286);
+}
+
+:root {
+  --primary-lighter: rgb(206.7375, 234.3160714286, 104.0839285714);
+}
+
+:root {
+  --primary-lightest: rgb(222.825, 241.2107142857, 154.3892857143);
+}
+
+:root {
+  --secondary-dark: rgb(6.4, 64, 110.4);
+}
+
+:root {
+  --secondary-darker: rgb(4.8, 48, 82.8);
+}
+
+:root {
+  --secondary-darkest: rgb(3.2, 32, 55.2);
+}
+
+:root {
+  --secondary-light: rgb(11.9890410959, 119.8904109589, 206.8109589041);
+}
+
+:root {
+  --secondary-lighter: rgb(48.5671232877, 156.2712328767, 243.0328767123);
+}
+
+:root {
+  --secondary-lightest: rgb(117.3780821918, 189.1808219178, 247.0219178082);
+}
+
+:root {
+  --tertiary-dark: rgb(184, 110.4, 0);
+}
+
+:root {
+  --tertiary-darker: rgb(138, 82.8, 0);
+}
+
+:root {
+  --tertiary-darkest: rgb(92, 55.2, 0);
+}
+
+:root {
+  --tertiary-light: rgb(255, 165.4, 31);
+}
+
+:root {
+  --tertiary-lighter: rgb(255, 187.8, 87);
+}
+
+:root {
+  --tertiary-lightest: rgb(255, 210.2, 143);
+}
+
+:root {
+  --quaternary-dark: #00cc00;
+}
+
+:root {
+  --quaternary-darker: #009900;
+}
+
+:root {
+  --quaternary-darkest: #006600;
+}
+
+:root {
+  --quaternary-light: #33ff33;
+}
+
+:root {
+  --quaternary-lighter: #66ff66;
+}
+
+:root {
+  --quaternary-lightest: #99ff99;
+}
+
+:root {
+  --neutral-dark: rgb(95.2, 95.2, 95.2);
+}
+
+:root {
+  --neutral-darker: rgb(71.4, 71.4, 71.4);
+}
+
+:root {
+  --neutral-darkest: rgb(47.6, 47.6, 47.6);
+}
+
+:root {
+  --neutral-light: rgb(146.2, 146.2, 146.2);
+}
+
+:root {
+  --neutral-lighter: rgb(173.4, 173.4, 173.4);
+}
+
+:root {
+  --neutral-lightest: rgb(200.6, 200.6, 200.6);
+}
+
+:root {
+  --primary: #A1C51B;
+}
+
+:root {
+  --secondary: #08508A;
+}
+
+:root {
+  --tertiary: #e68a00;
+}
+
+:root {
+  --quaternary: lime;
+}
+
+:root {
+  --neutral: #777;
+}
+
+:root {
+  --palettee: #199fd9;
+}
+
+:root {
+  --palettef: #ff3399;
+}
+
+p + ul {
+  margin: -2.3vh 0 0 0;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  font-family: sans-serif;
+  display: flex;
+  flex-flow: row nowrap;
+  overflow: hidden;
+}
+
+#notes {
+  height: 100%;
+  overflow: auto;
+  border-right: 1px solid black;
+  padding-top: 1px;
+  flex: 1 1 70vw;
+}
+#notes p, #notes table, #notes img, #notes object {
+  margin: 2.8vh 0;
+}
+#notes h1 {
+  text-align: center;
+  border-bottom: 1px solid black;
+}
+#notes h2 {
+  margin: 0.8em 0 0.2em 0;
+}
+#notes ul {
+  margin: 0.2em 0;
+  padding-inline-start: 2.2em;
+}
+#notes ul > li {
+  list-style-type: none;
+  padding-left: 0.4em;
+  text-indent: -0.7em;
+  line-height: 1;
+}
+#notes ul > li::before {
+  content: "• ";
+  font-size: 200%;
+  color: rgb(96.6, 118.2, 16.2);
+  display: inline-block;
+  vertical-align: -0.1em;
+}
+#notes ul > li li {
+  font-size: 0.9em;
+  text-indent: -0.8em;
+  padding-left: 1em;
+  padding-bottom: 1.25vh;
+}
+#notes ul > li li::before {
+  font-size: 1em;
+  content: "✗ ";
+}
+#notes ul > li li:last-child {
+  padding-bottom: 0px;
+}
+
+aside {
+  flex: 1 0 30vw;
+  display: flex;
+  flex-flow: column nowrap;
+}
+aside div#next {
+  flex: initial;
+}
+aside div#next iframe {
+  width: 100%;
+  height: 18vw;
+}
+aside div.space {
+  flex: auto;
+}
+aside div.counter {
+  margin: 0;
+  padding: 0.2em 0;
+  flex: initial;
+  border-style: inset;
+  border-width: 3px;
+}
+aside div.counter h1 {
+  margin: 0 0 0.2em 0;
+  font-size: 1.2em;
+  margin-bottom: 0.3em;
+  text-align: center;
+}
+aside div.counter p {
+  margin: 0.2em 0;
+  font-size: 1.5em;
+  text-align: center;
+}
+aside .late {
+  color: red;
+}
+aside .early {
+  color: green;
+}
+
+strong {
+  font-weight: bold;
+}
+
+/*# sourceMappingURL=template_notes.css.map */
