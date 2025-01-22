@@ -95,6 +95,10 @@ body>section, #thumblayer>div.wthumb>section {
 		--animation: "convex";
 	}
 
+    &.outline {
+      @extend .content;
+    }
+
     &.outline div.content .current {
 		background-color: map.get(colors.$theme, "primary-lightest");
     }

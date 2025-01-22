@@ -1052,11 +1052,11 @@ body > section#title .authordate, body > section.title .authordate, #thumblayer 
   font-size: 80%;
   text-align: center;
 }
-body > section.content, #thumblayer > div.wthumb > section.content {
+body > section.content, body > section.outline, #thumblayer > div.wthumb > section.content, #thumblayer > div.wthumb > section.outline {
   --foreground: "[Minitoc(), ClassicFooter()]";
   --animation: "convex";
 }
-body > section.content > h1, #thumblayer > div.wthumb > section.content > h1 {
+body > section.content > h1, body > section.outline > h1, #thumblayer > div.wthumb > section.content > h1, #thumblayer > div.wthumb > section.outline > h1 {
   position: relative;
   padding: 2vh 2vw 2vh 2vw;
   text-align: left;
@@ -1064,7 +1064,7 @@ body > section.content > h1, #thumblayer > div.wthumb > section.content > h1 {
   flex: none;
   margin: 8vh 5vw 0.6vw 5vw;
 }
-body > section.content > .content, #thumblayer > div.wthumb > section.content > .content {
+body > section.content > .content, body > section.outline > .content, #thumblayer > div.wthumb > section.content > .content, #thumblayer > div.wthumb > section.outline > .content {
   border-width: 0.6vh 0 0 0;
   padding: 1.2vh 2.4vw;
   margin: 0 5vw 6vh 5vw;
