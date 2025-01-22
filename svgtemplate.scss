@@ -2,9 +2,10 @@
 /*                 Colors                   */
 /********************************************/
 @use "sass:map";
-@import 'colors';
+$theme: () !default;
+@use 'colors' with ($theme: $theme);
 
-@each $name, $col in $theme {
+@each $name, $col in colors.$theme {
   svg {
     .fill-#{$name}: $col;
     .stroke-#{$name}: $col;
@@ -39,8 +40,8 @@ svg {
 	.svgbox {
 		rx: 10;
 		ry: 10;
-		stroke: map.get($theme, "primary");
-		fill: map.get($theme, "primary-lighter");
+		stroke: map.get(colors.$theme, "primary");
+		fill: map.get(colors.$theme, "primary-lighter");
 		filter: url("#shadow");
 	}
 

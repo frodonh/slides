@@ -1190,6 +1190,7 @@ body > section.outline[data-level="2"] > div.outline-image, #thumblayer > div.wt
   bottom: 7vh;
   left: 3vw;
   right: 0;
+  z-index: -1;
   background-size: cover;
 }
 body > section.outline[data-level="2"] > div.outline-image.image0, #thumblayer > div.wthumb > section.outline[data-level="2"] > div.outline-image.image0 {

@@ -1,2 +1,2 @@
-@import "colors";
-@import '../template_outline.scss';
+@use "colors";
+@use '../template_outline.scss' with ($theme: colors.$theme);

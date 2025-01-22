@@ -3,7 +3,7 @@
 
 $theme: () !default;
 
-$theme: map-merge((
+$theme: map.merge((
     "primary": #A1C51B,
     "secondary": #08508A,
     "tertiary": #e68a00,
@@ -32,7 +32,7 @@ $themen: ();
     }
 }
 
-$theme: map-merge($themen, $theme);
+$theme: map.merge($themen, $theme);
 
 @each $name,$col in $theme {
     :root { --#{$name}: #{$col}; }

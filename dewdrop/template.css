@@ -1041,7 +1041,6 @@ body > section#title h1, body > section.title h1, #thumblayer > div.wthumb > sec
   width: 70%;
   text-align: center;
   padding: 1em;
-  background-color: rgb(173.4, 173.4, 173.4);
   border-radius: 30px;
 }
 body > section#title h1 .subtitle, body > section.title h1 .subtitle, #thumblayer > div.wthumb > section#title h1 .subtitle, #thumblayer > div.wthumb > section.title h1 .subtitle {
@@ -1051,23 +1050,21 @@ body > section#title h1 .subtitle, body > section.title h1 .subtitle, #thumblaye
 body > section#title .authordate, body > section.title .authordate, #thumblayer > div.wthumb > section#title .authordate, #thumblayer > div.wthumb > section.title .authordate {
   margin: 10vh 0;
   font-size: 80%;
-  color: rgb(130.0922772277, 90.0827722772, 222.7972277228);
   text-align: center;
 }
-body > section.content, body > section.outline, #thumblayer > div.wthumb > section.content, #thumblayer > div.wthumb > section.outline {
+body > section.content, #thumblayer > div.wthumb > section.content {
   --foreground: "[Minitoc(), ClassicFooter()]";
   --animation: "convex";
 }
-body > section.content > h1, body > section.outline > h1, #thumblayer > div.wthumb > section.content > h1, #thumblayer > div.wthumb > section.outline > h1 {
+body > section.content > h1, #thumblayer > div.wthumb > section.content > h1 {
   position: relative;
   padding: 2vh 2vw 2vh 2vw;
   text-align: left;
   font: bold 180% sans-serif;
-  color: rgb(57.9398019802, 25.838019802, 132.321980198);
   flex: none;
   margin: 8vh 5vw 0.6vw 5vw;
 }
-body > section.content > .content, body > section.outline > .content, #thumblayer > div.wthumb > section.content > .content, #thumblayer > div.wthumb > section.outline > .content {
+body > section.content > .content, #thumblayer > div.wthumb > section.content > .content {
   border-width: 0.6vh 0 0 0;
   padding: 1.2vh 2.4vw;
   margin: 0 5vw 6vh 5vw;
@@ -1081,7 +1078,6 @@ body > section.chessboard > h1, #thumblayer > div.wthumb > section.chessboard > 
   padding: 2vh 2vw 2vh 2vw;
   text-align: left;
   font: bold 180% sans-serif;
-  color: rgb(57.9398019802, 25.838019802, 132.321980198);
   flex: none;
   margin: 8vh 5vw 0.6vw 5vw;
 }
@@ -1094,9 +1090,6 @@ body > section.plain, #thumblayer > div.wthumb > section.plain {
 }
 body > section.focus, #thumblayer > div.wthumb > section.focus {
   --animation: "convex";
-}
-body > section.outline div.content .current, #thumblayer > div.wthumb > section.outline div.content .current {
-  background-color: rgb(192.5461386139, 172.5413861386, 238.8986138614);
 }
 body > section div.content ul > li, #thumblayer > div.wthumb > section div.content ul > li {
   color: rgb(98.8653465347, 48.8534653465, 214.7465346535);

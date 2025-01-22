@@ -1,2 +1,2 @@
-@import "colors";
-@import '../template_notes.scss';
+@use "colors";
+@use '../template_notes.scss' with ($theme: colors.$theme);

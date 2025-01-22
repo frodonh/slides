@@ -1,5 +1,6 @@
 @use "sass:map";
-@import "colors";
+$theme: () !default;
+@use "colors" with ($theme: $theme);
 
 // Mixins
 @mixin shadowed {
@@ -57,7 +58,7 @@ body {
 	& > h2 {
 		font-weight: bold;
 		font-size: 140%;
-		color: map-get($theme, "primary-dark");
+		color: map.get(colors.$theme, "primary-dark");
 		counter-reset: h3counter;
 		border-bottom: 1px solid black;
 		margin-top: 2em;
@@ -71,7 +72,7 @@ body {
 	& > h3 {
 		font-style: italic;
 		font-size: 120%;
-		color: map-get($theme, "secondary-dark");
+		color: map.get(colors.$theme, "secondary-dark");
 		
 		&::before {
 			counter-increment: h3counter;
@@ -106,14 +107,14 @@ body>section {
 			text-align: center;
 
 			.subtitle {
-				color: map.get($theme, "secondary-dark");
+				color: map.get(colors.$theme, "secondary-dark");
 				font: italic 80% serif;
 				text-align: center;
 			}
 		}
 
 		.authordate {
-			color: map.get($theme, "secondary-dark");
+			color: map.get(colors.$theme, "secondary-dark");
 			font-size: 120%;
 			line-height: 1.5;
 			text-align: center;
@@ -190,7 +191,7 @@ body>section {
 			div {
 				margin: 0;
 				box-sizing: border-box;
-				border: 1px solid map.get($theme, "primary");
+				border: 1px solid map.get(colors.$theme, "primary");
 			}
 
 			& > div {
@@ -247,7 +248,7 @@ body>section {
 				content: "• ";
 				font-size: 200%;
 				margin-right: 0.35em;
-				color: map.get($theme, "primary-darker");
+				color: map.get(colors.$theme, "primary-darker");
 				display: inline-block;
 				vertical-align: -0.1em;
 				height: 0.8em;
@@ -303,7 +304,7 @@ body>section {
 	padding: 0;
 	border-radius: 0.6vmax;
 	@include shadowed;
-	background-color: map.get($theme, "#{$color}-lighter");
+	background-color: map.get(colors.$theme, "#{$color}-lighter");
 	position: relative;
 
 	h1 {
@@ -319,7 +320,7 @@ body>section {
 		border-radius: 0.6vmax 0.6vmax 0 0;
 		font-weight: bold;
 		color: white;
-		background-image: linear-gradient(to bottom,map.get($theme, "#{$color}-darker") 0%,map.get($theme, "#{$color}-darker") 80%,map.get($theme, "#{$color}-lighter") 100%);
+		background-image: linear-gradient(to bottom,map.get(colors.$theme, "#{$color}-darker") 0%,map.get(colors.$theme, "#{$color}-darker") 80%,map.get(colors.$theme, "#{$color}-lighter") 100%);
 	}
 
 	.content {
@@ -343,7 +344,7 @@ body>section {
 			color: white;
 			font-size: italic 1.5em serif;
 			border-radius: 1em;
-			background-color: map.get($theme, "#{$color}-darkest");
+			background-color: map.get(colors.$theme, "#{$color}-darkest");
 			position: absolute;
 			left: 0.3em;
 			top: 50%;
@@ -368,7 +369,7 @@ body>section {
 
 
 strong {
-	color: map.get($theme, "primary-dark");
+	color: map.get(colors.$theme, "primary-dark");
 	font-weight: bold;
 }
 
@@ -380,7 +381,7 @@ blockquote {
 	
 	&::before {
 		content: "\201C";
-		color: map.get($theme, "secondary-dark");
+		color: map.get(colors.$theme, "secondary-dark");
 		font-size: 4em;
 		position: absolute;
 		left: 0px;
@@ -408,14 +409,14 @@ table {
 	border-collapse: collapse;
 
 	&:not(.plain) thead,&:not(.plain) tfoot {
-		background-color: map.get($theme, "primary-darker");
+		background-color: map.get(colors.$theme, "primary-darker");
 		color: white;
 		font-weight: bold;
 	}
 
 	&:not(.plain) tbody.dummy-header {
 		font-weight: bold;
-		color: map.get($theme, "primary-darker");
+		color: map.get(colors.$theme, "primary-darker");
 	}
 
 	thead,tr,tfoot,tbody.dummy-header {
@@ -423,7 +424,7 @@ table {
 	}
 
 	&:not(.plain) tbody tr:nth-child(even) {
-		background-color: map.get($theme, "primary-lighter");
+		background-color: map.get(colors.$theme, "primary-lighter");
 	}
 
 	img {
@@ -440,7 +441,7 @@ table {
 
 	&:not(.plain).headcolumn {
 		td:first-child {
-			background: map.get($theme, "primary-darker");
+			background: map.get(colors.$theme, "primary-darker");
 			font-weight: bold;
 			color: white;
 		}
@@ -452,7 +453,7 @@ table {
 
 	&.grid {
 		td {
-			border: 1px solid map.get($theme, "primary-darker");
+			border: 1px solid map.get(colors.$theme, "primary-darker");
 		}
 		thead td {
 			border: 1px solid white;

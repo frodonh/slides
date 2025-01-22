@@ -1,7 +1,7 @@
 @use "sass:map";
-@import "colors";
-@import "fonts";
-@import '../template.scss';
+@use "colors";
+@use "fonts";
+@use '../template.scss' with ($theme: colors.$theme);
 
 body {
 	font-family: "Marianne";
@@ -40,12 +40,12 @@ body>section, #thumblayer>div.wthumb>section {
 			width: 100%;
 			bottom: 26%;
 			top: 34%;
-			color: map.get($theme, "primary-darker");
+			color: map.get(colors.$theme, "primary-darker");
 			font: bold 180% sans-serif;
 			text-align: center;
 
 			.subtitle {
-				color: map.get($theme, "secondary-darker");
+				color: map.get(colors.$theme, "secondary-darker");
 				font: italic 80% sans-serif;
 			}
         }
@@ -56,7 +56,7 @@ body>section, #thumblayer>div.wthumb>section {
 			bottom: 2%;
 			top: unset;
 			width: 51%;
-			color: map.get($theme, "primary-darker");
+			color: map.get(colors.$theme, "primary-darker");
 			font-size: 80%;
 			line-height: 1.5;
         }
@@ -67,9 +67,9 @@ body>section, #thumblayer>div.wthumb>section {
 		padding: 1.5vh 0px 2vh 0px;
 		text-align: center;
 		font: bold 180% sans-serif;
-		color: map.get($theme, "primary-darker");
+		color: map.get(colors.$theme, "primary-darker");
 		margin: 4vh 5vw 0.4vw 5vw;
-		border-bottom: 0.6vh solid map.get($theme, "primary-darker");
+		border-bottom: 0.6vh solid map.get(colors.$theme, "primary-darker");
 	}
 
 	&.content > .content, &.chessboard > .content {
@@ -82,6 +82,10 @@ body>section, #thumblayer>div.wthumb>section {
 	&.content, &.chessboard {
         --background: "[ImageBackground('page_courante.svg')]";
         --foreground: "[Minitoc(), ClassicFooter()]";
+    }
+
+    &.outline {
+      @extend .content;
     }
 
 	&.focus {
@@ -117,6 +121,7 @@ body>section, #thumblayer>div.wthumb>section {
 			bottom: 7.0vh;
 			left: 3vw;
 			right: 0;
+            z-index: -1;
 			background-size: cover;
 
 			@for $i from 0 through 5 {
@@ -127,7 +132,7 @@ body>section, #thumblayer>div.wthumb>section {
 
     // Inner structure
 	ul>li {
-		color: map.get($theme, "primary-darker");
+		color: map.get(colors.$theme, "primary-darker");
 		line-height: 1.2;
 		margin-top: 0.3em;
 
@@ -135,19 +140,19 @@ body>section, #thumblayer>div.wthumb>section {
 			content: "▶ ";
 			font-size: 80%;
 			margin-right: 0.35em;
-			color: map.get($theme, "primary-darker");
+			color: map.get(colors.$theme, "primary-darker");
 			display: inline-block;
 			vertical-align: 0.1em;
 			height: 1em;
 		}
 
 		li {
-			color: map.get($theme, "secondary-darker");
+			color: map.get(colors.$theme, "secondary-darker");
 			padding-bottom: 0;
 
 			&::before {
 				content: "▶ ";
-				color: map.get($theme, "secondary-darker");
+				color: map.get(colors.$theme, "secondary-darker");
 			}
 		}
 	}

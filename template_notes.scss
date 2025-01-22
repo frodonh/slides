@@ -1,5 +1,6 @@
 @use "sass:map";
-@import "colors";
+$theme: () !default;
+@use "colors" with ($theme: $theme);
 
 // General declarations
 p + ul {
@@ -53,7 +54,7 @@ body {
 			&::before {
 				content: "• ";
 				font-size: 200%;
-				color: map.get($theme, "primary-darker");
+				color: map.get(colors.$theme, "primary-darker");
 				display: inline-block;
 				vertical-align: -0.1em;
 			}

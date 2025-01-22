@@ -2,7 +2,8 @@
 /*                 Colors                   */
 /********************************************/
 @use "sass:map";
-@import 'colors';
+$theme: () !default;
+@use 'colors' with ($theme: $theme);
 
 /********************************************/
 /*            Custom properties             */
@@ -237,14 +238,14 @@ body {
             list-style-type: none;
             margin: 0 1.2vw;
             font-size: 0.7em;
-            color: map.get($theme, "primary-darker");
+            color: map.get(colors.$theme, "primary-darker");
             padding: 0;
             flex: auto;
 
             &:not(:has(.current)) {opacity: 0.4;}
             &.current {
                 opacity: 1;
-                background-color: map.get($theme, "primary-darker");
+                background-color: map.get(colors.$theme, "primary-darker");
                 color: white;
             }
 
@@ -294,7 +295,7 @@ body {
 	left: 0;
 	margin: 0 1.2vw;
 	font-size: 0.7em;
-	color: map.get($theme, "primary-darker");
+	color: map.get(colors.$theme, "primary-darker");
 
 	div:first-child {
 		position: absolute;
@@ -378,7 +379,7 @@ body {
 
 	.title {
 		text-align: center;
-		color: map.get($theme, "primary-darker");
+		color: map.get(colors.$theme, "primary-darker");
 		flex: 0 1 0;
 	}
 
@@ -523,7 +524,7 @@ body>section, #thumblayer>div.wthumb>section {
 
         div.content .current {
             opacity: 1;
-            background-color: map.get($theme, "primary-lighter");
+            background-color: map.get(colors.$theme, "primary-lighter");
             @include shadowed;
             border-radius: 1.2vmax;
         }
@@ -569,7 +570,7 @@ body>section, #thumblayer>div.wthumb>section {
 			}
 
 			& > div:nth-child(odd) > div:nth-child(odd), & > div:nth-child(even) > div:nth-child(even), &.reversed > div:nth-child(odd) > div:nth-child(even), &.reversed > div:nth-child(even) > div:nth-child(odd) {
-				background-color: map.get($theme, "primary-darker");
+				background-color: map.get(colors.$theme, "primary-darker");
 				&, & ul > li, & ul > li::before { color: white; }
 			}
 		}
@@ -614,7 +615,7 @@ body>section, #thumblayer>div.wthumb>section {
 				content: "• ";
 				font-size: 200%;
 				margin-right: 0.35em;
-				color: map.get($theme, "primary-darker");
+				color: map.get(colors.$theme, "primary-darker");
 				display: inline-block;
 				vertical-align: -0.1em;
 				height: 0.8em;
@@ -726,7 +727,7 @@ body>section, #thumblayer>div.wthumb>section {
 	transform: scale(0.20, 0.20);
 
 	&.targetted {
-		border: 20px solid map.get($theme, "primary");
+		border: 20px solid map.get(colors.$theme, "primary");
 	}
 }
 
@@ -759,7 +760,7 @@ body>section, #thumblayer>div.wthumb>section {
 	padding: 0;
 	border-radius: 0.6vmax;
 	@include shadowed;
-	background-color: map.get($theme, "#{$color}-lighter");
+	background-color: map.get(colors.$theme, "#{$color}-lighter");
 	position: relative;
 
 	h1 {
@@ -775,7 +776,7 @@ body>section, #thumblayer>div.wthumb>section {
 		border-radius: 0.6vmax 0.6vmax 0 0;
 		font: bold 120% sans-serif;
 		color: white;
-		background-image: linear-gradient(to bottom,map.get($theme, "#{$color}-darker") 0%,map.get($theme, "#{$color}-darker") 80%,map.get($theme, "#{$color}-lighter") 100%);
+		background-image: linear-gradient(to bottom,map.get(colors.$theme, "#{$color}-darker") 0%,map.get(colors.$theme, "#{$color}-darker") 80%,map.get(colors.$theme, "#{$color}-lighter") 100%);
 	}
 
 	.content {
@@ -799,7 +800,7 @@ body>section, #thumblayer>div.wthumb>section {
 			color: white;
 			font: italic 1.5em serif;
 			border-radius: 1em;
-			background-color: map.get($theme, "#{$color}-darkest");
+			background-color: map.get(colors.$theme, "#{$color}-darkest");
 			position: absolute;
 			left: 0.3em;
 			top: 50%;
@@ -823,7 +824,7 @@ body>section, #thumblayer>div.wthumb>section {
 }
 
 strong {
-	color: map.get($theme, "primary-darker");
+	color: map.get(colors.$theme, "primary-darker");
 	font-weight: bold;
 }
 
@@ -835,7 +836,7 @@ blockquote {
 	
 	&::before {
 		content: "\201C";
-		color: map.get($theme, "secondary-darker");
+		color: map.get(colors.$theme, "secondary-darker");
 		font-size: 4em;
 		position: absolute;
 		left: 0px;
@@ -863,14 +864,14 @@ table {
 	border-collapse: collapse;
 
 	&:not(.plain) thead,&:not(.plain) tfoot {
-		background-color: map.get($theme, "primary-darker");
+		background-color: map.get(colors.$theme, "primary-darker");
 		color: white;
 		font-weight: bold;
 	}
 
 	&:not(.plain) tbody.dummy-header {
 		font-weight: bold;
-		color: map.get($theme, "primary-darker");
+		color: map.get(colors.$theme, "primary-darker");
 	}
 
 	thead,tr,tfoot,tbody.dummy-header {
@@ -878,7 +879,7 @@ table {
 	}
 
 	&:not(.plain) tbody tr:nth-child(even) {
-		background-color: map.get($theme, "primary-lighter");
+		background-color: map.get(colors.$theme, "primary-lighter");
 	}
 
 	img {
@@ -895,7 +896,7 @@ table {
 
 	&:not(.plain).headcolumn {
 		td:first-child {
-			background: map.get($theme, "primary-darker");
+			background: map.get(colors.$theme, "primary-darker");
 			font-weight: bold;
 			color: white;
 		}
@@ -907,7 +908,7 @@ table {
 
 	&.grid {
 		td {
-			border: 1px solid map.get($theme, "primary-darker");
+			border: 1px solid map.get(colors.$theme, "primary-darker");
 		}
 		thead td {
 			border: 1px solid white;
