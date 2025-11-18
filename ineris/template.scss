@@ -1,0 +1,180 @@
+@use "sass:map";
+@use "colors";
+@use "fonts";
+@use '../template.scss' with ($theme: colors.$theme);
+
+body {
+	font-family: "Marianne";
+    --background-layer: "active";
+    --foreground-layer: "active";
+
+	& > h1 {
+		--outline: "ClassicOutlineSlide";
+	}
+
+	& > h2 {
+		--outline: "FocusOutlineSlide";
+	}
+}
+
+/********************************************/
+/*            Outer components              */
+/********************************************/
+.component-minitoc > ul >li >ul li.section a::before {
+	font-size: 0.8rem;
+}
+
+// Footers
+.component-inerisfooter {
+	display: block;
+	width: 90vw;
+	height: 5vh;
+    border-top: 1px solid black;
+	box-sizing: border-box;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	margin: 0 5vw;
+	font-size: 0.7em;
+	color: var(--primary-darker);
+
+	div:first-child {
+		position: absolute;
+		left: 0;
+		top: 0;
+	}
+
+	div:last-child {
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
+}
+
+/********************************************/
+/*              Slide layout                */
+/********************************************/
+body>section, #thumblayer>div.wthumb>section {
+	--animation: "convex";
+
+    // Title slide
+    &#title {
+        --background: "[ImageBackground('page_garde.svg')]";
+        --foreground: "[InerisFooter()]";
+
+        h1 {
+			position: absolute;
+			left: 5vw;
+			width: 90vw;
+			bottom: 26%;
+			top: 40%;
+			font: bold 220% sans-serif;
+            text-transform: uppercase;
+
+			.subtitle {
+				font-size: 80%;
+				text-transform: none;
+			}
+        }
+
+        .authordate {
+			position: absolute;
+			left: 5vw;
+			bottom: 5%;
+			top: unset;
+			width: 90vw;
+			font-size: 80%;
+			line-height: 1.5;
+        }
+    }
+
+	&.content > h1, &.chessboard > h1 {
+		position: relative;
+		padding: 1.5vh 0px 0.5vh 0px;
+		text-align: left;
+		font: bold 180% sans-serif;
+		color: black;
+		margin: 9vh 5vw 0 5vw;
+	}
+
+	&.content > .content, &.chessboard > .content {
+		padding: 1.2vh 0vw;
+		margin: 0 5vw 6vh 5vw;
+		min-height: 0;
+	}
+
+
+	&.content, &.chessboard {
+        --background: "[ImageBackground('page_courante.svg')]";
+        --foreground: "[Minitoc(), InerisFooter()]";
+    }
+
+    &.outline {
+      @extend .content;
+    }
+
+	&.focus {
+		--background: "[ColorBackground('var(--primary-darker)')]";
+		--foreground: "[]";
+	}
+
+	&.plain {
+		--background: "[]";
+		--foreground: "[]";
+	}
+
+	&.outline[data-level="2"] {
+		--components: "[SimpleElement(\\'<div class='outline-image'></div>\\')]";
+		
+		
+		h1 {
+			margin: 50vh 5vw 0 5vw;
+			font-size: 2.5em;
+			font-weight: bold;
+			color: black;
+			text-align: left;
+			border: none;
+		}
+
+		div.content {
+			display: none;
+		}
+
+		& > div.outline-image {
+			position: absolute;
+			top: 10vh;
+			bottom: 0;
+			left: 0;
+			right: 0;
+            z-index: -1;
+			background-color: var(--neutral-lighter);
+		}
+	}
+
+    // Inner structure
+	ul>li {
+		color: var(--primary-darker);
+		line-height: 1.2;
+		margin-top: 0.3em;
+
+		&::before {
+			content: "▶ ";
+			font-size: 80%;
+			margin-right: 0.35em;
+			color: var(--primary-darker);
+			display: inline-block;
+			vertical-align: 0.1em;
+			height: 1em;
+		}
+
+		li {
+			color: var(--secondary-darker);
+			padding-bottom: 0;
+
+			&::before {
+				content: "▶ ";
+				color: var(--secondary-darker);
+			}
+		}
+	}
+}
