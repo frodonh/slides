@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-notes="example_notes.htm" data-synchronize="/templates/slides/slides.php">
+<html lang="en" data-notes="example_notes.htm" data-synchronize="slides.php" data-syncss="sync.css">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +9,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 	<script src="slides.js"></script>
+	<script src="interactive.js"></script> <!-- This is only needed if interactive features are used. -->
 	<script>
 		initialize({
 			"title": "Slides.js",
@@ -257,7 +258,6 @@ initialize({
 				<li><code>entry</code> is the structure node of the current heading</li>
 				<li><code>structure</code> is the structure of the document (usually a global variable named structure with the tree of headings and slides)</li>
 			</ul>
-			</p>
 		</div>
 	</section>
 
@@ -378,6 +378,7 @@ function animate_none(source,dest,increasing,callback) {
 	opacity: 0 !important;
 }
 			</code></pre>
+		</div>
 	</section>
 
 	<section class="content" data-animation="sweep">
@@ -400,6 +401,7 @@ function animate_none(source,dest,increasing,callback) {
 }
 
 			</code></pre>
+		</div>
 	</section>
 	
 	<section class="content" data-animation="rotate">
@@ -422,6 +424,7 @@ function animate_none(source,dest,increasing,callback) {
 	transform: rotate(90deg);
 }
 			</code></pre>
+		</div>
 	</section>
 	
 	<section class="content" data-animation="convex">
@@ -449,6 +452,7 @@ function animate_none(source,dest,increasing,callback) {
 	opacity: 0 !important;
 }
 			</code></pre>
+		</div>
 	</section>
 	
 	<section class="content" data-animation="takeoff">
@@ -476,6 +480,7 @@ function animate_none(source,dest,increasing,callback) {
 	opacity: 0 !important;
 }
 			</code></pre>
+		</div>
 	</section>
 
 	<section class="content" data-animation="sponge">
@@ -493,7 +498,7 @@ function animate_none(source,dest,increasing,callback) {
 	&lt;mask id="tempmaskb" maskContentUnits="objectBoundingBox"&gt;&lt;/mask&gt;
 &lt;/svg&gt;
 			</code></pre>
-
+		</div>
 	</section>
 
 	<h2 data-short="Slide">The slide structure</h2>
@@ -883,7 +888,7 @@ function animate_none(source,dest,increasing,callback) {
 
 			CSS stylesheet:
 			<pre><code class="language-css">
-#autofragments-elements ul > li {
+&num;autofragments-elements ul > li {
 	--autofragment: "{'before':['semivisible'],'current':['pulse'],'animation':'fragment_cssanim'}";
 }
 			</code></pre>
@@ -1182,6 +1187,29 @@ function animate_none(source,dest,increasing,callback) {
 		</div>
 	</section>
 
+	<h2 data-short="Interactive">Interactive components</h2>
+
+	<section class="content">
+		<h1>Attendees URL</h1>
+		<div class="content">
+			<p>When using interactive components, you need to address your attendees to another URL, where they will be able to answer to your polls.</p>
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>Real-time voting component</h1>
+		<div class="content">
+			<div class="interactive rt-election" id="my-election">
+				<h1>How far is the Moon from the Earth?</h1>
+				<ul>
+					<li>4.000 km</li>
+					<li>40.000 km</li>
+					<li>400.000 km</li>
+					<li>4.000.000 km</li>
+				</ul>
+			</div>
+		</div>
+	</section>
 
 	<h2 data-short="Templates">Creating your own template</h2>
 
@@ -1443,7 +1471,6 @@ function FocusOutlineSlide() {return new FocusOutlineSlideObject();}
 		<div class="content qrcode"></div>
 	</section>
 
-</body>
 <script>
 	for (let el of document.getElementsByClassName("code-sample")) {
 		el.append(view_source(el.dataset["selector"], el.dataset["num-lines"], el.dataset["language"]));
@@ -1500,4 +1527,5 @@ function FocusOutlineSlide() {return new FocusOutlineSlideObject();}
 		generate_table_color();
 	});
 </script>
+</body>
 </html>

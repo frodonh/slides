@@ -1,173 +1,101 @@
 @charset "UTF-8";
-@font-face {
-  font-family: "Marianne";
-  src: url("/fonts/Marianne-Thin.otf") format("opentype"), local("Marianne Thin");
-  font-weight: 0 200;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Marianne";
-  src: url("/fonts/Marianne-ThinItalic.otf") format("opentype"), local("Marianne Thin Italic");
-  font-weight: 0 200;
-  font-style: italic;
-}
-@font-face {
-  font-family: "Marianne";
-  src: url("/fonts/Marianne-Light.otf") format("opentype"), local("Marianne Light");
-  font-weight: 200 350;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Marianne";
-  src: url("/fonts/Marianne-LightItalic.otf") format("opentype"), local("Marianne Light Italic");
-  font-weight: 200 350;
-  font-style: italic;
-}
-@font-face {
-  font-family: "Marianne";
-  src: url("/fonts/Marianne-Regular.otf") format("opentype"), local("Marianne");
-  font-weight: 350 450;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Marianne";
-  src: url("/fonts/Marianne-RegularItalic.otf") format("opentype"), local("Marianne Italic");
-  font-weight: 350 450;
-  font-style: italic;
-}
-@font-face {
-  font-family: "Marianne";
-  src: url("/fonts/Marianne-Medium.otf") format("opentype"), local("Marianne Medium");
-  font-weight: 450 600;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Marianne";
-  src: url("/fonts/Marianne-MediumItalic.otf") format("opentype"), local("Marianne Medium Italic");
-  font-weight: 450 600;
-  font-style: italic;
-}
-@font-face {
-  font-family: "Marianne";
-  src: url("/fonts/Marianne-Bold.otf") format("opentype"), local("Marianne Bold");
-  font-weight: 600 800;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Marianne";
-  src: url("/fonts/Marianne-BoldItalic.otf") format("opentype"), local("Marianne Bold Italic");
-  font-weight: 600 800;
-  font-style: italic;
-}
-@font-face {
-  font-family: "Marianne";
-  src: url("/fonts/Marianne-ExtraBold.otf") format("opentype"), local("Marianne ExtraBold");
-  font-weight: 800 1000;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Marianne";
-  src: url("/fonts/Marianne-ExtraBoldItalic.otf") format("opentype"), local("Marianne ExtraBold Italic");
-  font-weight: 800 1000;
-  font-style: italic;
-}
 /********************************************/
 /*                 Colors                   */
 /********************************************/
 :root {
-  --primary-dark: #0083cb;
+  --primary-dark: rgb(128.8, 157.6, 21.6);
 }
 
 :root {
-  --primary-darker: #003a76;
+  --primary-darker: rgb(96.6, 118.2, 16.2);
 }
 
 :root {
-  --primary-darkest: rgb(0, 66.4, 90.4);
+  --primary-darkest: rgb(64.4, 78.8, 10.8);
 }
 
 :root {
-  --primary-light: #5bc5f2;
+  --primary-light: rgb(190.65, 227.4214285714, 53.7785714286);
 }
 
 :root {
-  --primary-lighter: #99d7f7;
+  --primary-lighter: rgb(206.7375, 234.3160714286, 104.0839285714);
 }
 
 :root {
-  --primary-lightest: rgb(141.4, 224.8407079646, 255);
+  --primary-lightest: rgb(222.825, 241.2107142857, 154.3892857143);
 }
 
 :root {
-  --secondary-dark: #a4a64b;
+  --secondary-dark: rgb(6.4, 64, 110.4);
 }
 
 :root {
-  --secondary-darker: #0e823a;
+  --secondary-darker: rgb(4.8, 48, 82.8);
 }
 
 :root {
-  --secondary-darkest: rgb(37.2054794521, 79.1945205479, 39.8630136986);
+  --secondary-darkest: rgb(3.2, 32, 55.2);
 }
 
 :root {
-  --secondary-light: #9fca7e;
+  --secondary-light: rgb(11.9890410959, 119.8904109589, 206.8109589041);
 }
 
 :root {
-  --secondary-lighter: #c4d89b;
+  --secondary-lighter: rgb(48.5671232877, 156.2712328767, 243.0328767123);
 }
 
 :root {
-  --secondary-lightest: rgb(195.4, 227, 197.4);
+  --secondary-lightest: rgb(117.3780821918, 189.1808219178, 247.0219178082);
 }
 
 :root {
-  --tertiary-dark: rgb(230.9368421053, 55.8105263158, 25.0631578947);
+  --tertiary-dark: rgb(184, 110.4, 0);
 }
 
 :root {
-  --tertiary-darker: #c2133e;
+  --tertiary-darker: rgb(138, 82.8, 0);
 }
 
 :root {
-  --tertiary-darkest: rgb(115.8736842105, 27.6210526316, 12.1263157895);
+  --tertiary-darkest: rgb(92, 55.2, 0);
 }
 
 :root {
-  --tertiary-light: #f39655;
+  --tertiary-light: rgb(255, 165.4, 31);
 }
 
 :root {
-  --tertiary-lighter: #ffd744;
+  --tertiary-lighter: rgb(255, 187.8, 87);
 }
 
 :root {
-  --tertiary-lightest: rgb(247.8, 195.4, 186.2);
+  --tertiary-lightest: rgb(255, 210.2, 143);
 }
 
 :root {
-  --quaternary-dark: #9a7b67;
+  --quaternary-dark: #00cc00;
 }
 
 :root {
-  --quaternary-darker: #564949;
+  --quaternary-darker: #009900;
 }
 
 :root {
-  --quaternary-darkest: rgb(93.4125, 63.6, 33.7875);
+  --quaternary-darkest: #006600;
 }
 
 :root {
-  --quaternary-light: #eac198;
+  --quaternary-light: #33ff33;
 }
 
 :root {
-  --quaternary-lighter: rgb(224.4, 197.4, 170.4);
+  --quaternary-lighter: #66ff66;
 }
 
 :root {
-  --quaternary-lightest: rgb(234.6, 216.6, 198.6);
+  --quaternary-lightest: #99ff99;
 }
 
 :root {
@@ -195,19 +123,19 @@
 }
 
 :root {
-  --primary: #00a6e2;
+  --primary: #A1C51B;
 }
 
 :root {
-  --secondary: #6ab96f;
+  --secondary: #08508A;
 }
 
 :root {
-  --tertiary: #ed6a53;
+  --tertiary: #e68a00;
 }
 
 :root {
-  --quaternary: #cc9f72;
+  --quaternary: lime;
 }
 
 :root {
@@ -289,19 +217,6 @@ body > section.anim-takeoff-to {
 }
 
 /********************************************/
-/*            Custom properties             */
-/********************************************/
-* {
-  --autofragment: "";
-  --animation: "";
-  --components: "";
-  --background: "";
-  --foreground: "";
-  --background-layer: "";
-  --foreground-layer: "";
-}
-
-/********************************************/
 /*                Animations                */
 /********************************************/
 @keyframes pulsebox {
@@ -320,6 +235,25 @@ body > section.anim-takeoff-to {
   animation-name: pulsebox;
   animation-duration: 1s;
   animation-timing-function: ease-in-out;
+}
+
+div.rt-election h1 {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 1em;
+}
+
+/********************************************/
+/*            Custom properties             */
+/********************************************/
+* {
+  --autofragment: "";
+  --animation: "";
+  --components: "";
+  --background: "";
+  --foreground: "";
+  --background-layer: "";
+  --foreground-layer: "";
 }
 
 /********************************************/
@@ -424,7 +358,7 @@ body > h1, body > h2 {
   list-style-type: none;
   margin: 0 1.2vw;
   font-size: 0.7em;
-  color: #003a76;
+  color: rgb(96.6, 118.2, 16.2);
   padding: 0;
   flex: auto;
 }
@@ -433,7 +367,7 @@ body > h1, body > h2 {
 }
 .component-minitoc > ul > li.current {
   opacity: 1;
-  background-color: #003a76;
+  background-color: rgb(96.6, 118.2, 16.2);
   color: white;
 }
 .component-minitoc > ul > li > ul {
@@ -474,7 +408,7 @@ body > h1, body > h2 {
   left: 0;
   margin: 0 1.2vw;
   font-size: 0.7em;
-  color: #003a76;
+  color: rgb(96.6, 118.2, 16.2);
 }
 .component-classicfooter div:first-child {
   position: absolute;
@@ -549,7 +483,7 @@ body > h1, body > h2 {
 }
 #qrcode-view .title {
   text-align: center;
-  color: #003a76;
+  color: rgb(96.6, 118.2, 16.2);
   flex: 0 1 0;
 }
 #qrcode-view figure {
@@ -662,7 +596,7 @@ body > section.outline > div:has(.current) ul > li:not(.current), #thumblayer > 
 }
 body > section.outline div.content .current, #thumblayer > div.wthumb > section.outline div.content .current {
   opacity: 1;
-  background-color: #99d7f7;
+  background-color: rgb(206.7375, 234.3160714286, 104.0839285714);
   box-shadow: 1.5vw 1.2vh 1.2vmax rgba(0, 0, 0, 0.5);
   border-radius: 1.2vmax;
 }
@@ -700,7 +634,7 @@ body > section.chessboard > .content > div > div, #thumblayer > div.wthumb > sec
   justify-content: center;
 }
 body > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd), body > section.chessboard > .content > div:nth-child(even) > div:nth-child(even), body > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even), body > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd), #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd), #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(even) > div:nth-child(even), #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even), #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) {
-  background-color: #003a76;
+  background-color: rgb(96.6, 118.2, 16.2);
 }
 body > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd), body > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd) ul > li, body > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd) ul > li::before, body > section.chessboard > .content > div:nth-child(even) > div:nth-child(even), body > section.chessboard > .content > div:nth-child(even) > div:nth-child(even) ul > li, body > section.chessboard > .content > div:nth-child(even) > div:nth-child(even) ul > li::before, body > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even), body > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even) ul > li, body > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even) ul > li::before, body > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd), body > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) ul > li, body > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) ul > li::before, #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd), #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd) ul > li, #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd) ul > li::before, #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(even) > div:nth-child(even), #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(even) > div:nth-child(even) ul > li, #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(even) > div:nth-child(even) ul > li::before, #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even), #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even) ul > li, #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even) ul > li::before, #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd), #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) ul > li, #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) ul > li::before {
   color: white;
@@ -739,7 +673,7 @@ body > section div.content ul > li::before, #thumblayer > div.wthumb > section d
   content: "• ";
   font-size: 200%;
   margin-right: 0.35em;
-  color: #003a76;
+  color: rgb(96.6, 118.2, 16.2);
   display: inline-block;
   vertical-align: -0.1em;
   height: 0.8em;
@@ -836,7 +770,7 @@ body > section div.content dl.rightheader dt, #thumblayer > div.wthumb > section
   transform: scale(0.2, 0.2);
 }
 #thumblayer > div.wthumb > section.thumbnail.targetted {
-  border: 20px solid #00a6e2;
+  border: 20px solid #A1C51B;
 }
 
 /********************************************/
@@ -865,7 +799,7 @@ body > section div.content dl.rightheader dt, #thumblayer > div.wthumb > section
   padding: 0;
   border-radius: 0.6vmax;
   box-shadow: 1.5vw 1.2vh 1.2vmax rgba(0, 0, 0, 0.5);
-  background-color: #99d7f7;
+  background-color: rgb(206.7375, 234.3160714286, 104.0839285714);
   position: relative;
 }
 .block h1 {
@@ -877,7 +811,7 @@ body > section div.content dl.rightheader dt, #thumblayer > div.wthumb > section
   border-radius: 0.6vmax 0.6vmax 0 0;
   font: bold 120% sans-serif;
   color: white;
-  background-image: linear-gradient(to bottom, #003a76 0%, #003a76 80%, #99d7f7 100%);
+  background-image: linear-gradient(to bottom, rgb(96.6, 118.2, 16.2) 0%, rgb(96.6, 118.2, 16.2) 80%, rgb(206.7375, 234.3160714286, 104.0839285714) 100%);
 }
 .block .content, .block body > section.outline, .block #thumblayer > div.wthumb > section.outline {
   padding-top: 0.78vh;
@@ -894,7 +828,7 @@ body > section div.content dl.rightheader dt, #thumblayer > div.wthumb > section
   padding: 0;
   border-radius: 0.6vmax;
   box-shadow: 1.5vw 1.2vh 1.2vmax rgba(0, 0, 0, 0.5);
-  background-color: #c4d89b;
+  background-color: rgb(48.5671232877, 156.2712328767, 243.0328767123);
   position: relative;
 }
 .infoblock h1 {
@@ -906,7 +840,7 @@ body > section div.content dl.rightheader dt, #thumblayer > div.wthumb > section
   border-radius: 0.6vmax 0.6vmax 0 0;
   font: bold 120% sans-serif;
   color: white;
-  background-image: linear-gradient(to bottom, #0e823a 0%, #0e823a 80%, #c4d89b 100%);
+  background-image: linear-gradient(to bottom, rgb(4.8, 48, 82.8) 0%, rgb(4.8, 48, 82.8) 80%, rgb(48.5671232877, 156.2712328767, 243.0328767123) 100%);
 }
 .infoblock .content, .infoblock body > section.outline, .infoblock #thumblayer > div.wthumb > section.outline {
   padding-top: 0.78vh;
@@ -922,7 +856,7 @@ body > section div.content dl.rightheader dt, #thumblayer > div.wthumb > section
   color: white;
   font: italic 1.5em serif;
   border-radius: 1em;
-  background-color: rgb(37.2054794521, 79.1945205479, 39.8630136986);
+  background-color: rgb(3.2, 32, 55.2);
   position: absolute;
   left: 0.3em;
   top: 50%;
@@ -936,7 +870,7 @@ body > section div.content dl.rightheader dt, #thumblayer > div.wthumb > section
   padding: 0;
   border-radius: 0.6vmax;
   box-shadow: 1.5vw 1.2vh 1.2vmax rgba(0, 0, 0, 0.5);
-  background-color: #ffd744;
+  background-color: rgb(255, 187.8, 87);
   position: relative;
 }
 .warningblock h1 {
@@ -948,7 +882,7 @@ body > section div.content dl.rightheader dt, #thumblayer > div.wthumb > section
   border-radius: 0.6vmax 0.6vmax 0 0;
   font: bold 120% sans-serif;
   color: white;
-  background-image: linear-gradient(to bottom, #c2133e 0%, #c2133e 80%, #ffd744 100%);
+  background-image: linear-gradient(to bottom, rgb(138, 82.8, 0) 0%, rgb(138, 82.8, 0) 80%, rgb(255, 187.8, 87) 100%);
 }
 .warningblock .content, .warningblock body > section.outline, .warningblock #thumblayer > div.wthumb > section.outline {
   padding-top: 0.78vh;
@@ -964,7 +898,7 @@ body > section div.content dl.rightheader dt, #thumblayer > div.wthumb > section
   color: white;
   font: italic 1.5em serif;
   border-radius: 1em;
-  background-color: rgb(115.8736842105, 27.6210526316, 12.1263157895);
+  background-color: rgb(92, 55.2, 0);
   position: absolute;
   left: 0.3em;
   top: 50%;
@@ -974,7 +908,7 @@ body > section div.content dl.rightheader dt, #thumblayer > div.wthumb > section
 }
 
 strong {
-  color: #003a76;
+  color: rgb(96.6, 118.2, 16.2);
   font-weight: bold;
 }
 
@@ -986,7 +920,7 @@ blockquote {
 }
 blockquote::before {
   content: "“";
-  color: #0e823a;
+  color: rgb(4.8, 48, 82.8);
   font-size: 4em;
   position: absolute;
   left: 0px;
@@ -1013,19 +947,19 @@ table {
   border-collapse: collapse;
 }
 table:not(.plain) thead, table:not(.plain) tfoot {
-  background-color: #003a76;
+  background-color: rgb(96.6, 118.2, 16.2);
   color: white;
   font-weight: bold;
 }
 table:not(.plain) tbody.dummy-header {
   font-weight: bold;
-  color: #003a76;
+  color: rgb(96.6, 118.2, 16.2);
 }
 table thead, table tr, table tfoot, table tbody.dummy-header {
   border-bottom: 1px solid grey;
 }
 table:not(.plain) tbody tr:nth-child(even) {
-  background-color: #99d7f7;
+  background-color: rgb(206.7375, 234.3160714286, 104.0839285714);
 }
 table img {
   margin: 0;
@@ -1037,7 +971,7 @@ table ul {
   padding-inline-start: 1.2em;
 }
 table:not(.plain).headcolumn td:first-child {
-  background: #003a76;
+  background: rgb(96.6, 118.2, 16.2);
   font-weight: bold;
   color: white;
 }
@@ -1045,7 +979,7 @@ table.fullwidth {
   width: 100%;
 }
 table.grid td {
-  border: 1px solid #003a76;
+  border: 1px solid rgb(96.6, 118.2, 16.2);
 }
 table.grid thead td {
   border: 1px solid white;
@@ -1094,147 +1028,6 @@ table.leftaligned thead td, table.leftaligned tbody.dummy-header td {
   * {
     animation: none !important;
   }
-}
-body {
-  font-family: "Marianne";
-  --background-layer: "active";
-  --foreground-layer: "active";
-}
-body > h1 {
-  --outline: "ClassicOutlineSlide";
-}
-body > h2 {
-  --outline: "FocusOutlineSlide";
-}
-
-/********************************************/
-/*            Outer components              */
-/********************************************/
-.component-minitoc > ul > li > ul li.section a::before {
-  font-size: 0.8rem;
-}
-
-/********************************************/
-/*              Slide layout                */
-/********************************************/
-body > section, #thumblayer > div.wthumb > section {
-  --animation: "convex";
-}
-body > section#title, #thumblayer > div.wthumb > section#title {
-  --background: "[ImageBackground('page_courante_couleurs.svg')]";
-}
-body > section#title h1, #thumblayer > div.wthumb > section#title h1 {
-  position: absolute;
-  left: 0%;
-  width: 100%;
-  bottom: 26%;
-  top: 34%;
-  color: #003a76;
-  font: bold 180% sans-serif;
-  text-align: center;
-}
-body > section#title h1 .subtitle, #thumblayer > div.wthumb > section#title h1 .subtitle {
-  color: #0e823a;
-  font: italic 80% sans-serif;
-}
-body > section#title .authordate, #thumblayer > div.wthumb > section#title .authordate {
-  position: absolute;
-  left: 1%;
-  bottom: 2%;
-  top: unset;
-  width: 51%;
-  color: #003a76;
-  font-size: 80%;
-  line-height: 1.5;
-}
-body > section.content > h1, body > section.outline > h1, body > section.chessboard > h1, #thumblayer > div.wthumb > section.content > h1, #thumblayer > div.wthumb > section.outline > h1, #thumblayer > div.wthumb > section.chessboard > h1 {
-  position: relative;
-  padding: 1.5vh 0px 2vh 0px;
-  text-align: center;
-  font: bold 180% sans-serif;
-  color: #003a76;
-  margin: 4vh 5vw 0.4vw 5vw;
-  border-bottom: 0.6vh solid #003a76;
-}
-body > section.content > .content, body > section.outline > .content, body > section.chessboard > .content, #thumblayer > div.wthumb > section.content > .content, #thumblayer > div.wthumb > section.outline > .content, #thumblayer > div.wthumb > section.chessboard > .content {
-  padding: 1.2vh 2.4vw;
-  margin: 0 5vw 6vh 5vw;
-  min-height: 0;
-}
-body > section.content, body > section.outline, body > section.chessboard, #thumblayer > div.wthumb > section.content, #thumblayer > div.wthumb > section.outline, #thumblayer > div.wthumb > section.chessboard {
-  --background: "[ImageBackground('page_courante.svg')]";
-  --foreground: "[Minitoc(), ClassicFooter()]";
-}
-body > section.focus, #thumblayer > div.wthumb > section.focus {
-  --background: "[ColorBackground('var(--primary-darker)')]";
-  --foreground: "[]";
-}
-body > section.plain, #thumblayer > div.wthumb > section.plain {
-  --background: "[]";
-  --foreground: "[]";
-}
-body > section.outline[data-level="2"], #thumblayer > div.wthumb > section.outline[data-level="2"] {
-  --components: "[SimpleElement(\\'<div class='outline-image image\\'+Math.floor(Math.random()*6)+\\''></div>\\')]";
-}
-body > section.outline[data-level="2"] h1, #thumblayer > div.wthumb > section.outline[data-level="2"] h1 {
-  margin: 50vh 5vw 0 5vw;
-  font-size: 2.5em;
-  font-weight: bold;
-  color: white;
-  text-align: left;
-  border: none;
-}
-body > section.outline[data-level="2"] div.content, #thumblayer > div.wthumb > section.outline[data-level="2"] div.content {
-  display: none;
-}
-body > section.outline[data-level="2"] > div.outline-image, #thumblayer > div.wthumb > section.outline[data-level="2"] > div.outline-image {
-  position: absolute;
-  top: 19.2vh;
-  bottom: 7vh;
-  left: 3vw;
-  right: 0;
-  z-index: -1;
-  background-size: cover;
-}
-body > section.outline[data-level="2"] > div.outline-image.image0, #thumblayer > div.wthumb > section.outline[data-level="2"] > div.outline-image.image0 {
-  background-image: url("bimage0.jpg");
-}
-body > section.outline[data-level="2"] > div.outline-image.image1, #thumblayer > div.wthumb > section.outline[data-level="2"] > div.outline-image.image1 {
-  background-image: url("bimage1.jpg");
-}
-body > section.outline[data-level="2"] > div.outline-image.image2, #thumblayer > div.wthumb > section.outline[data-level="2"] > div.outline-image.image2 {
-  background-image: url("bimage2.jpg");
-}
-body > section.outline[data-level="2"] > div.outline-image.image3, #thumblayer > div.wthumb > section.outline[data-level="2"] > div.outline-image.image3 {
-  background-image: url("bimage3.jpg");
-}
-body > section.outline[data-level="2"] > div.outline-image.image4, #thumblayer > div.wthumb > section.outline[data-level="2"] > div.outline-image.image4 {
-  background-image: url("bimage4.jpg");
-}
-body > section.outline[data-level="2"] > div.outline-image.image5, #thumblayer > div.wthumb > section.outline[data-level="2"] > div.outline-image.image5 {
-  background-image: url("bimage5.jpg");
-}
-body > section ul > li, #thumblayer > div.wthumb > section ul > li {
-  color: #003a76;
-  line-height: 1.2;
-  margin-top: 0.3em;
-}
-body > section ul > li::before, #thumblayer > div.wthumb > section ul > li::before {
-  content: "▶ ";
-  font-size: 80%;
-  margin-right: 0.35em;
-  color: #003a76;
-  display: inline-block;
-  vertical-align: 0.1em;
-  height: 1em;
-}
-body > section ul > li li, #thumblayer > div.wthumb > section ul > li li {
-  color: #0e823a;
-  padding-bottom: 0;
-}
-body > section ul > li li::before, #thumblayer > div.wthumb > section ul > li li::before {
-  content: "▶ ";
-  color: #0e823a;
 }
 
 /*# sourceMappingURL=template.css.map */

@@ -1,0 +1,16 @@
+@use 'sass:map';
+@use 'sass:color';
+
+$theme: () !default;
+
+%rt-component {
+  h1 {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1em;
+  }
+}
+
+div.rt-election {
+  @extend %rt-component;
+}

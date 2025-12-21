@@ -1,3 +1,8 @@
+$theme: () !default;
+
+/********************************************/
+/*               Transitions                */
+/********************************************/
 body>section {
 	// Slide-animation: fade
 	&.anim-fade-transitions {
@@ -79,3 +84,25 @@ body>section {
 	}
 
 }
+
+/********************************************/
+/*                Animations                */
+/********************************************/
+@keyframes pulsebox {
+	from {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.2);
+	}
+	to {
+		transform: scale(1);
+	}
+}
+.pulse {
+	animation-play-state: running;
+	animation-name: pulsebox;
+	animation-duration: 1s;
+	animation-timing-function: ease-in-out;
+}
+

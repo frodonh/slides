@@ -45,12 +45,14 @@ var xDown = null;
 var yDown = null;
 var xUp = null;
 var yUp = null;
-/** URL used for synchronization */
-var syncUrl=null;
-/** Name used for synchronization */
-var syncName=null;
-/** Slave mode */
-var slaveMode=false;
+/** Synchronization configuration */
+var syncConfig = {
+	url: null,	// URL for synchronization
+	name: null,	// Name of sync unit
+	css: null,	// URL of a CSS file used as a template in polls
+	master: false,	// Is synchronization active?
+	slave: false	// Are we in slave mode?
+};
 /** Outline stylesheet activated */
 var outlinestyle=false;
 /** Array of slideshow parameters */
@@ -1117,28 +1119,38 @@ function toggleFullscreen() {
  * @param {string} name - Name used for the synchronization channel
  */
 function signal(url,name) {
+	let curid = location.hash.substring(1);
+	let el = getSlideElement(curid);
+	let inter = el.element.getElementsByClassName("interactive");
+	let args = 'push=' + name + '&hash=' + curid;
+	if (inter.length > 0) args = args + "&interactive=" + encodeURIComponent(generatePollPage(inter[0]));
 	let xhttp=new XMLHttpRequest();
 	xhttp.open('POST',url,true);
 	xhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-	xhttp.send('push='+name+'&hash='+location.hash);
+	xhttp.send(args);
 }
 
 /**
- * This event handler is meant to be used as the keyUp event handler for the Syncname input field. Updates the syncName variable as read from user input and closes the query bar
+ * This event handler is meant to be used as the keyUp event handler for the Syncname input field. Updates the sync.name variable as read from user input and closes the query bar
  * @param {event} event - Event object
  */
 function getSyncName(event) {
-	if (event.keyCode==13) {
-		let syncf=document.getElementById('syncName');
-		syncName=syncf.value;
-		if (syncName=='') syncName=null;
-		let bar=syncf.parentNode;
-		bar.addEventListener('transitionend',function() {
-			bar.parentNode.removeChild(bar);
-		},{capture:false,once:true});
-		bar.style.top=null;
-	}
+	let syncf=document.getElementById('syncName');
 	event.stopPropagation();
+	if (event.key == 'Enter') {
+		syncConfig.name = syncf.value;
+		if (syncConfig.name=='') {
+			syncConfig.name=null;
+			syncConfig.master = false;
+		} else syncConfig.master = true;
+	} else if (event.key == 'Escape') {
+		syncConfig.name = null;
+	} else return;
+	let bar=syncf.parentNode;
+	bar.addEventListener('transitionend',function() {
+		bar.parentNode.removeChild(bar);
+	},{capture:false,once:true});
+	bar.style.top=null;
 }
 
 /**
@@ -1148,12 +1160,12 @@ function getSyncName(event) {
  */
 function pollSync(url,name) {
 	setInterval(function() {
-		if (slaveMode) {
+		if (syncConfig.slave) {
 			let xhttp=new XMLHttpRequest();
 			xhttp.open('POST',url,true);
 			xhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
 			xhttp.onreadystatechange=function() {
-				if (this.readyState==XMLHttpRequest.DONE && this.status==200) location.hash=this.responseText;
+				if (this.readyState==XMLHttpRequest.DONE && this.status==200) location.hash = '#' + this.responseText;
 			}
 			xhttp.send('pull='+name);
 		}
@@ -1167,8 +1179,9 @@ function pollSync(url,name) {
  */
 function registerSync(url,name) {
 	let source=new EventSource(url+'?register='+encodeURIComponent(name));
+	window.addEventListener('beforeunload', () => { source.close(); });
 	source.onmessage=function(e) {
-		if (slaveMode) location.hash=e.data;
+		if (syncConfig.slave) location.hash = '#' + e.data;
 	};
 }
 
@@ -1177,8 +1190,8 @@ function registerSync(url,name) {
  * @param {object} elem - Element which has been clicked on to toggle the slave mode.
  */
 function toggleSync(elem) {
-	slaveMode=!slaveMode;
-	if (slaveMode) {
+	syncConfig.slave=!syncConfig.slave;
+	if (syncConfig.slave) {
 		elem.textContent="Activée";
 		elem.parentNode.classList.replace('inactive','active');
 	} else {
@@ -1189,17 +1202,13 @@ function toggleSync(elem) {
 
 /**
  * Display QR-Code of sync'ed presentation. This function uses the Google API to generate a QR-Code from a URL.
- * @param {string} syncName - Id of synchronization, may be null if no synchronization has been set
+ * @param {string} uri - Id of URI for which the QR code is displayed
  */
-function displayQrcode(syncName) {
+function displayQrcode(uri) {
 	document.body.insertAdjacentHTML('afterbegin','<div id="coverlayer"></div>');
 	document.getElementById('coverlayer').style.opacity='1';
 	let syncd=document.createElement('div');
 	syncd.id='qrcode-view';
-	let uri=window.location.protocol+'//'+window.location.hostname+window.location.pathname+window.location.search;
-	if (syncName) {
-		uri+=(window.location.search!=''?'&':'?')+'sync='+syncName;
-	}
 	let encodeduri=encodeURIComponent(uri);
 	//syncd.innerHTML='<div class="title">Suivez la présentation en direct<br/>en flashant le QR-Code suivant</div><figure><img src="https://chart.googleapis.com/chart?cht=qr&chl='+encodeduri+'&chs=400x400" /></figure><p><a href="'+uri+'">'+uri+'</p>';
 	syncd.innerHTML='<div class="title">Suivez la présentation en direct<br/>en flashant le QR-Code suivant</div><figure><img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data='+encodeduri+'" /></figure><p><a href="'+uri+'">'+uri+'</p>';
@@ -1578,6 +1587,7 @@ document.addEventListener("DOMContentLoaded",function(event) {
 	// Read some attributes
 	let ss = head.querySelector('link[rel="stylesheet"]');
 	if (ss) meta.template_path = ss.getAttribute("href").replace(/[^\/]*$/, "");
+	syncConfig.name = btoa(Date.now() + location.host).substring(0, 30);
 
 	// Initialize metadata
 	if (!("date" in meta)) {
@@ -1641,7 +1651,8 @@ document.addEventListener("DOMContentLoaded",function(event) {
 
 function afterLoad() {
 	window.name="parentpres";
-	syncUrl=document.documentElement.dataset['synchronize'];
+	syncConfig.url=document.documentElement.dataset['synchronize'];
+	syncConfig.css=document.documentElement.dataset['syncss'];
 	prepare_slides(parameters); // Prepare the array of slides
 	if (location.hash=='') location.hash='#title';
 
@@ -1650,7 +1661,6 @@ function afterLoad() {
 		if (program_hashchange) {
 			program_hashchange=false;
 		} else {
-			let slide=curslide;
 			curslide=getSlideIndex(location.hash.substring(1));
 			let curslideo=getSlide(curslide);
 			for (const layer of ["background", "foreground"]) switch_layer(layer, slides[curslide]);
@@ -1660,8 +1670,9 @@ function afterLoad() {
 			wnotes.location.hash=location.hash;
 			wnotes.ratio=curslide/slides.length;
 		}
-		if (!slaveMode && syncUrl && syncName) {
-			signal(syncUrl,syncName,location.hash);
+		let curslideo = getSlide(curslide);
+		if (!syncConfig.slave && syncConfig.url && (syncConfig.master || curslideo.getElementsByClassName("interactive").length > 0)) {
+			signal(syncConfig.url, syncConfig.name);
 		}
 	});
 
@@ -1671,14 +1682,14 @@ function afterLoad() {
 	if (location.hash != "#title") setTimeout(()=>location.hash = location.hash,20); // Force hash change event to make CSS :target selector work on dynamically-generated IDs
 
 	// Pull mode, synchronize with presenter
-	if (syncUrl) {
+	if (syncConfig.url) {
 		if (('sync' in parameters) || ('syncp' in parameters)) {
-			slaveMode=true;
+			syncConfig.slave=true;
 			let el=document.createElement('div');
 			el.id='syncstatus';
 			el.innerHTML='Synchronisation : <span class="active"><a href="#" onClick="toggleSync(this);return false;">Activée</a></span>';
 			document.body.insertAdjacentElement('afterbegin',el);
-			if (parameters['sync']) registerSync(syncUrl,parameters['sync']); else pollSync(syncUrl,parameters['syncp']);
+			if (parameters['sync']) registerSync(syncConfig.url,parameters['sync']); else pollSync(syncConfig.url,parameters['syncp']);
 		}
 	}
 
@@ -1805,28 +1816,38 @@ function afterLoad() {
 					obj.scrollTop-=wnotes.screen.height/2;
 				}
 				break;
-			case "s":case "S":	// 's'
-				if (e.shiftKey) {
-					if (on_qrcode) {
-						closeQrcode();
-					} else {
-						displayQrcode(syncName);
-					}
+			case "s":	// 's'
+				if (syncConfig.url) {
+					e.stopImmediatePropagation();
+					let syncd=document.createElement('div');
+					syncd.id='synchronize';
+					syncd.innerHTML='Identifiant de synchronisation : <input type="text" id="syncName" maxlength="30" value="' + syncConfig.name + '" onfocus="this.select()">';
+					document.body.insertAdjacentElement('afterbegin',syncd);
+					setTimeout(function() {
+						syncd.style.top='0px';
+						let obj=syncd.lastChild;
+						obj.addEventListener('keydown',(evt) => {evt.stopPropagation()},false);
+						obj.addEventListener('keyup',getSyncName,false);
+						obj.focus();
+					},20);
+				}
+				break;
+			case "S":	// 'S'
+				if (on_qrcode) {
+					closeQrcode();
 				} else {
-					if (syncUrl) {
-						e.stopImmediatePropagation();
-						let syncd=document.createElement('div');
-						syncd.id='synchronize';
-						syncd.innerHTML='Identifiant de synchronisation : <input type="text" id="syncName" maxlength="30">';
-						document.body.insertAdjacentElement('afterbegin',syncd);
-						setTimeout(function() {
-							syncd.style.top='0px';
-							let obj=syncd.lastChild;
-							obj.addEventListener('keydown',(evt) => {evt.stopPropagation()},false);
-							obj.addEventListener('keyup',getSyncName,false);
-							obj.focus();
-						},20);
-					}
+					let uri = location.protocol + '//' + location.host + location.pathname +location.search;
+					uri += (location.search!=''?'&':'?') + "sync=" + syncConfig.name;
+					displayQrcode(uri);
+				}
+				break;
+			case "Q":	// 'Q'
+				if (on_qrcode) {
+					closeQrcode();
+				} else {
+					let uri = syncConfig.url + "?wait=" + syncConfig.name;
+					if (syncConfig.css) uri += "&css=" + syncConfig.css;
+					displayQrcode(uri);
 				}
 				break;
 		}

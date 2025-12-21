@@ -6,6 +6,12 @@ $theme: () !default;
 @use 'colors' with ($theme: $theme);
 
 /********************************************/
+/*            External modules              */
+/********************************************/
+@use 'animations' with ($theme: colors.$theme);
+@use 'interactive' with ($theme: colors.$theme);
+
+/********************************************/
 /*            Custom properties             */
 /********************************************/
 // This is needed to deactive inheritance on custom properties. Empty strings are filtered out in the Javascript script
@@ -17,111 +23,6 @@ $theme: () !default;
 	--foreground: "";
 	--background-layer: "";
 	--foreground-layer: "";
-}
-
-/********************************************/
-/*               Transitions                */
-/********************************************/
-body>section {
-	// Slide-animation: fade
-	&.anim-fade-transitions {
-		opacity: 1;
-		transition: opacity 1s ease-in-out;
-	}
-
-	&.anim-fade-from {
-		opacity: 0 !important;
-	}
-
-	&.anim-fade-to {
-		opacity: 0 !important;
-	}
-
-	// Slide-animation: sweep
-	&.anim-sweep-transitions {
-		transition: left 1s ease-in-out;
-	}
-
-	&.anim-sweep-from {
-		left: 100%;
-	}
-
-	&.anim-sweep-to {
-		left: -100%;
-	}
-
-	// Slide-animation: rotate
-	&.anim-rotate-transitions {
-		transform-origin: -50% 50%;
-		transition: transform 1s ease-in-out;
-	}
-
-	&.anim-rotate-from {
-		transform: rotate(-90deg);
-	}
-
-	&.anim-rotate-to {
-		transform: rotate(90deg);
-	}
-
-	// Slide-animation: convex
-	&.anim-convex-transitions {
-		opacity: 1;
-		transform-origin: center center 250px;
-		transition-property: transform, opacity;
-		transition-duration: 1s;
-		transition-timing-function: ease-in-out;
-	}
-
-	&.anim-convex-from {
-		transform: rotateY(-120deg) scale(0.5);
-		opacity: 0 !important;
-	}
-
-	&.anim-convex-to {
-		transform: rotateY(120deg) scale(0.5);
-		opacity: 0 !important;
-	}
-
-	// Slide-animation: takeoff
-	&.anim-takeoff-transitions {
-		opacity: 1;
-		transform-origin: center center;
-		transition-property: transform, opacity;
-		transition-duration: 1s;
-		transition-timing-function: ease-in-out;
-	}
-
-	&.anim-takeoff-from {
-		transform: scale(0.2);
-		opacity: 0 !important;
-	}
-
-	&.anim-takeoff-to {
-		transform: scale(5);
-		opacity: 0 !important;
-	}
-}
-
-/********************************************/
-/*                Animations                */
-/********************************************/
-@keyframes pulsebox {
-	from {
-		transform: scale(1);
-	}
-	50% {
-		transform: scale(1.2);
-	}
-	to {
-		transform: scale(1);
-	}
-}
-.pulse {
-	animation-play-state: running;
-	animation-name: pulsebox;
-	animation-duration: 1s;
-	animation-timing-function: ease-in-out;
 }
 
 /********************************************/

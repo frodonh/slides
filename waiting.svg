@@ -1,0 +1,19 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100">
+	<style>
+		.waiterlines {
+			fill: none;
+			stroke: #253A65;
+			stroke-width: 4;
+			stroke-miterlimit: 10;
+			stroke-linecap: round;
+		}
+	</style>
+	<image x="15" y="30" width="70" xlink:href="ofbet.svg" />
+	<circle class="waiterlines" cx="50" cy="50" r="48"/>
+	<line class="waiterlines" x1="50" y1="50" x2="85" y2="50.5">
+		<animateTransform attributeName="transform" dur="2s" type="rotate" from="0 50 50" to="360 50 50" repeatCount="indefinite" />
+	</line>
+	<line class="waiterlines" x1="50" y1="50" x2="49.5" y2="74">
+		<animateTransform attributeName="transform" dur="24s" type="rotate" from="0 50 50" to="360 50 50" repeatCount="indefinite" />
+	</line>
+</svg>
