@@ -13,4 +13,12 @@ $theme: () !default;
 
 div.rt-election {
   @extend %rt-component;
+
+  & > div {
+    display: grid;
+    grid-template-columns: 40vw 1fr;
+    row-gap: 0.5em;
+    align-self: center;
+  }
+
 }

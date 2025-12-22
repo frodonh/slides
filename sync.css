@@ -157,22 +157,19 @@ body {
   overflow: hidden;
   margin: 0;
 }
-
-div.interactive {
+body > div {
   display: flex;
   height: 100%;
   flex-flow: column nowrap;
   justify-content: space-evenly;
   align-items: center;
 }
-
-h1 {
+body > div > h1 {
   font: bold 2.2vmin sans-serif;
   text-align: center;
   flex: 0 1 auto;
 }
-
-ul {
+body > div > ul {
   flex: 1 1 80vh;
   margin: 0;
   padding: 0;
@@ -182,8 +179,7 @@ ul {
   justify-content: space-between;
   width: 100%;
 }
-
-li {
+body > div > li {
   flex: 1 1 30vw;
   display: flex;
   flex-flow: column nowrap;

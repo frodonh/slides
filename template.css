@@ -243,6 +243,11 @@ div.rt-election h1 {
   font-size: 1em;
 }
 
+div.rt-election > div {
+  display: grid;
+  grid-template-columns: 40vw 1fr;
+}
+
 /********************************************/
 /*            Custom properties             */
 /********************************************/

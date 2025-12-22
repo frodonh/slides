@@ -1123,7 +1123,7 @@ function signal(url,name) {
 	let el = getSlideElement(curid);
 	let inter = el.element.getElementsByClassName("interactive");
 	let args = 'push=' + name + '&hash=' + curid;
-	if (inter.length > 0) args = args + "&interactive=" + encodeURIComponent(generatePollPage(inter[0]));
+	if (inter.length > 0) args = args + "&interactive=" + encodeURIComponent(polls[inter[0].id].generateParticipantPage());
 	let xhttp=new XMLHttpRequest();
 	xhttp.open('POST',url,true);
 	xhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
@@ -1836,7 +1836,7 @@ function afterLoad() {
 				if (on_qrcode) {
 					closeQrcode();
 				} else {
-					let uri = location.protocol + '//' + location.host + location.pathname +location.search;
+					let uri = location.protocol + '//' + location.host + location.pathname + location.search;
 					uri += (location.search!=''?'&':'?') + "sync=" + syncConfig.name;
 					displayQrcode(uri);
 				}

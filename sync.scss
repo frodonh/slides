@@ -13,46 +13,48 @@ body {
   height: 100vh;
   overflow: hidden;
   margin: 0;
+
+  & > div {
+    display: flex;
+    height: 100%;
+    flex-flow: column nowrap;
+    justify-content: space-evenly;
+    align-items: center;
+
+    & > h1 {
+      font: bold 2.2vmin sans-serif;
+      text-align: center;
+      flex: 0 1 auto;
+    }
+
+    & > ul {
+      flex: 1 1 80vh;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-flow: row wrap;
+      align-items: stretch;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    & > li {
+      flex: 1 1 30vw;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
+      margin: 2em;
+      padding: 1em 0.2em;
+      container-type: size;
+      list-style-type: none;
+      background-color: map.get(colors.$theme, "primary-darker");
+      border: 1px solid black;
+      box-shadow: 10px 10px 5px 5px #77777777;
+      color: white;
+      text-align: center;
+      font-size: 3cqi;
+    }
+  }
 }
 
-div.interactive {
-  display: flex;
-  height: 100%;
-  flex-flow: column nowrap;
-  justify-content: space-evenly;
-  align-items: center;
-}
 
-h1 {
-  font: bold 2.2vmin sans-serif;
-  text-align: center;
-  flex: 0 1 auto;
-}
-
-ul {
-  flex: 1 1 80vh;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-flow: row wrap;
-  align-items: stretch;
-  justify-content: space-between;
-  width: 100%;
-}
-
-li {
-  flex: 1 1 30vw;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  margin: 2em;
-  padding: 1em 0.2em;
-  container-type: size;
-  list-style-type: none;
-  background-color: map.get(colors.$theme, "primary-darker");
-  border: 1px solid black;
-  box-shadow: 10px 10px 5px 5px #77777777;
-  color: white;
-  text-align: center;
-  font-size: 3cqi;
-}
