@@ -179,7 +179,7 @@ body > div > ul {
   justify-content: space-between;
   width: 100%;
 }
-body > div > li {
+body > div > ul > li {
   flex: 1 1 30vw;
   display: flex;
   flex-flow: column nowrap;

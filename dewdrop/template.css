@@ -246,6 +246,8 @@ div.rt-election h1 {
 div.rt-election > div {
   display: grid;
   grid-template-columns: 40vw 1fr;
+  row-gap: 0.5em;
+  align-self: center;
 }
 
 /********************************************/

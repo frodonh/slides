@@ -36,23 +36,23 @@ body {
       align-items: stretch;
       justify-content: space-between;
       width: 100%;
-    }
 
-    & > li {
-      flex: 1 1 30vw;
-      display: flex;
-      flex-flow: column nowrap;
-      justify-content: center;
-      margin: 2em;
-      padding: 1em 0.2em;
-      container-type: size;
-      list-style-type: none;
-      background-color: map.get(colors.$theme, "primary-darker");
-      border: 1px solid black;
-      box-shadow: 10px 10px 5px 5px #77777777;
-      color: white;
-      text-align: center;
-      font-size: 3cqi;
+      & > li {
+        flex: 1 1 30vw;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        margin: 2em;
+        padding: 1em 0.2em;
+        container-type: size;
+        list-style-type: none;
+        background-color: map.get(colors.$theme, "primary-darker");
+        border: 1px solid black;
+        box-shadow: 10px 10px 5px 5px #77777777;
+        color: white;
+        text-align: center;
+        font-size: 3cqi;
+      }
     }
   }
 }
