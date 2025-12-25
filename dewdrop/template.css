@@ -237,17 +237,53 @@ body > section.anim-takeoff-to {
   animation-timing-function: ease-in-out;
 }
 
+/********************************************/
+/*                 Colors                   */
+/********************************************/
+div.rt-election {
+  padding: 0.5em;
+  border-radius: 0.6vmax;
+  background-color: rgb(248.28, 192.4523076923, 160.92);
+}
 div.rt-election h1 {
   font-style: normal;
-  font-weight: normal;
-  font-size: 1em;
+  font-weight: bold;
+  font-size: 1.2em;
+  margin-bottom: 2em;
 }
 
 div.rt-election > div {
   display: grid;
-  grid-template-columns: 40vw 1fr;
-  row-gap: 0.5em;
-  align-self: center;
+  grid-template-columns: auto 1fr;
+  row-gap: 1em;
+  column-gap: 1em;
+  align-items: center;
+}
+div.rt-election > div div:nth-child(odd) {
+  max-width: 40vw;
+}
+div.rt-election > div div:nth-child(even) {
+  border-radius: 0.4vmax;
+  background-color: rgb(98.8653465347, 48.8534653465, 214.7465346535);
+  height: 1em;
+}
+div.rt-election > div div:nth-child(even):not(:empty) {
+  padding: 0.4em;
+}
+div.rt-election > div div:nth-child(even) {
+  margin-right: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: end;
+  transition: margin-right 0.5s ease-in-out;
+}
+div.rt-election > div div:nth-child(even) > div {
+  background-color: rgb(192.64, 78.3261538462, 13.76);
+  color: white;
+  border-radius: 50%;
+  min-width: 1em;
+  text-align: center;
+  padding: 0 0.3em;
 }
 
 /********************************************/

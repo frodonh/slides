@@ -1128,10 +1128,10 @@ function animate_none(source,dest,increasing,callback) {
 		</div>
 	</section>
 
-	<section class="content">
+	<section id="synchronization" class="content">
 		<h1>Synchronization</h1>
 		<div class="content">
-			<p>The presenter slideshow (<em>master</em>) may be synchronized with the audience devices (<em>slaves</em>) when they are connected on the same presentation. When synchronized, slave devices automatically switch slides to match the master progress. This does not include fragments however.</p>
+			<p>The presenter slideshow (<em>master</em>) may be synchronized with the audience devices (<em>slaves</em>) when they are connected on the same presentation. When synchronized, slave devices automatically switch slides to match the master progress. This does not include fragments however, which are always visible on slave devices.</p>
 			<p>The synchronization mode needs a synchronization script which manages the process through a remote database. The address of the script shall be included in the HTML data attributes.</p>
 			<pre><code class="language-html">
 &lt;html lang="en" data-notes="example_notes.htm" data-synchronize="/templates/slides/slides.php"&gt;
@@ -1150,12 +1150,11 @@ function animate_none(source,dest,increasing,callback) {
 	<section class="content">
 		<h1>Synchronization</h1>
 		<div class="content">
-			<p>To activate the master synchronization mode, hit <key>S</key> and then an id (any id can be entered, it is mainly useful when two speakers are presenting at the same time).</p>
+			<p>To activate the master synchronization mode, hit <key>S</key> and then an id (any id can be entered, it is mainly useful when two speakers are presenting at the same time). An automatic (and unique) id is proposed by default</p>
 			<p>When the synchronization mode is active, hitting <key>Shift</key><key>S</key> displays a link and a QR-Code to connect to the slideshow in slave mode.</p>
-			<p>The synchronization script must have access to a PostgreSQL database at least on version 12. The database must have a table created by the script pgschema.sql.</p>
+			<p>The synchronization script must have access to a PostgreSQL database at least on version 12. The database may be empty as the program will automatically create the needed table (named <code>slides</code>).</p>
 		</div>
 	</section>
-
 
 	<section class="content">
 		<h1>Presenter notes</h1>
@@ -1187,18 +1186,59 @@ function animate_none(source,dest,increasing,callback) {
 		</div>
 	</section>
 
-	<h2 data-short="Interactive">Interactive components</h2>
+	<h2 data-short="Interactivity">Interactive components</h2>
 
 	<section class="content">
-		<h1>Attendees URL</h1>
+		<h1>Configuration</h1>
 		<div class="content">
-			<p>When using interactive components, you need to address your attendees to another URL, where they will be able to answer to your polls.</p>
+			<p>Interactive components can only be used when the slideshow is hosted on a server with PHP and PostgreSql support. This is needed for server-side events which allow for an automatic synchronization of the presenter slideshow and the attendees devices.</p>
+			<p>When using interactive components, you need to configure a proper synchronization URL in the HTML element.</p>
+			<pre><code class="language-html">
+&lt;html lang="fr" data-synchronize="slides.php" data-syncss="sync.css"&gt;
+			</code></pre>
+			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>Elements</td><td>HTML attribute</td><td>CSS property</td><td>Meaning</td></tr>
+				</thead>
+				<tbody>
+					<tr><td>html</td><td>data-synchronize</td><td></td><td>Path of the synchronization script, this is the same as the one used for the <a href="#synchronization">synchronization of the slideshow</a></td></tr>
+					<tr><td>html</td><td>data-syncss</td><td></td><td>Path of a custom CSS for the attendees view</td></tr>
+				</tbody>
+			</table>
+			<p>Hitting <key>Shift</key><key>Q</key> displays a link and a QR-Code for the audience to connect to the slideshow and answer to the polls.</p>
 		</div>
 	</section>
 
 	<section class="content">
-		<h1>Real-time voting component</h1>
+		<h1>Using interactive components</h1>
 		<div class="content">
+			<p>Interactive components are included, simply by adding a <code>div</code> with the <code>interactive</code> class and another class which stands for the type of components (which name starts with <code>rt-</code>).</p>
+			<p>As soon as the slideshow displays a slide with an interactive component (see following pages), several things happen automatically:
+				<ul>
+					<li>A visual representation of the poll is displayed on the presenter screen.</li>
+					<li>An interactive page is displayed on the audience devices, to let them pick an answer.</li>
+					<li>The presenter slideshow listens for new answers and displays the score in real-time.</li>
+				</ul>
+			</p>
+			<p>By default, the score is not accessible any longer after the slideshow is closed. However, you can still retrieve your slideshow with the scores if you save the synchronization code which appears when you press <key>s</key>. When you open your slideshow again, press <key>s</key> and paste the code there. Now when you hit a poll, you will see your last results. You can still ask your audience to vote but the new votes will add to the previous ones.</p>
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>Voting component</h1>
+		<div class="content">
+			<p>A voting component can be included by adding a div with the <code>interactive</code> and <code>rt-election</code> classes.</p>
+			<pre><code>
+&lt;div class="interactive rt-election" id="my-election"&gt;
+&lt;h1&gt;How far is the Moon from the Earth?&lt;/h1&gt;
+&lt;ul&gt;
+	&lt;li&gt;4.000 km&lt;/li&gt;
+	&lt;li&gt;40.000 km&lt;/li&gt;
+	&lt;li&gt;400.000 km&lt;/li&gt;
+	&lt;li&gt;4.000.000 km&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+			</code></pre>
 			<div class="interactive rt-election" id="my-election">
 				<h1>How far is the Moon from the Earth?</h1>
 				<ul>
@@ -1207,6 +1247,21 @@ function animate_none(source,dest,increasing,callback) {
 					<li>400.000 km</li>
 					<li>4.000.000 km</li>
 				</ul>
+			</div>
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>Rating component</h1>
+		<div class="content">
+			<p>A rating component can be included by adding a div with the <code>interactive</code> and <code>rt-rating</code> classes.</p>
+			<pre><code>
+&lt;div class="interactive rt-rating" id="my-rating" data-max="10"&gt;
+&lt;h1&gt;Rate this shideshow&lt;/h1&gt;
+&lt;/div&gt;
+			</code></pre>
+			<div class="interactive rt-rating" id="my-rating" data-max="10">
+				<h1>Rate this slideshow</h1>
 			</div>
 		</div>
 	</section>

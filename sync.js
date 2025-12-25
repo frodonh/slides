@@ -5,17 +5,37 @@ function to_wait_mode() {
 }
 
 function gen_interaction() {
-	for (let opt of document.getElementsByTagName("li")) {
-		opt.addEventListener("click", function(event){
+	let comp = document.getElementsByClassName("interactive")[0];
+	if (comp.classList.contains("rt-election")) {
+		for (let opt of comp.querySelectorAll("li")) {
+			opt.addEventListener("click", function(event){
+				let xhttp = new XMLHttpRequest();
+				xhttp.open("POST", location.protocol + "//" + location.host + location.pathname, false);
+				xhttp.onreadystatechange = function() {
+					if (this.readyState == XMLHttpRequest.DONE && this.status == 200) to_wait_mode();
+				}
+				xhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+				xhttp.send("submit=" + parameters["wait"] + "&poll=" + this.closest(".interactive").id + "&answer=" + this.id);
+			});
+		}
+	} else if (comp.classList.contains("rt-rating")) {
+		let starListener = function(event) {
+			let inf = true;
+			for (let span of event.target.parentNode.childNodes) {
+				if (inf) span.classList.add("lighted"); else span.classList.remove("lighted");
+				if (span == event.target) inf = false;
+			}
+		};
+		for (let rate of comp.querySelectorAll("span")) rate.addEventListener("click", starListener);
+		comp.querySelector("button").addEventListener("click", function(event) {
 			let xhttp = new XMLHttpRequest();
 			xhttp.open("POST", location.protocol + "//" + location.host + location.pathname, false);
 			xhttp.onreadystatechange = function() {
-				if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
-					to_wait_mode();
-				}
+				if (this.readyState == XMLHttpRequest.DONE && this.status == 200) to_wait_mode();
 			}
 			xhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-			xhttp.send("submit=" + parameters["wait"] + "&poll=" + this.closest(".interactive").id + "&answer=" + this.id);
+			let stars = this.previousSibling.querySelectorAll('.lighted').length;
+			xhttp.send("submit=" + parameters["wait"] + "&poll=" + this.closest(".interactive").id + "&answer=" + stars);
 		});
 	}
 }

@@ -2,12 +2,18 @@
 @use 'sass:color';
 
 $theme: () !default;
+@use 'colors';
 
 %rt-component {
+  padding: 0.5em;
+  border-radius: 0.6vmax;
+  background-color: map.get(colors.$theme, "secondary-lightest");
+  
   h1 {
     font-style: normal;
-    font-weight: normal;
-    font-size: 1em;
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-bottom: 2em;
   }
 }
 
@@ -16,9 +22,33 @@ div.rt-election {
 
   & > div {
     display: grid;
-    grid-template-columns: 40vw 1fr;
-    row-gap: 0.5em;
-    align-self: center;
+    grid-template-columns: auto 1fr;
+    row-gap: 1em;
+    column-gap: 1em;
+    align-items: center;
+    div:nth-child(odd) {
+      max-width: 40vw;
+    }
+    div:nth-child(even) {
+      border-radius: 0.4vmax;
+      background-color: map.get(colors.$theme, "primary");
+      height: 1em;
+      &:not(:empty) {padding: 0.4em;}
+      margin-right: 100%;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: end;
+      transition: margin-right 0.5s ease-in-out;
+
+      & > div {
+        background-color: map.get(colors.$theme, "secondary-dark");
+        color: white;
+        border-radius: 50%;
+        min-width: 1em;
+        text-align: center;
+        padding: 0 0.3em;
+      }
+    }
   }
 
 }
