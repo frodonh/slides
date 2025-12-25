@@ -191,12 +191,17 @@ body div.rt-election > ul > li {
   padding: 1em 0.2em;
   container-type: size;
   list-style-type: none;
-  background-color: rgb(96.6, 118.2, 16.2);
-  border: 1px solid black;
-  box-shadow: 10px 10px 5px 5px rgba(119, 119, 119, 0.4666666667);
+  font-size: 3cqi;
+  background-color: #A1C51B;
+  border: 1px solid rgb(96.6, 118.2, 16.2);
+  border-radius: 2px;
   color: white;
   text-align: center;
-  font-size: 3cqi;
+  transition: background-color 0.5s ease;
+}
+body div.rt-election > ul > li:hover {
+  background-color: rgb(128.8, 157.6, 21.6);
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.3);
 }
 
 /********************************************/
@@ -217,14 +222,15 @@ div.rt-rating div span.lighted:before {
   content: "★";
 }
 div.rt-rating button {
-  background-color: #A1C51B;
-  color: white;
   font-size: 2em;
-  transition: background-color 0.5s ease;
   padding: 1em;
   min-width: 20vw;
+  background-color: #A1C51B;
   border: 1px solid rgb(96.6, 118.2, 16.2);
   border-radius: 2px;
+  color: white;
+  text-align: center;
+  transition: background-color 0.5s ease;
 }
 div.rt-rating button:hover {
   background-color: rgb(128.8, 157.6, 21.6);

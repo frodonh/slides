@@ -8,6 +8,20 @@
 $theme: () !default;
 @use 'colors' with ($theme: $theme);
 
+@mixin interactive {
+  background-color: map.get(colors.$theme, "primary");
+  border: 1px solid map.get(colors.$theme, "primary-darker");
+  border-radius: 2px;
+  color: white;
+  text-align: center;
+  transition: background-color 0.5s ease;
+  cursor: pointer;
+  &:hover {
+    background-color: map.get(colors.$theme, "primary-dark");
+    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.3);
+  }
+}
+
 body {
   height: 100vh;
   overflow: hidden;
@@ -26,6 +40,7 @@ body {
       flex: 0 1 auto;
     }
 }
+
 /********************************************/
 /*                Election                  */
 /********************************************/
@@ -48,12 +63,8 @@ div.rt-election > ul {
       padding: 1em 0.2em;
       container-type: size;
       list-style-type: none;
-      background-color: map.get(colors.$theme, "primary-darker");
-      border: 1px solid black;
-      box-shadow: 10px 10px 5px 5px #77777777;
-      color: white;
-      text-align: center;
       font-size: 3cqi;
+      @include interactive;
     }
   }
 }
@@ -80,18 +91,9 @@ div.rt-rating {
   }
 
   button {
-    background-color: map.get(colors.$theme, "primary");
-    color: white;
     font-size: 2em;
-    transition: background-color 0.5s ease;
     padding: 1em;
     min-width: 20vw;
-    border: 1px solid map.get(colors.$theme, "primary-darker");
-    border-radius: 2px;
-
-    &:hover {
-      background-color: map.get(colors.$theme, "primary-dark");
-      box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.3);
-    }
+    @include interactive;
   }
 }
