@@ -15,7 +15,7 @@ function gen_interaction() {
 					if (this.readyState == XMLHttpRequest.DONE && this.status == 200) to_wait_mode();
 				}
 				xhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-				xhttp.send("submit=" + parameters["wait"] + "&poll=" + this.closest(".interactive").id + "&answer=" + this.id);
+				xhttp.send("submit=" + parameters["wait"] + "&poll=" + this.closest(".interactive").id + "&answers=" + encodeURIComponent("{\"" + this.id + "\":1}"));
 			});
 		}
 	} else if (comp.classList.contains("rt-rating")) {
@@ -35,7 +35,7 @@ function gen_interaction() {
 			}
 			xhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
 			let stars = this.previousSibling.querySelectorAll('.lighted').length;
-			xhttp.send("submit=" + parameters["wait"] + "&poll=" + this.closest(".interactive").id + "&answer=" + stars);
+			xhttp.send("submit=" + parameters["wait"] + "&poll=" + this.closest(".interactive").id + "&answers=" + encodeURIComponent("{\"stars-" + stars + "\":1}"));
 		});
 	}
 }

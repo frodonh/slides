@@ -1845,7 +1845,7 @@ function afterLoad() {
 				if (on_qrcode) {
 					closeQrcode();
 				} else {
-					let uri = syncConfig.url + "?wait=" + syncConfig.name;
+					let uri = URL.parse(syncConfig.url, location.protocol + '//' + location.host + location.pathname) + "?wait=" + syncConfig.name;
 					if (syncConfig.css) uri += "&css=" + syncConfig.css;
 					displayQrcode(uri);
 				}

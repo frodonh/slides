@@ -50,5 +50,47 @@ div.rt-election {
       }
     }
   }
+}
+
+div.rt-rating {
+  @extend %rt-component;
+
+  display: flex;
+  flex-flow: column nowrap;
+  flex: auto;
+
+  & > div {
+    display: grid;
+    row-gap: 1em;
+    column-gap: 1em;
+    grid-template-rows: 1fr auto;
+    justify-items: center;
+    flex: 1 1 auto;
+  
+    div.bar {
+      width: 100%;
+      position: relative;
+
+      & > div {
+        position: absolute;
+        top: 100%;
+        left: 0%;
+        right: 0%;
+        bottom: 0%;
+        background-color: map.get(colors.$theme, "primary");
+        transition: top ease-in-out 0.5s;
+        &:not(:empty) {padding: 0.4em;}
+
+        & > div {
+          background-color: map.get(colors.$theme, "secondary-dark");
+          color: white;
+          border-radius: 50%;
+          min-width: 1em;
+          text-align: center;
+          padding: 0 0.3em;
+        }
+      }
+    }
+  }
 
 }

@@ -62,11 +62,12 @@ class PollElection extends Poll {
 	}
 
 	update(data) {
-		const max = data.reduce((acc, cur)=>(cur.number>acc?cur.number:acc), 0);
-		for (const question of data) {
-			let div = document.getElementById(question.answer).nextSibling ;
-			div.style.marginRight = (100 - question.number / max * 100) + "%";
-			div.innerHTML = "<div>" + question.number + "</div>";
+		delete data.number;
+		const max = Object.entries(data).reduce((acc, cur)=>(cur[1]>acc?cur[1]:acc), 0);
+		for (const [key,value] of Object.entries(data)) {
+			let div = document.getElementById(key).nextSibling ;
+			div.style.marginRight = (100 - value / max * 100) + "%";
+			div.innerHTML = "<div>" + value + "</div>";
 		}
 	}
 }
@@ -88,15 +89,17 @@ class PollRating extends Poll {
 	}
 
 	generatePresenterPage() {
-		return `<h1>${this.title}</h1><div style="grid-template-columns: repeat(${this.max}, 1fr)" >` + '<div></div>'.repeat(this.max*2) + '</div>';
+		return `<h1>${this.title}</h1><div style="grid-template-columns: repeat(${this.max+1}, 1fr)" >` + '<div class="bar"><div></div></div>'.repeat(this.max+1) + Array(this.max+1).fill().map((_, index)=>`<div class="legend">${index}</div>`).join('') + '</div>';
 	}
 
 	update(data) {
-		const max = data.reduce((acc, cur)=>(cur.number>acc?cur.number:acc), 0);
-		for (const question of data) {
-			let div = document.getElementById(question.answer).nextSibling ;
-			div.style.marginRight = (100 - question.number / max * 100) + "%";
-			div.innerHTML = "<div>" + question.number + "</div>";
+		delete data.number;
+		const max = Object.entries(data).reduce((acc, cur)=>(cur[1]>acc?cur[1]:acc), 0);
+		let grid = document.getElementById(this.id).getElementsByTagName('div')[0];
+		for (const [key,value] of Object.entries(data)) {
+			let div = grid.childNodes[parseInt(key.substring(6))].getElementsByTagName('div')[0];
+			div.style.top = (100 - value / max * 100) + "%";
+			div.innerHTML = "<div>" + value + "</div>";
 		}
 	}
 }

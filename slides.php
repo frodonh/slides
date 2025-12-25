@@ -104,23 +104,24 @@ if (array_key_exists('push',$_REQUEST))	{	// Master mode, updates database with 
 } elseif (array_key_exists('submit', $_REQUEST) && array_key_exists('poll', $_REQUEST)) {	// Submit an answer to a poll
 	$dbconn=pg_connect("host=".$host." dbname=".$dbname." user=".$user." password=".$password) or die ('Impossible to connect to the database: '.pg_last_error());
 	if (!pg_meta_data($dbconn,'polls')) {
-		$query="create table polls (name varchar(30), poll text, answer text)";
+		$query="create table polls (name varchar(30), poll text, answers jsonb, constraint polls_pkey primary key (name, poll))";
 		$result=pg_query($dbconn, $query) or die('Request failed: '.pg_last_error());
 		pg_free_result($result);
 		$query="create or replace function notify_polls() returns trigger as $$
 			begin
-				perform pg_notify(new.name || new.poll,new.answer);
+				perform pg_notify(new.name || new.poll,new.answers::text);
 				return new;
 			end;
 			$$ language plpgsql;";
 		$result=pg_query($dbconn, $query) or die('Request failed: '.pg_last_error());
 		pg_free_result($result);
-		$query="create or replace trigger notify_update_polls after insert on polls for each row execute procedure notify_polls()";
+		$query="create or replace trigger notify_update_polls after insert or update on polls for each row execute procedure notify_polls()";
 		$result=pg_query($dbconn, $query) or die('Request failed: '.pg_last_error());
 		pg_free_result($result);
 	}
-	$query="insert into polls values ($1, $2, $3)";
-	$result=pg_query_params($dbconn, $query, array($_REQUEST['submit'], $_REQUEST['poll'], $_REQUEST['answer'])) or die('Request failed: '.pg_last_error());
+	// If the poll is not in the database, create a row with the given answers. Otherwise combines the existing JSON value for answers with the new one by adding the corresponding fields.
+	$query="insert into polls values ($1, $2, cast ($3 as jsonb) || '{\"number\":1}'::jsonb) on conflict on constraint polls_pkey do update set answers=(select jsonb_object_agg(key, total) from (select key, sum(value::numeric) as total from (select * from jsonb_each(polls.answers) union all select * from jsonb_each(excluded.answers) as combined) group by key) as summed)";
+	$result=pg_query_params($dbconn, $query, array($_REQUEST['submit'], $_REQUEST['poll'], $_REQUEST['answers'])) or die('Request failed: '.pg_last_error());
 	pg_free_result($result);
 	pg_close($dbconn);
 } elseif (array_key_exists('follow', $_REQUEST) && array_key_exists('poll', $_REQUEST)) {	// Get events for updates on a poll
@@ -138,12 +139,12 @@ if (array_key_exists('push',$_REQUEST))	{	// Master mode, updates database with 
 	while (true) {
 		$notify=pg_get_notify($dbconn,PGSQL_NUM);
 		if ($notify || $first) {
-			$query="select answer, count(poll) as number from polls where name=$1 and poll=$2 group by answer";
+			$query="select answers from polls where name=$1 and poll=$2";
 			$res=pg_query_params($dbconn, $query, array($_REQUEST['follow'], $_REQUEST['poll'])) or die('Request failed: '.pg_last_error());
-			$ret=pg_fetch_all($res, PGSQL_ASSOC);
+			$ret=pg_fetch_array($res, null, PGSQL_ASSOC);
 			pg_free_result($res);
 			if ($ret) {
-				echo "data: ".json_encode($ret).PHP_EOL;
+				echo "data: ".$ret["answers"].PHP_EOL;
 				echo PHP_EOL;
 				if (ob_get_contents()) {ob_end_flush();}
 				flush();
