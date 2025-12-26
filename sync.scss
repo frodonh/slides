@@ -39,6 +39,7 @@ body {
       text-align: center;
       flex: 0 1 auto;
     }
+  }
 }
 
 /********************************************/
@@ -56,27 +57,26 @@ button {
 /*                Election                  */
 /********************************************/
 div.rt-election > ul, div.rt-selection > ul {
-    flex: auto;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-flow: row wrap;
-    align-items: stretch;
-    justify-content: space-between;
-    width: 100%;
+  flex: auto;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: stretch;
+  justify-content: space-between;
+  width: 100%;
 
-    & > li {
-      flex: 1 0 30vw;
-      display: flex;
-      flex-flow: column nowrap;
-      justify-content: center;
-      margin: 0.3em;
-      padding: 1em 0.2em;
-      container-type: size;
-      list-style-type: none;
-      font-size: 3cqi;
-      @include interactive;
-    }
+  & > li {
+    flex: 1 0 30vw;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    margin: 0.3em;
+    padding: 1em 0.2em;
+    container-type: size;
+    list-style-type: none;
+    font-size: 3cqi;
+    @include interactive;
   }
 }
 
@@ -105,6 +105,41 @@ div.rt-rating {
 
     span.lighted:before {
       content: '★';
+    }
+  }
+}
+
+/********************************************/
+/*                Ranking                   */
+/********************************************/
+div.rt-ranking > ul {
+  flex: auto;
+  margin: 0;
+  padding: 0;
+  display: flex; 
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  align-items: center;
+
+  & > li {
+    flex: 1 1 auto;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    margin: 0.3em;
+    padding: 1em 0.2em;
+    container-type: unset;
+    list-style-type: none;
+    font-size: 2em;
+    width: 80vh;
+    @include interactive;
+
+    &.fake {
+      border: 1px dashed map.get(colors.$theme, "primary");
+    }
+
+    &.fake-clone {
+      opacity: 0.3;
     }
   }
 }

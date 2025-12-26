@@ -38,6 +38,7 @@ class Poll {
 		if (element.classList.contains("rt-election")) return new PollElection(id, element);
 		if (element.classList.contains("rt-rating")) return new PollRating(id, element);
 		if (element.classList.contains("rt-selection")) return new PollSelection(id, element);
+		if (element.classList.contains("rt-ranking")) return new PollRanking(id, element);
 	}
 }
 
@@ -132,6 +133,38 @@ class PollRating extends Poll {
 		for (const [key,value] of Object.entries(data)) {
 			let div = grid.childNodes[parseInt(key.substring(6))].getElementsByTagName('div')[0];
 			div.style.top = (100 - value / max * 100) + "%";
+			div.innerHTML = "<div>" + value + "</div>";
+		}
+	}
+}
+
+/*************************************
+ *          Ranking poll             *
+ *************************************/
+/**
+ * Ranking poll: the user can rank different options according to his preferences
+ */
+class PollRanking extends Poll {
+	constructor(id, element) {
+		super(id, 'ranking', element);
+		let onum = 1;
+		this.options = Array.from(element.getElementsByTagName('li')).map((el)=>({id: (el.id)?el.id:(id+"-"+(onum++)), value: el.innerHTML}));
+	}
+
+	generateParticipantPage() {
+		return `<div class="interactive rt-ranking" id="${this.id}"><h1>${this.title}</h1><ul>` + this.options.map((el)=>`<li draggable="true" id="${el.id}">${el.value}</li>`).join("") + '</ul><button type="button">OK</button></div>';;
+	}
+
+	generatePresenterPage() {
+		return `<h1>${this.title}</h1><div>` + this.options.map((el)=>`<div id="${el.id}">${el.value}</div><div></div>`).join("") + "</div>";
+	}
+
+	update(data) {
+		delete data.number;
+		const max = Object.entries(data).reduce((acc, cur)=>(cur[1]>acc?cur[1]:acc), 0);
+		for (const [key,value] of Object.entries(data)) {
+			let div = document.getElementById(key).nextSibling ;
+			div.style.marginRight = (100 - value / max * 100) + "%";
 			div.innerHTML = "<div>" + value + "</div>";
 		}
 	}

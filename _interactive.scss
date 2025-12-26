@@ -17,7 +17,7 @@ $theme: () !default;
   }
 }
 
-div.rt-election, div.rt-selection {
+div.rt-election, div.rt-selection, div.rt-ranking {
   @extend %rt-component;
 
   & > div {

@@ -167,12 +167,11 @@ body > div > h1 {
   text-align: center;
   flex: 0 1 auto;
 }
-body {
-  /********************************************/
-  /*             Inline elements              */
-  /********************************************/
-}
-body button {
+
+/********************************************/
+/*             Inline elements              */
+/********************************************/
+button {
   font-size: 2em;
   padding: 1em;
   margin: 1em;
@@ -185,16 +184,15 @@ body button {
   transition: background-color 0.5s ease;
   cursor: pointer;
 }
-body button:hover {
+button:hover {
   background-color: rgb(128.8, 157.6, 21.6);
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.3);
 }
-body {
-  /********************************************/
-  /*                Election                  */
-  /********************************************/
-}
-body div.rt-election > ul, body div.rt-selection > ul {
+
+/********************************************/
+/*                Election                  */
+/********************************************/
+div.rt-election > ul, div.rt-selection > ul {
   flex: auto;
   margin: 0;
   padding: 0;
@@ -204,7 +202,7 @@ body div.rt-election > ul, body div.rt-selection > ul {
   justify-content: space-between;
   width: 100%;
 }
-body div.rt-election > ul > li, body div.rt-selection > ul > li {
+div.rt-election > ul > li, div.rt-selection > ul > li {
   flex: 1 0 30vw;
   display: flex;
   flex-flow: column nowrap;
@@ -222,7 +220,7 @@ body div.rt-election > ul > li, body div.rt-selection > ul > li {
   transition: background-color 0.5s ease;
   cursor: pointer;
 }
-body div.rt-election > ul > li:hover, body div.rt-selection > ul > li:hover {
+div.rt-election > ul > li:hover, div.rt-selection > ul > li:hover {
   background-color: rgb(128.8, 157.6, 21.6);
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.3);
 }
@@ -250,6 +248,48 @@ div.rt-rating div span:before {
 }
 div.rt-rating div span.lighted:before {
   content: "★";
+}
+
+/********************************************/
+/*                Ranking                   */
+/********************************************/
+div.rt-ranking > ul {
+  flex: auto;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+div.rt-ranking > ul > li {
+  flex: 1 1 auto;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  margin: 0.3em;
+  padding: 1em 0.2em;
+  container-type: unset;
+  list-style-type: none;
+  font-size: 2em;
+  width: 80vh;
+  background-color: #A1C51B;
+  border: 1px solid rgb(96.6, 118.2, 16.2);
+  border-radius: 2px;
+  color: white;
+  text-align: center;
+  transition: background-color 0.5s ease;
+  cursor: pointer;
+}
+div.rt-ranking > ul > li:hover {
+  background-color: rgb(128.8, 157.6, 21.6);
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.3);
+}
+div.rt-ranking > ul > li.fake {
+  border: 1px dashed #A1C51B;
+}
+div.rt-ranking > ul > li.fake-clone {
+  opacity: 0.3;
 }
 
 /*# sourceMappingURL=sync.css.map */
