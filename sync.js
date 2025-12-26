@@ -18,6 +18,17 @@ function gen_interaction() {
 				xhttp.send("submit=" + parameters["wait"] + "&poll=" + this.closest(".interactive").id + "&answers=" + encodeURIComponent("{\"" + this.id + "\":1}"));
 			});
 		}
+	} else if (comp.classList.contains("rt-selection")) {
+		comp.querySelectorAll("li").forEach((opt)=>{opt.addEventListener('click', (ev) => {ev.target.classList.toggle('active');});});
+		comp.querySelector("button").addEventListener("click", function(event){
+			let xhttp = new XMLHttpRequest();
+			xhttp.open("POST", location.protocol + "//" + location.host + location.pathname, false);
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == XMLHttpRequest.DONE && this.status == 200) to_wait_mode();
+			}
+			xhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+			xhttp.send("submit=" + parameters["wait"] + "&poll=" + this.closest(".interactive").id + "&answers=" + encodeURIComponent('{' + Array.from(comp.querySelectorAll('li.active')).map((opt)=>'"' + opt.id + '":1').join(',') + '}'));
+		});
 	} else if (comp.classList.contains("rt-rating")) {
 		let starListener = function(event) {
 			let inf = true;

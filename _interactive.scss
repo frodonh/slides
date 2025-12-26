@@ -17,7 +17,7 @@ $theme: () !default;
   }
 }
 
-div.rt-election {
+div.rt-election, div.rt-selection {
   @extend %rt-component;
 
   & > div {

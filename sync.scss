@@ -42,10 +42,21 @@ body {
 }
 
 /********************************************/
+/*             Inline elements              */
+/********************************************/
+button {
+  font-size: 2em;
+  padding: 1em;
+  margin: 1em;
+  min-width: 20vw;
+  @include interactive;
+}
+
+/********************************************/
 /*                Election                  */
 /********************************************/
-div.rt-election > ul {
-    flex: 1 1 80vh;
+div.rt-election > ul, div.rt-selection > ul {
+    flex: auto;
     margin: 0;
     padding: 0;
     display: flex;
@@ -55,11 +66,11 @@ div.rt-election > ul {
     width: 100%;
 
     & > li {
-      flex: 1 1 30vw;
+      flex: 1 0 30vw;
       display: flex;
       flex-flow: column nowrap;
       justify-content: center;
-      margin: 2em;
+      margin: 0.3em;
       padding: 1em 0.2em;
       container-type: size;
       list-style-type: none;
@@ -67,6 +78,13 @@ div.rt-election > ul {
       @include interactive;
     }
   }
+}
+
+/********************************************/
+/*                Selection                 */
+/********************************************/
+body > div.rt-selection > ul > li.active {
+  background-color: map.get(colors.$theme, "secondary");
 }
 
 /********************************************/
@@ -88,12 +106,5 @@ div.rt-rating {
     span.lighted:before {
       content: '★';
     }
-  }
-
-  button {
-    font-size: 2em;
-    padding: 1em;
-    min-width: 20vw;
-    @include interactive;
   }
 }

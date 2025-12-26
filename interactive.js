@@ -37,6 +37,7 @@ class Poll {
 	static create(id, element) {
 		if (element.classList.contains("rt-election")) return new PollElection(id, element);
 		if (element.classList.contains("rt-rating")) return new PollRating(id, element);
+		if (element.classList.contains("rt-selection")) return new PollSelection(id, element);
 	}
 }
 
@@ -55,6 +56,38 @@ class PollElection extends Poll {
 
 	generateParticipantPage() {
 		return `<div class="interactive rt-election" id="${this.id}"><h1>${this.title}</h1><ul>` + this.options.map((el)=>`<li id="${el.id}">${el.value}</li>`).join("") + '</ul></div>';
+	}
+
+	generatePresenterPage() {
+		return `<h1>${this.title}</h1><div>` + this.options.map((el)=>`<div id="${el.id}">${el.value}</div><div></div>`).join("") + "</div>";
+	}
+
+	update(data) {
+		delete data.number;
+		const max = Object.entries(data).reduce((acc, cur)=>(cur[1]>acc?cur[1]:acc), 0);
+		for (const [key,value] of Object.entries(data)) {
+			let div = document.getElementById(key).nextSibling ;
+			div.style.marginRight = (100 - value / max * 100) + "%";
+			div.innerHTML = "<div>" + value + "</div>";
+		}
+	}
+}
+
+/*************************************
+ *     Multi-selection poll          *
+ *************************************/
+/**
+ * Multi-selection poll: the user can choose several options amongst predefined ones.
+ */
+class PollSelection extends Poll {
+	constructor(id, element) {
+		super(id, 'selection', element);
+		let onum = 1;
+		this.options = Array.from(element.getElementsByTagName('li')).map((el)=>({id: (el.id)?el.id:(id+"-"+(onum++)), value: el.innerHTML}));
+	}
+
+	generateParticipantPage() {
+		return `<div class="interactive rt-selection" id="${this.id}"><h1>${this.title}</h1><ul>` + this.options.map((el)=>`<li id="${el.id}">${el.value}</li>`).join("") + '</ul><button type="button">OK</button></div>';;
 	}
 
 	generatePresenterPage() {

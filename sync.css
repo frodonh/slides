@@ -169,11 +169,33 @@ body > div > h1 {
 }
 body {
   /********************************************/
+  /*             Inline elements              */
+  /********************************************/
+}
+body button {
+  font-size: 2em;
+  padding: 1em;
+  margin: 1em;
+  min-width: 20vw;
+  background-color: #A1C51B;
+  border: 1px solid rgb(96.6, 118.2, 16.2);
+  border-radius: 2px;
+  color: white;
+  text-align: center;
+  transition: background-color 0.5s ease;
+  cursor: pointer;
+}
+body button:hover {
+  background-color: rgb(128.8, 157.6, 21.6);
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.3);
+}
+body {
+  /********************************************/
   /*                Election                  */
   /********************************************/
 }
-body div.rt-election > ul {
-  flex: 1 1 80vh;
+body div.rt-election > ul, body div.rt-selection > ul {
+  flex: auto;
   margin: 0;
   padding: 0;
   display: flex;
@@ -182,12 +204,12 @@ body div.rt-election > ul {
   justify-content: space-between;
   width: 100%;
 }
-body div.rt-election > ul > li {
-  flex: 1 1 30vw;
+body div.rt-election > ul > li, body div.rt-selection > ul > li {
+  flex: 1 0 30vw;
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
-  margin: 2em;
+  margin: 0.3em;
   padding: 1em 0.2em;
   container-type: size;
   list-style-type: none;
@@ -198,10 +220,18 @@ body div.rt-election > ul > li {
   color: white;
   text-align: center;
   transition: background-color 0.5s ease;
+  cursor: pointer;
 }
-body div.rt-election > ul > li:hover {
+body div.rt-election > ul > li:hover, body div.rt-selection > ul > li:hover {
   background-color: rgb(128.8, 157.6, 21.6);
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.3);
+}
+
+/********************************************/
+/*                Selection                 */
+/********************************************/
+body > div.rt-selection > ul > li.active {
+  background-color: #08508A;
 }
 
 /********************************************/
@@ -220,21 +250,6 @@ div.rt-rating div span:before {
 }
 div.rt-rating div span.lighted:before {
   content: "★";
-}
-div.rt-rating button {
-  font-size: 2em;
-  padding: 1em;
-  min-width: 20vw;
-  background-color: #A1C51B;
-  border: 1px solid rgb(96.6, 118.2, 16.2);
-  border-radius: 2px;
-  color: white;
-  text-align: center;
-  transition: background-color 0.5s ease;
-}
-div.rt-rating button:hover {
-  background-color: rgb(128.8, 157.6, 21.6);
-  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.3);
 }
 
 /*# sourceMappingURL=sync.css.map */

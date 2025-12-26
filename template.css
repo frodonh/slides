@@ -240,44 +240,44 @@ body > section.anim-takeoff-to {
 /********************************************/
 /*                 Colors                   */
 /********************************************/
-div.rt-rating, div.rt-election {
+div.rt-rating, div.rt-election, div.rt-selection {
   padding: 0.5em;
   border-radius: 0.6vmax;
   background-color: rgb(117.3780821918, 189.1808219178, 247.0219178082);
 }
-div.rt-rating h1, div.rt-election h1 {
+div.rt-rating h1, div.rt-election h1, div.rt-selection h1 {
   font-style: normal;
   font-weight: bold;
   font-size: 1.2em;
   margin-bottom: 2em;
 }
 
-div.rt-election > div {
+div.rt-election > div, div.rt-selection > div {
   display: grid;
   grid-template-columns: auto 1fr;
   row-gap: 1em;
   column-gap: 1em;
   align-items: center;
 }
-div.rt-election > div div:nth-child(odd) {
+div.rt-election > div div:nth-child(odd), div.rt-selection > div div:nth-child(odd) {
   max-width: 40vw;
 }
-div.rt-election > div div:nth-child(even) {
+div.rt-election > div div:nth-child(even), div.rt-selection > div div:nth-child(even) {
   border-radius: 0.4vmax;
   background-color: #A1C51B;
   height: 1em;
 }
-div.rt-election > div div:nth-child(even):not(:empty) {
+div.rt-election > div div:nth-child(even):not(:empty), div.rt-selection > div div:nth-child(even):not(:empty) {
   padding: 0.4em;
 }
-div.rt-election > div div:nth-child(even) {
+div.rt-election > div div:nth-child(even), div.rt-selection > div div:nth-child(even) {
   margin-right: 100%;
   display: flex;
   flex-flow: row nowrap;
   justify-content: end;
   transition: margin-right 0.5s ease-in-out;
 }
-div.rt-election > div div:nth-child(even) > div {
+div.rt-election > div div:nth-child(even) > div, div.rt-selection > div div:nth-child(even) > div {
   background-color: rgb(6.4, 64, 110.4);
   color: white;
   border-radius: 50%;
