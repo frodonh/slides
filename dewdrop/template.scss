@@ -104,11 +104,13 @@ body>section, #thumblayer>div.wthumb>section {
     }
 
     // Inner structure
-	div.content ul>li {
+	div.content ul>li, div.content ol>li {
 		color: map.get(colors.$theme, "primary");
 		line-height: 1.2;
 		margin-top: 0.3em;
+    }
 
+	div.content ul>li {
 		&::before {
 			content: "• ";
 			font-size: 200%;
@@ -119,7 +121,7 @@ body>section, #thumblayer>div.wthumb>section {
 			height: 0.8em;
 		}
 
-		li {
+		ul > li {
 			color: map.get(colors.$theme, "secondary");
 			padding-bottom: 0;
 

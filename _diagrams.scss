@@ -1,0 +1,159 @@
+@use 'sass:map';
+@use 'sass:color';
+
+$theme: () !default;
+@use 'colors';
+
+/********************************************/
+/*          Process flow diagram            */
+/********************************************/
+/* Usage:
+<ul class="sd-flow">
+  <li>Planification</li>
+  <li>Exécution</li>
+  <li>Livraison</li>
+</ul>
+*/
+div.content ul.sd-flow {
+  display: flex;
+  list-style: none;
+  padding: 20px 0;
+  gap: 30px;
+  justify-content: center;
+
+  & > li {
+    position: relative;
+    background: map.get(colors.$theme, "primary-darker");
+    color: white;
+    padding: 15px 20px;
+    border-radius: 4px;
+    flex: 1;
+    text-align: center;
+    &::before{content: none};
+
+    &:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      right: -25px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: map.get(colors.$theme, "primary-darker");
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+  }
+}
+
+/********************************************/
+/*             Circular diagram             */
+/********************************************/
+/* Usage:
+<div class="sd-circular">
+  <div class="sd-circle-center">Projet</div>
+  <ul class="sd-circle-items">
+    <li style="--a: 0deg"><div class="sd-circle-node">Design</div></li>
+    <li style="--a: 120deg"><div class="sd-circle-node">Code</div></li>
+    <li style="--a: 240deg"><div class="sd-circle-node">Test</div></li>
+  </ul>
+</div>
+*/
+div.content div.sd-circular {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 40px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & > div.sd-circle-center {
+    width: 90px;
+    height: 90px;
+    background: map.get(colors.$theme, "primary-darker");
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    z-index: 2;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  & > ul.sd-circle-items {
+    list-style: none;
+    padding: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    & > li {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 70px;
+      height: 70px;
+      margin: -35px;
+      transform: rotate(var(--a)) translate(130px) rotate(calc(var(--a) * -1));
+      &::before{content: none};
+
+      & > div.sd-circle-node {
+        width: 100%;
+        height: 100%;
+        background: white;
+        border: 2px solid map.get(colors.$theme, "primary-darker");
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+/********************************************/
+/*             Matrix diagram               */
+/********************************************/
+/* Usage:
+<div class="sd-matrix">
+  <div class="sd-matrix-item">
+    <h4>Strength</h4>
+    <p>We are big.</p>
+  </div>
+  <div class="sd-matrix-item">
+    <h4>Opportunity</h4>
+    <p>We could be bigger.</p>
+  </div>
+</div>
+*/
+div.content div.sd-matrix {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  max-width: 500px;
+  margin: 20px auto;
+
+  & > div.sd-matrix-item {
+    padding: 20px;
+    background: map.get(colors.$theme, "secondary-lighter");
+    border-left: 5px solid map.get(colors.$theme, "secondary-dark");
+    border-radius: 4px;
+  }
+}
+
+
+/* --- RESPONSIVE --- */
+@media (max-width: 600px) {
+  .sd-flow { flex-direction: column; }
+  .sd-flow li:not(:last-child)::after {
+    content: "↓";
+    right: auto;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

@@ -325,6 +325,160 @@ div.rt-rating > div div.bar > div > div {
 }
 
 /********************************************/
+/*                 Colors                   */
+/********************************************/
+/********************************************/
+/*          Process flow diagram            */
+/********************************************/
+/* Usage:
+<ul class="sd-flow">
+  <li>Planification</li>
+  <li>Exécution</li>
+  <li>Livraison</li>
+</ul>
+*/
+div.content ul.sd-flow {
+  display: flex;
+  list-style: none;
+  padding: 20px 0;
+  gap: 30px;
+  justify-content: center;
+}
+div.content ul.sd-flow > li {
+  position: relative;
+  background: rgb(57.9398019802, 25.838019802, 132.321980198);
+  color: white;
+  padding: 15px 20px;
+  border-radius: 4px;
+  flex: 1;
+  text-align: center;
+}
+div.content ul.sd-flow > li::before {
+  content: none;
+}
+div.content ul.sd-flow > li:not(:last-child)::after {
+  content: "→";
+  position: absolute;
+  right: -25px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgb(57.9398019802, 25.838019802, 132.321980198);
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+/********************************************/
+/*             Circular diagram             */
+/********************************************/
+/* Usage:
+<div class="sd-circular">
+  <div class="sd-circle-center">Projet</div>
+  <ul class="sd-circle-items">
+    <li style="--a: 0deg"><div class="sd-circle-node">Design</div></li>
+    <li style="--a: 120deg"><div class="sd-circle-node">Code</div></li>
+    <li style="--a: 240deg"><div class="sd-circle-node">Test</div></li>
+  </ul>
+</div>
+*/
+div.content div.sd-circular {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 40px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+div.content div.sd-circular > div.sd-circle-center {
+  width: 90px;
+  height: 90px;
+  background: rgb(57.9398019802, 25.838019802, 132.321980198);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  z-index: 2;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+div.content div.sd-circular > ul.sd-circle-items {
+  list-style: none;
+  padding: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+div.content div.sd-circular > ul.sd-circle-items > li {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 70px;
+  height: 70px;
+  margin: -35px;
+  transform: rotate(var(--a)) translate(130px) rotate(calc(var(--a) * -1));
+}
+div.content div.sd-circular > ul.sd-circle-items > li::before {
+  content: none;
+}
+div.content div.sd-circular > ul.sd-circle-items > li > div.sd-circle-node {
+  width: 100%;
+  height: 100%;
+  background: white;
+  border: 2px solid rgb(57.9398019802, 25.838019802, 132.321980198);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/********************************************/
+/*             Matrix diagram               */
+/********************************************/
+/* Usage:
+<div class="sd-matrix">
+  <div class="sd-matrix-item">
+    <h4>Strength</h4>
+    <p>We are big.</p>
+  </div>
+  <div class="sd-matrix-item">
+    <h4>Opportunity</h4>
+    <p>We could be bigger.</p>
+  </div>
+</div>
+*/
+div.content div.sd-matrix {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  max-width: 500px;
+  margin: 20px auto;
+}
+div.content div.sd-matrix > div.sd-matrix-item {
+  padding: 20px;
+  background: rgb(244.92, 161.1784615385, 113.88);
+  border-left: 5px solid rgb(192.64, 78.3261538462, 13.76);
+  border-radius: 4px;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 600px) {
+  .sd-flow {
+    flex-direction: column;
+  }
+  .sd-flow li:not(:last-child)::after {
+    content: "↓";
+    right: auto;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+/********************************************/
 /*            Custom properties             */
 /********************************************/
 * {
@@ -354,11 +508,11 @@ body > section.outline a:visited, #thumblayer > div.wthumb > section.outline a:v
 /********************************************/
 /*              General styles              */
 /********************************************/
-ul {
+ul, ol {
   margin: 0;
 }
 
-p + ul {
+p + ul, p + ol {
   margin: -2.3vh 0 0 0;
 }
 
@@ -436,8 +590,8 @@ body > h1, body > h2 {
   flex-flow: row nowrap;
 }
 .component-minitoc > ul > li {
-  list-style-type: none;
   margin: 0 1.2vw;
+  list-style-type: none;
   font-size: 0.7em;
   color: rgb(57.9398019802, 25.838019802, 132.321980198);
   padding: 0;
@@ -584,7 +738,7 @@ body > h1, body > h2 {
 }
 
 /********************************************/
-/*              Slide layout                */
+/*               Slide layout               */
 /********************************************/
 body > section, #thumblayer > div.wthumb > section {
   position: absolute;
@@ -623,7 +777,7 @@ body > section.content > .content, body > section.outline > .content, #thumblaye
 body > section.content > .content.autocolumns, body > section.outline > .content.autocolumns, #thumblayer > div.wthumb > section.content > .content.autocolumns, #thumblayer > div.wthumb > section.outline > .content.autocolumns {
   flex-wrap: wrap;
 }
-body > section.content > .content.autocolumns > p, body > section.outline > .content.autocolumns > p, body > section.content > .content.autocolumns > ul, body > section.outline > .content.autocolumns > ul, body > section.content > .content.autocolumns > div, body > section.outline > .content.autocolumns > div, #thumblayer > div.wthumb > section.content > .content.autocolumns > p, #thumblayer > div.wthumb > section.outline > .content.autocolumns > p, #thumblayer > div.wthumb > section.content > .content.autocolumns > ul, #thumblayer > div.wthumb > section.outline > .content.autocolumns > ul, #thumblayer > div.wthumb > section.content > .content.autocolumns > div, #thumblayer > div.wthumb > section.outline > .content.autocolumns > div {
+body > section.content > .content.autocolumns > p, body > section.outline > .content.autocolumns > p, body > section.content > .content.autocolumns > ul, body > section.outline > .content.autocolumns > ul, body > section.content > .content.autocolumns > ol, body > section.outline > .content.autocolumns > ol, body > section.content > .content.autocolumns > div, body > section.outline > .content.autocolumns > div, #thumblayer > div.wthumb > section.content > .content.autocolumns > p, #thumblayer > div.wthumb > section.outline > .content.autocolumns > p, #thumblayer > div.wthumb > section.content > .content.autocolumns > ul, #thumblayer > div.wthumb > section.outline > .content.autocolumns > ul, #thumblayer > div.wthumb > section.content > .content.autocolumns > ol, #thumblayer > div.wthumb > section.outline > .content.autocolumns > ol, #thumblayer > div.wthumb > section.content > .content.autocolumns > div, #thumblayer > div.wthumb > section.outline > .content.autocolumns > div {
   width: calc(50% - 3.6vw);
   margin: 1.56vh 1.2vw;
 }
@@ -740,15 +894,25 @@ body > section figure.centered svg, body > section figure.centered img, #thumbla
   max-width: 100%;
   max-height: 100%;
 }
-body > section div.content ul, #thumblayer > div.wthumb > section div.content ul {
+body > section div.content ul, body > section div.content ol, #thumblayer > div.wthumb > section div.content ul, #thumblayer > div.wthumb > section div.content ol {
   margin: 0.6em 0 0 0;
   padding-inline-start: 2.2em;
 }
+body > section div.content ul > li, body > section div.content ol > li, #thumblayer > div.wthumb > section div.content ul > li, #thumblayer > div.wthumb > section div.content ol > li {
+  padding-left: 0.4em;
+  line-height: 1;
+}
+body > section div.content ul > li li, body > section div.content ol > li li, #thumblayer > div.wthumb > section div.content ul > li li, #thumblayer > div.wthumb > section div.content ol > li li {
+  font-size: 0.9em;
+  padding-left: 1em;
+  padding-bottom: 0.3em;
+}
+body > section div.content ul > li li:last-child, body > section div.content ol > li li:last-child, #thumblayer > div.wthumb > section div.content ul > li li:last-child, #thumblayer > div.wthumb > section div.content ol > li li:last-child {
+  padding-bottom: 0px;
+}
 body > section div.content ul > li, #thumblayer > div.wthumb > section div.content ul > li {
   list-style-type: none;
-  padding-left: 0.4em;
   text-indent: -0.7em;
-  line-height: 1;
 }
 body > section div.content ul > li::before, #thumblayer > div.wthumb > section div.content ul > li::before {
   content: "• ";
@@ -760,17 +924,11 @@ body > section div.content ul > li::before, #thumblayer > div.wthumb > section d
   height: 0.8em;
 }
 body > section div.content ul > li li, #thumblayer > div.wthumb > section div.content ul > li li {
-  font-size: 0.9em;
   text-indent: -0.8em;
-  padding-left: 1em;
-  padding-bottom: 0.3em;
 }
-body > section div.content ul > li li::before, #thumblayer > div.wthumb > section div.content ul > li li::before {
+body > section div.content ul > li ul > li::before, #thumblayer > div.wthumb > section div.content ul > li ul > li::before {
   font-size: 1em;
   content: "✗ ";
-}
-body > section div.content ul > li li:last-child, #thumblayer > div.wthumb > section div.content ul > li li:last-child {
-  padding-bottom: 0px;
 }
 body > section div.content dl, #thumblayer > div.wthumb > section div.content dl {
   display: grid;
@@ -1181,7 +1339,7 @@ body > section.plain, #thumblayer > div.wthumb > section.plain {
 body > section.focus, #thumblayer > div.wthumb > section.focus {
   --animation: "convex";
 }
-body > section div.content ul > li, #thumblayer > div.wthumb > section div.content ul > li {
+body > section div.content ul > li, body > section div.content ol > li, #thumblayer > div.wthumb > section div.content ul > li, #thumblayer > div.wthumb > section div.content ol > li {
   color: rgb(98.8653465347, 48.8534653465, 214.7465346535);
   line-height: 1.2;
   margin-top: 0.3em;
@@ -1195,11 +1353,11 @@ body > section div.content ul > li::before, #thumblayer > div.wthumb > section d
   vertical-align: -0.1em;
   height: 0.8em;
 }
-body > section div.content ul > li li, #thumblayer > div.wthumb > section div.content ul > li li {
+body > section div.content ul > li ul > li, #thumblayer > div.wthumb > section div.content ul > li ul > li {
   color: rgb(238.2, 98.6307692308, 19.8);
   padding-bottom: 0;
 }
-body > section div.content ul > li li::before, #thumblayer > div.wthumb > section div.content ul > li li::before {
+body > section div.content ul > li ul > li::before, #thumblayer > div.wthumb > section div.content ul > li ul > li::before {
   content: "✗ ";
   color: rgb(238.2, 98.6307692308, 19.8);
 }

@@ -10,103 +10,104 @@ $theme: () !default;
 /********************************************/
 @use 'animations' with ($theme: colors.$theme);
 @use 'interactive' with ($theme: colors.$theme);
+@use 'diagrams' with ($theme: colors.$theme);
 
 /********************************************/
 /*            Custom properties             */
 /********************************************/
 // This is needed to deactive inheritance on custom properties. Empty strings are filtered out in the Javascript script
 * {
-	--autofragment: "";
-	--animation: "";
-	--components: "";
-	--background: "";
-	--foreground: "";
-	--background-layer: "";
-	--foreground-layer: "";
+  --autofragment: "";
+  --animation: "";
+  --components: "";
+  --background: "";
+  --foreground: "";
+  --background-layer: "";
+  --foreground-layer: "";
 }
 
 /********************************************/
 /*                 Mixins                   */
 /********************************************/
 @mixin shadowed {
-	box-shadow: 1.5vw 1.2vh 1.2vmax rgba(0,0,0,0.5);
+  box-shadow: 1.5vw 1.2vh 1.2vmax rgba(0,0,0,0.5);
 }
 
 %hiddenLinks {
-	a {
-		text-decoration: none;
-		color: inherit;
+  a {
+    text-decoration: none;
+    color: inherit;
 
-		&:hover {
-			color: inherit;
-		}
+    &:hover {
+      color: inherit;
+    }
 
-		&:visited {
-			color: inherit;
-		}
-	}
+    &:visited {
+      color: inherit;
+    }
+  }
 }
 
 /********************************************/
 /*              General styles              */
 /********************************************/
 // General declarations
-ul {
-	margin: 0;
+ul, ol {
+  margin: 0;
 }
 
-p + ul {
-	margin: -2.3vh 0 0 0;
+p + ul, p + ol {
+  margin: -2.3vh 0 0 0;
 }
 
 body {
-	height: 100vh;
-	overflow: hidden;
-	margin: 0;
-	font: 2.2vmin sans-serif;
-    --background-layer: "active"; // May be "active" or "inactive". When active, the background of the slides is added to a separate background layer, and is not attached to the slide (therefore it does not move with the slides animation. When inactive, the background is added to each slide.
-    --foreground-layer: "active";
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  font: 2.2vmin sans-serif;
+  --background-layer: "active"; // May be "active" or "inactive". When active, the background of the slides is added to a separate background layer, and is not attached to the slide (therefore it does not move with the slides animation. When inactive, the background is added to each slide.
+  --foreground-layer: "active";
 
-    & > h1, & > h2, & > h3, & > h4, & > h5, & > h6 {
-        display: none;
-    }
+  & > h1, & > h2, & > h3, & > h4, & > h5, & > h6 {
+    display: none;
+  }
 
-    & > h1, & > h2 {
-        --outline: "ClassicOutlineSlide";
-    }
+  & > h1, & > h2 {
+    --outline: "ClassicOutlineSlide";
+  }
 }
 
 /********************************************/
 /*     Background and foreground layers     */
 /********************************************/
 #background,#foreground,#newbackground,#newforeground {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	top: 0;
-	left: 0;
-	transition: opacity 1s ease;
-    pointer-events: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: opacity 1s ease;
+  pointer-events: none;
 }
 
 #background {
-	opacity: 1;
-	z-index: -2;
+  opacity: 1;
+  z-index: -2;
 }
 
 #foreground {
-	opacity: 1;
-    z-index: 2;
+  opacity: 1;
+  z-index: 2;
 }
 
 #newbackground {
-	opacity: 0;
-	z-index: -2;
+  opacity: 0;
+  z-index: -2;
 }
 
 #newforeground {
-	opacity: 0;
-    z-index: 2;
+  opacity: 0;
+  z-index: 2;
 }
 
 /********************************************/
@@ -114,105 +115,104 @@ body {
 /********************************************/
 // Navigation bars
 .component-minitoc {
-    pointer-events: auto;
-	width: 100%;
-	height: 5%;
-	position: absolute;
-	transition: opacity 1s ease;
-	display: flex;
-	top: 0;
-	left: 0;
-	flex-flow: row nowrap;
-	justify-content: center;
+  pointer-events: auto;
+  width: 100%;
+  height: 5%;
+  position: absolute;
+  transition: opacity 1s ease;
+  display: flex;
+  top: 0;
+  left: 0;
+  flex-flow: row nowrap;
+  justify-content: center;
 
-    ul {
+  ul {
+    padding: 0;
+  }
+
+  a { color: inherit;}
+
+  & > ul {
+    display: flex;
+    flex-flow: row nowrap;
+
+    & > li {
+      margin: 0 1.2vw;
+      list-style-type: none;
+      font-size: 0.7em;
+      color: map.get(colors.$theme, "primary-darker");
+      padding: 0;
+      flex: auto;
+
+      &:not(:has(.current)) {opacity: 0.4;}
+      &.current {
+        opacity: 1;
+        background-color: map.get(colors.$theme, "primary-darker");
+        color: white;
+      }
+
+      & > ul {
+        display: block;
+        list-style-type: none;
         padding: 0;
-    }
-
-    a { color: inherit;}
-
-    & > ul {
-        display: flex;
-        flex-flow: row nowrap;
-
-        & > li {
-            list-style-type: none;
-            margin: 0 1.2vw;
-            font-size: 0.7em;
-            color: map.get(colors.$theme, "primary-darker");
-            padding: 0;
-            flex: auto;
-
-            &:not(:has(.current)) {opacity: 0.4;}
-            &.current {
-                opacity: 1;
-                background-color: map.get(colors.$theme, "primary-darker");
-                color: white;
+        margin: -0.3em 0 0 0;
+        li { 
+          display: inline-block; 
+          &.h3 {
+            font-size: 0em;
+            margin-right: 0.5rem;
+          }
+          &.section {
+            font-size: 0px;
+            a::before {
+              font-size: 1rem;
+              content: "\25cb";
             }
-
-            & > ul {
-                display: block;
-                list-style-type: none;
-                padding: 0;
-                margin: -0.3em 0 0 0;
-                li { 
-                    display: inline-block; 
-                    &.h3 {
-                        font-size: 0em;
-                        margin-right: 0.5rem;
-                    }
-                    &.section {
-                        font-size: 0px;
-                        a::before {
-                            font-size: 1rem;
-                            content: "\25cb";
-                        }
-                        &.current a::before {
-                            content: "\25cf";
-                        }
-                    }
-                }
+            &.current a::before {
+              content: "\25cf";
             }
+          }
         }
-
+      }
     }
+  }
 
-	a {
-		text-decoration: none;
-		font-size: 1.2em;
-	}
+  a {
+    text-decoration: none;
+    font-size: 1.2em;
+  }
 
 
 }
 
 // Footers
 .component-classicfooter {
-	display: block;
-	width: calc(100% - 2.4vw);
-	height: 5vh;
-	box-sizing: border-box;
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	margin: 0 1.2vw;
-	font-size: 0.7em;
-	color: map.get(colors.$theme, "primary-darker");
+  display: block;
+  width: calc(100% - 2.4vw);
+  height: 5vh;
+  box-sizing: border-box;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  margin: 0 1.2vw;
+  font-size: 0.7em;
+  color: map.get(colors.$theme, "primary-darker");
 
-	div:first-child {
-		position: absolute;
-		left: 0;
-		top: 0;
-	}
+  div:first-child {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
 
-	div:nth-child(2) {
-		text-align: center;
-	}
+  div:nth-child(2) {
+    text-align: center;
+  }
 
-	div:last-child {
-		position: absolute;
-		right: 0;
-		top: 0;
-	}
+  div:last-child {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
 }
 
 /********************************************/
@@ -220,346 +220,352 @@ body {
 /********************************************/
 // Input line for synchronization
 #synchronize {
-	background-color: black;
-	color: white;
-	position: fixed;
-	top: -30px;
-	left: 0;
-	width: 100%;
-	z-index: 100;
-	display: block;
-	transition: top 0.5s ease;
+  background-color: black;
+  color: white;
+  position: fixed;
+  top: -30px;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  display: block;
+  transition: top 0.5s ease;
 }
 
 #syncstatus {
-	font-size: 0.8em;
-	background-color: black;
-	color: white;
-	position: fixed;
-	padding: 0 0.2em 0.1em 0.2em;
-	top: 0;
-	right: 0;
-	z-index: 100;
-	display: inline-block;
-	@extend %hiddenLinks;
+  font-size: 0.8em;
+  background-color: black;
+  color: white;
+  position: fixed;
+  padding: 0 0.2em 0.1em 0.2em;
+  top: 0;
+  right: 0;
+  z-index: 100;
+  display: inline-block;
+  @extend %hiddenLinks;
 
-	.active {
-		color: chartreuse;
-		font-weight: bold;
-	}
+  .active {
+    color: chartreuse;
+    font-weight: bold;
+  }
 
-	.inactive {
-		color: inherit;
-		font-weight: inherit;
-	}
+  .inactive {
+    color: inherit;
+    font-weight: inherit;
+  }
 }
 
 // QR-Code display
 #qrcode-view {
-	position: absolute;
-	top: 5vh;
-	left: 5vw;
-	background-color: white;
-	width: 90vw;
-	height: 0vh;
-	border-radius: 2px;
-	z-index: 20;
-	display: flex;
-	flex-flow: column nowrap;
-	font-weight: bold;
-	font-size: 0;
-	font-family: sans-serif;
-	transition-duration: 1s;
-	transition-timing-function: ease;
-	transition-property: height, font-size;
+  position: absolute;
+  top: 5vh;
+  left: 5vw;
+  background-color: white;
+  width: 90vw;
+  height: 0vh;
+  border-radius: 2px;
+  z-index: 20;
+  display: flex;
+  flex-flow: column nowrap;
+  font-weight: bold;
+  font-size: 0;
+  font-family: sans-serif;
+  transition-duration: 1s;
+  transition-timing-function: ease;
+  transition-property: height, font-size;
 
-	&.active {
-		height: 90vh;
-		font-size: 160%;
-	}
+  &.active {
+    height: 90vh;
+    font-size: 160%;
+  }
 
-	.title {
-		text-align: center;
-		color: map.get(colors.$theme, "primary-darker");
-		flex: 0 1 0;
-	}
+  .title {
+    text-align: center;
+    color: map.get(colors.$theme, "primary-darker");
+    flex: 0 1 0;
+  }
 
-	figure {
-		flex: 1;
-		display: flex;
-		flex-flow: column nowrap;
-		overflow: hidden;
-		position: relative;
+  figure {
+    flex: 1;
+    display: flex;
+    flex-flow: column nowrap;
+    overflow: hidden;
+    position: relative;
 
-		img {
-			margin: 0 auto 0 auto;
-			height: 100%;
-		}
-	}
+    img {
+      margin: 0 auto 0 auto;
+      height: 100%;
+    }
+  }
 
-	p {
-		text-align: center;
-		font-size: 0.7em;
-	}
+  p {
+    text-align: center;
+    font-size: 0.7em;
+  }
 }
 
 /********************************************/
-/*              Slide layout                */
+/*               Slide layout               */
 /********************************************/
 // Slide page
 body>section, #thumblayer>div.wthumb>section {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
-	visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  visibility: hidden;
 
-    &:target {
-        visibility: visible;
+  &:target {
+    visibility: visible;
+  }
+
+  &.overview-transition {
+    transition: transform 1s ease-in-out;
+  }
+
+  // Title slide
+  &#title {
+    --background: "";
+    --foreground: "";
+
+    .h1 {
     }
 
-	&.overview-transition {
-		transition: transform 1s ease-in-out;
-	}
+    .authordate {
+    }
+  }
 
-    // Title slide
-    &#title {
-        --background: "";
-        --foreground: "";
+  // Regular content slide (title + content)
+  &.content {
+    display: flex;
+    flex-flow: column nowrap;
+    --background: "";
+    --foreground: "[Minitoc(), ClassicFooter()]";
 
-        .h1 {
-        }
-
-        .authordate {
-        }
+    & > h1 {
+      flex: none;
     }
 
-    // Regular content slide (title + content)
-    &.content {
+    & > .content {
+      flex: auto;
+      display: flex;
+      position: relative;
+      flex-flow: column nowrap;
+      justify-content: space-evenly;
+
+      &.autocolumns {
+        flex-wrap: wrap;
+
+        &>p,&>ul,&>ol,&>div {
+          width: calc(50% - 3.6vw);
+          margin: 1.56vh 1.2vw;
+        }
+      }
+
+      &.twocolumns,.twocolumns {
         display: flex;
-        flex-flow: column nowrap;
-        --background: "";
-        --foreground: "[Minitoc(), ClassicFooter()]";
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: space-between;
 
-        & > h1 {
-			flex: none;
+        & > div {
+          min-height:0;
+          flex: auto;
+          display: flex;
+          position: relative;
+          flex-flow: column nowrap;
+          justify-content: space-evenly;
+          box-sizing : border-box;
+          width: 45%;
         }
 
-        & > .content {
-            flex: auto;
-            display: flex;
-            position: relative;
-            flex-flow: column nowrap;
-            justify-content: space-evenly;
-
-            &.autocolumns {
-                flex-wrap: wrap;
-
-                &>p,&>ul,&>div {
-                    width: calc(50% - 3.6vw);
-                    margin: 1.56vh 1.2vw;
-                }
-            }
-
-            &.twocolumns,.twocolumns {
-                display: flex;
-                flex-flow: row nowrap;
-                align-items: center;
-                justify-content: space-between;
-
-                & > div {
-                    min-height:0;
-                    flex: auto;
-                    display: flex;
-                    position: relative;
-                    flex-flow: column nowrap;
-                    justify-content: space-evenly;
-                    box-sizing : border-box;
-                    width: 45%;
-                }
-
-                & > div:first-child {
-                    margin-right: 1em;
-                }
-            }
-
-            &.plain {
-                margin-top: 8vh;		
-            }
+        & > div:first-child {
+          margin-right: 1em;
         }
+      }
+
+      &.plain {
+        margin-top: 8vh;    
+      }
+    }
+  }
+
+  // Plain slide
+  &.plain {
+    display: block;
+    h1 { margin-top: 0px; }
+  }
+
+  &.focus {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    --background: "[ColorBackground('var(--primary-darker)')]";
+    
+    h1 {
+      color: white;
+      font-size: 2.5em;
+      font-weight: bold;
+      text-align: center;
+      flex: initial;
     }
 
-    // Plain slide
-	&.plain {
-		display: block;
-		h1 { margin-top: 0px; }
-	}
+  }
 
-	&.focus {
-		display: flex;
-		flex-flow: column nowrap;
-		justify-content: center;
-		--background: "[ColorBackground('var(--primary-darker)')]";
-		
-		h1 {
-			color: white;
-			font-size: 2.5em;
-			font-weight: bold;
-			text-align: center;
-			flex: initial;
-		}
+  // Outline slide
+  &.outline {
+    @extend .content;
 
-	}
-
-    // Outline slide
-    &.outline {
-        @extend .content;
-
-        & > div > ul > li {
-            padding-bottom: 0.2vh;
-            padding-right: 1.2vw;
-        }
-
-		& > div:has(.current) ul > li:not(.current) { opacity: 0.5; }
-
-        div.content .current {
-            opacity: 1;
-            background-color: map.get(colors.$theme, "primary-lighter");
-            @include shadowed;
-            border-radius: 1.2vmax;
-        }
-
-        @extend %hiddenLinks;
+    & > div > ul > li {
+      padding-bottom: 0.2vh;
+      padding-right: 1.2vw;
     }
 
-	// A chessboard slide with alternating colors
-	&.chessboard {
+    & > div:has(.current) ul > li:not(.current) { opacity: 0.5; }
+
+    div.content .current {
+      opacity: 1;
+      background-color: map.get(colors.$theme, "primary-lighter");
+      @include shadowed;
+      border-radius: 1.2vmax;
+    }
+
+    @extend %hiddenLinks;
+  }
+
+  // A chessboard slide with alternating colors
+  &.chessboard {
+    display: flex;
+    flex-flow: column nowrap;
+    --background: "";
+    --foreground: "[Minitoc(), ClassicFooter()]";
+
+    & > h1 {
+      flex: none;
+    }
+
+    & > .content {
+      flex: auto;
+      display: flex;
+      position: relative;
+      flex-flow: column nowrap;
+      justify-content: flex-start;
+      align-items: stretch;
+
+      div {
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      & > div {
+        flex: auto;
         display: flex;
-        flex-flow: column nowrap;
-        --background: "";
-        --foreground: "[Minitoc(), ClassicFooter()]";
-
-        & > h1 {
-			flex: none;
+        flex-flow: row nowrap;
+        & > div { 
+          flex: 0 1 100%; 
+          padding: 0.5em;
+          display: flex;
+          flex-flow: column nowrap;
+          justify-content: center;
         }
+      }
 
-        & > .content {
-            flex: auto;
-            display: flex;
-            position: relative;
-            flex-flow: column nowrap;
-            justify-content: flex-start;
-			align-items: stretch;
-
-			div {
-				margin: 0;
-				box-sizing: border-box;
-			}
-
-			& > div {
-				flex: auto;
-				display: flex;
-				flex-flow: row nowrap;
-				& > div { 
-					flex: 0 1 100%; 
-					padding: 0.5em;
-					display: flex;
-					flex-flow: column nowrap;
-					justify-content: center;
-				}
-			}
-
-			& > div:nth-child(odd) > div:nth-child(odd), & > div:nth-child(even) > div:nth-child(even), &.reversed > div:nth-child(odd) > div:nth-child(even), &.reversed > div:nth-child(even) > div:nth-child(odd) {
-				background-color: map.get(colors.$theme, "primary-darker");
-				&, & ul > li, & ul > li::before { color: white; }
-			}
-		}
-	}
+      & > div:nth-child(odd) > div:nth-child(odd), & > div:nth-child(even) > div:nth-child(even), &.reversed > div:nth-child(odd) > div:nth-child(even), &.reversed > div:nth-child(even) > div:nth-child(odd) {
+        background-color: map.get(colors.$theme, "primary-darker");
+        &, & ul > li, & ul > li::before { color: white; }
+      }
+    }
+  }
 
 
-    // Inner structure
-	p,table,img,object {
-		margin: 2.8vh 0;
-	}
+  // Inner structure
+  p,table,img,object {
+    margin: 2.8vh 0;
+  }
 
-	figure.centered {
-		display: flex;
-		flex-flow: column nowrap;
-		flex: auto;
-		overflow: hidden;
-		position: relative;
+  figure.centered {
+    display: flex;
+    flex-flow: column nowrap;
+    flex: auto;
+    overflow: hidden;
+    position: relative;
 
-		svg,img {
-			margin: auto;
-			position: absolute;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			left: 0;
-			max-width: 100%;
-			max-height: 100%;
-		}
-	}
+    svg,img {
+      margin: auto;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
 
-	div.content ul {
-		margin: 0.6em 0 0 0;
-		padding-inline-start: 2.2em;
+  div.content ul, div.content ol {
+    margin: 0.6em 0 0 0;
+    padding-inline-start: 2.2em;
 
-		& > li {
-			list-style-type: none;
-			padding-left: 0.4em;
-			text-indent: -0.7em;
-			line-height: 1;
-			
-			&::before {
-				content: "• ";
-				font-size: 200%;
-				margin-right: 0.35em;
-				color: map.get(colors.$theme, "primary-darker");
-				display: inline-block;
-				vertical-align: -0.1em;
-				height: 0.8em;
-			}
+    & > li {
+      padding-left: 0.4em;
+      line-height: 1;
+      
+      li {
+        font-size: 0.9em;
+        padding-left: 1em;
+        padding-bottom: 0.3em;
+      }
 
-			li {
-				font-size: 0.9em;
-				text-indent: -0.8em;
-				padding-left: 1em;
-				padding-bottom: 0.3em;
+      li:last-child {
+        padding-bottom: 0px;
+      }
+    }
+  }
 
-				&::before {
-					font-size: 1em;
-					content: "✗ ";
-				}
-			}
+  div.content ul > li {
+      list-style-type: none;
+      text-indent: -0.7em;
 
-			li:last-child {
-				padding-bottom: 0px;
-			}
-		}
-	}
+      &::before {
+        content: "• ";
+        font-size: 200%;
+        margin-right: 0.35em;
+        color: map.get(colors.$theme, "primary-darker");
+        display: inline-block;
+        vertical-align: -0.1em;
+        height: 0.8em;
+      }
 
-	div.content dl {
-		display: grid;
-		grid-template-columns: max-content auto;
-		column-gap: 2em;
-		row-gap: 0.3em;
+      li {
+        text-indent: -0.8em;
+      }
 
-		dt {
-			grid-column-start: 1;
-			max-width: 25vw;
-		}
+      ul > li::before {
+        font-size: 1em;
+        content: "✗ ";
+      }
+  }
 
-		dd {
-			grid-column-start: 2;
-			margin: 0;
-		}
+  div.content dl {
+    display: grid;
+    grid-template-columns: max-content auto;
+    column-gap: 2em;
+    row-gap: 0.3em;
 
-		&.rightheader dt {
-			justify-self: end;
-		}
-	}
+    dt {
+      grid-column-start: 1;
+      max-width: 25vw;
+    }
+
+    dd {
+      grid-column-start: 2;
+      margin: 0;
+    }
+
+    &.rightheader dt {
+      justify-self: end;
+    }
+  }
 
 }
 
@@ -568,68 +574,68 @@ body>section, #thumblayer>div.wthumb>section {
 /********************************************/
 // Overview
 #thumblayer {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	top: 0;
-	left: 0;
-	overflow: auto;
-	margin: 0;
-	display: flex;
-	flex-flow: row wrap;
-	justify-content: space-between;
-	align-items: center;
-	z-index: 20;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: auto;
+  margin: 0;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
 
-    & > h1, & > h2, & > h3, & > h4, & > h5, & > h6 {
-        display: none;
-    }
+  & > h1, & > h2, & > h3, & > h4, & > h5, & > h6 {
+    display: none;
+  }
 }
 
 #coverlayer {
-	background-color: rgba(0,0,0,0.5);
-	opacity: 0;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
-	z-index: 15;
-	transition: opacity 1s linear;
+  background-color: rgba(0,0,0,0.5);
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 15;
+  transition: opacity 1s linear;
 }
 
 .wthumb {
-	width: 20vw;
-	height: 20vh;
-	margin: 1vh 1vw;
-	position: relative;
+  width: 20vw;
+  height: 20vh;
+  margin: 1vh 1vw;
+  position: relative;
 
-	&:hover {
-		left: -2vw;
-		top: -2vh;
-		z-index: 21;
+  &:hover {
+    left: -2vw;
+    top: -2vh;
+    z-index: 21;
 
-		.thumbnail {
-			transform: scale(0.25, 0.25);
-		}
-	}
+    .thumbnail {
+      transform: scale(0.25, 0.25);
+    }
+  }
 }
 
 #thumblayer>div.wthumb>section.thumbnail {
-	visibility: visible;
-	background-color: white;
-	border: 1px solid black;
-	@include shadowed;
-	position: absolute;
-	top:0;
-	left:0;
-	transform-origin: left top;
-	transform: scale(0.20, 0.20);
+  visibility: visible;
+  background-color: white;
+  border: 1px solid black;
+  @include shadowed;
+  position: absolute;
+  top:0;
+  left:0;
+  transform-origin: left top;
+  transform: scale(0.20, 0.20);
 
-	&.targetted {
-		border: 20px solid map.get(colors.$theme, "primary");
-	}
+  &.targetted {
+    border: 20px solid map.get(colors.$theme, "primary");
+  }
 }
 
 
@@ -638,18 +644,18 @@ body>section, #thumblayer>div.wthumb>section {
 /********************************************/
 // Fragment styles
 .visible {
-	visibility: visible;
-	animation-play-state: running;
+  visibility: visible;
+  animation-play-state: running;
 }
 
 .invisible {
-	visibility: hidden;
-	animation-play-state: paused;
+  visibility: hidden;
+  animation-play-state: paused;
 }
 
 .semivisible {
-	opacity: 0.2;
-	animation-play-state: running;
+  opacity: 0.2;
+  animation-play-state: running;
 }
 
 /********************************************/
@@ -657,216 +663,216 @@ body>section, #thumblayer>div.wthumb>section {
 /********************************************/
 // Generic styles
 @mixin alertblock($color, $symbol:null) {
-	margin: 1.56vh 0vw;
-	padding: 0;
-	border-radius: 0.6vmax;
-	@include shadowed;
-	background-color: map.get(colors.$theme, "#{$color}-lighter");
-	position: relative;
+  margin: 1.56vh 0vw;
+  padding: 0;
+  border-radius: 0.6vmax;
+  @include shadowed;
+  background-color: map.get(colors.$theme, "#{$color}-lighter");
+  position: relative;
 
-	h1 {
-		padding-top: 0.47vh;
-		padding-bottom: 0.78vh;
-		padding-right: 0.6vw;
-		@if $symbol {
-			padding-left: 3.5rem;
-		} @else {
-			padding-left: 0.6vw;
-		}
-		margin: 0 0 0 0;
-		border-radius: 0.6vmax 0.6vmax 0 0;
-		font: bold 120% sans-serif;
-		color: white;
-		background-image: linear-gradient(to bottom,map.get(colors.$theme, "#{$color}-darker") 0%,map.get(colors.$theme, "#{$color}-darker") 80%,map.get(colors.$theme, "#{$color}-lighter") 100%);
-	}
+  h1 {
+    padding-top: 0.47vh;
+    padding-bottom: 0.78vh;
+    padding-right: 0.6vw;
+    @if $symbol {
+      padding-left: 3.5rem;
+    } @else {
+      padding-left: 0.6vw;
+    }
+    margin: 0 0 0 0;
+    border-radius: 0.6vmax 0.6vmax 0 0;
+    font: bold 120% sans-serif;
+    color: white;
+    background-image: linear-gradient(to bottom,map.get(colors.$theme, "#{$color}-darker") 0%,map.get(colors.$theme, "#{$color}-darker") 80%,map.get(colors.$theme, "#{$color}-lighter") 100%);
+  }
 
-	.content {
-		padding-top: 0.78vh;
-		padding-bottom: 0.78vh;
-		padding-right: 0.6vw;
-		@if $symbol {
-			padding-left: 3.5rem;
-		} @else {
-			padding-left: 0.6vw;
-		}
-	}
+  .content {
+    padding-top: 0.78vh;
+    padding-bottom: 0.78vh;
+    padding-right: 0.6vw;
+    @if $symbol {
+      padding-left: 3.5rem;
+    } @else {
+      padding-left: 0.6vw;
+    }
+  }
 
-	li:first-child {
-		margin-top: -0.78vh;
-	}
+  li:first-child {
+    margin-top: -0.78vh;
+  }
 
-	@if $symbol {
-		.content::before {
-			content: $symbol;
-			color: white;
-			font: italic 1.5em serif;
-			border-radius: 1em;
-			background-color: map.get(colors.$theme, "#{$color}-darkest");
-			position: absolute;
-			left: 0.3em;
-			top: 50%;
-			transform: translateY(-50%);
-			width: 1.3em;
-			text-align: center;
-		}
-	}
+  @if $symbol {
+    .content::before {
+      content: $symbol;
+      color: white;
+      font: italic 1.5em serif;
+      border-radius: 1em;
+      background-color: map.get(colors.$theme, "#{$color}-darkest");
+      position: absolute;
+      left: 0.3em;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1.3em;
+      text-align: center;
+    }
+  }
 }
 
 .block {
-	@include alertblock(primary);
+  @include alertblock(primary);
 }
 
 .infoblock {
-	@include alertblock(secondary, "i");
+  @include alertblock(secondary, "i");
 }
 
 .warningblock {
-	@include alertblock(tertiary, "!");
+  @include alertblock(tertiary, "!");
 }
 
 strong {
-	color: map.get(colors.$theme, "primary-darker");
-	font-weight: bold;
+  color: map.get(colors.$theme, "primary-darker");
+  font-weight: bold;
 }
 
 blockquote {
-	font-style: italic;
-	margin: 0;
-	padding: 1.2em 0 0 4.2vw;
-	position: relative;
-	
-	&::before {
-		content: "\201C";
-		color: map.get(colors.$theme, "secondary-darker");
-		font-size: 4em;
-		position: absolute;
-		left: 0px;
-		top: -1.56vh;
-	}
+  font-style: italic;
+  margin: 0;
+  padding: 1.2em 0 0 4.2vw;
+  position: relative;
+  
+  &::before {
+    content: "\201C";
+    color: map.get(colors.$theme, "secondary-darker");
+    font-size: 4em;
+    position: absolute;
+    left: 0px;
+    top: -1.56vh;
+  }
 }
 
 cite {
-	display: block;
-	text-align: right;
+  display: block;
+  text-align: right;
 }
 
 .shadowed {
-	@include shadowed;
+  @include shadowed;
 }
 
 figure {
-	margin: 0;
+  margin: 0;
 }
 
 table {
-	display: table;
-	text-align: center;
-	border: 1px solid grey;
-	border-collapse: collapse;
+  display: table;
+  text-align: center;
+  border: 1px solid grey;
+  border-collapse: collapse;
 
-	&:not(.plain) thead,&:not(.plain) tfoot {
-		background-color: map.get(colors.$theme, "primary-darker");
-		color: white;
-		font-weight: bold;
-	}
+  &:not(.plain) thead,&:not(.plain) tfoot {
+    background-color: map.get(colors.$theme, "primary-darker");
+    color: white;
+    font-weight: bold;
+  }
 
-	&:not(.plain) tbody.dummy-header {
-		font-weight: bold;
-		color: map.get(colors.$theme, "primary-darker");
-	}
+  &:not(.plain) tbody.dummy-header {
+    font-weight: bold;
+    color: map.get(colors.$theme, "primary-darker");
+  }
 
-	thead,tr,tfoot,tbody.dummy-header {
-		border-bottom: 1px solid grey;
-	}
+  thead,tr,tfoot,tbody.dummy-header {
+    border-bottom: 1px solid grey;
+  }
 
-	&:not(.plain) tbody tr:nth-child(even) {
-		background-color: map.get(colors.$theme, "primary-lighter");
-	}
+  &:not(.plain) tbody tr:nth-child(even) {
+    background-color: map.get(colors.$theme, "primary-lighter");
+  }
 
-	img {
-		margin: 0;
-	}
+  img {
+    margin: 0;
+  }
 
-	td {
-		padding: 0.2em;
-	}
-	
-	ul {
-		padding-inline-start: 1.2em;
-	}
+  td {
+    padding: 0.2em;
+  }
+  
+  ul {
+    padding-inline-start: 1.2em;
+  }
 
-	&:not(.plain).headcolumn {
-		td:first-child {
-			background: map.get(colors.$theme, "primary-darker");
-			font-weight: bold;
-			color: white;
-		}
-	}
+  &:not(.plain).headcolumn {
+    td:first-child {
+      background: map.get(colors.$theme, "primary-darker");
+      font-weight: bold;
+      color: white;
+    }
+  }
 
-	&.fullwidth {
-		width: 100%;
-	}
+  &.fullwidth {
+    width: 100%;
+  }
 
-	&.grid {
-		td {
-			border: 1px solid map.get(colors.$theme, "primary-darker");
-		}
-		thead td {
-			border: 1px solid white;
-		}
-		thead {
-			border-style: hidden;
-		}
-	}
+  &.grid {
+    td {
+      border: 1px solid map.get(colors.$theme, "primary-darker");
+    }
+    thead td {
+      border: 1px solid white;
+    }
+    thead {
+      border-style: hidden;
+    }
+  }
 
-	&.leftaligned {
-		td {
-			text-align: left;
-		}
-		thead td,tbody.dummy-header td {
-			text-align: center;
-		}
-	}
+  &.leftaligned {
+    td {
+      text-align: left;
+    }
+    thead td,tbody.dummy-header td {
+      text-align: center;
+    }
+  }
 }
 
 /********************************************/
 /*             Handouts styles              */
 /********************************************/
 @media print {
-	@page {
-		size: landscape;
-	}
+  @page {
+    size: landscape;
+  }
 
-	body {
-		height: auto;
-		margin: 0;
-		font: 2.4vh sans-serif;
-	}
-	
-	#thumblayer {
-		height: auto;
-		position: relative;
-		top: -1.8vh;
-	}
-	
-	.wthumb {
-		page-break-inside: avoid;
-		width: 98vw;
-		height: 95.8vh;
-		margin-bottom: 4vh;
-	}
-	
-	#thumblayer>div.wthumb>section.thumbnail {
-		position: relative;
-		transform-origin: left top;
-		transform: scale(0.98, 0.958);
-	}
+  body {
+    height: auto;
+    margin: 0;
+    font: 2.4vh sans-serif;
+  }
+  
+  #thumblayer {
+    height: auto;
+    position: relative;
+    top: -1.8vh;
+  }
+  
+  .wthumb {
+    page-break-inside: avoid;
+    width: 98vw;
+    height: 95.8vh;
+    margin-bottom: 4vh;
+  }
+  
+  #thumblayer>div.wthumb>section.thumbnail {
+    position: relative;
+    transform-origin: left top;
+    transform: scale(0.98, 0.958);
+  }
 
-	#background, #newbackground, #foreground, #newforeground {
-		background-image: none !important;
-	}
-	
-	* {
-		animation:none !important;
-	}
+  #background, #newbackground, #foreground, #newforeground {
+    background-image: none !important;
+  }
+  
+  * {
+    animation:none !important;
+  }
 }
