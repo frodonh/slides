@@ -149,189 +149,263 @@
   --palettef: #ff3399;
 }
 
-svg {
-  .fill-primary-dark: rgb(128.8, 157.6, 21.6);
-  .stroke-primary-dark: rgb(128.8, 157.6, 21.6);
+svg .fill-primary-dark {
+  fill: rgb(128.8, 157.6, 21.6);
+}
+svg .stroke-primary-dark {
+  stroke: rgb(128.8, 157.6, 21.6);
 }
 
-svg {
-  .fill-primary-darker: rgb(96.6, 118.2, 16.2);
-  .stroke-primary-darker: rgb(96.6, 118.2, 16.2);
+svg .fill-primary-darker {
+  fill: rgb(96.6, 118.2, 16.2);
+}
+svg .stroke-primary-darker {
+  stroke: rgb(96.6, 118.2, 16.2);
 }
 
-svg {
-  .fill-primary-darkest: rgb(64.4, 78.8, 10.8);
-  .stroke-primary-darkest: rgb(64.4, 78.8, 10.8);
+svg .fill-primary-darkest {
+  fill: rgb(64.4, 78.8, 10.8);
+}
+svg .stroke-primary-darkest {
+  stroke: rgb(64.4, 78.8, 10.8);
 }
 
-svg {
-  .fill-primary-light: rgb(190.65, 227.4214285714, 53.7785714286);
-  .stroke-primary-light: rgb(190.65, 227.4214285714, 53.7785714286);
+svg .fill-primary-light {
+  fill: rgb(190.65, 227.4214285714, 53.7785714286);
+}
+svg .stroke-primary-light {
+  stroke: rgb(190.65, 227.4214285714, 53.7785714286);
 }
 
-svg {
-  .fill-primary-lighter: rgb(206.7375, 234.3160714286, 104.0839285714);
-  .stroke-primary-lighter: rgb(206.7375, 234.3160714286, 104.0839285714);
+svg .fill-primary-lighter {
+  fill: rgb(206.7375, 234.3160714286, 104.0839285714);
+}
+svg .stroke-primary-lighter {
+  stroke: rgb(206.7375, 234.3160714286, 104.0839285714);
 }
 
-svg {
-  .fill-primary-lightest: rgb(222.825, 241.2107142857, 154.3892857143);
-  .stroke-primary-lightest: rgb(222.825, 241.2107142857, 154.3892857143);
+svg .fill-primary-lightest {
+  fill: rgb(222.825, 241.2107142857, 154.3892857143);
+}
+svg .stroke-primary-lightest {
+  stroke: rgb(222.825, 241.2107142857, 154.3892857143);
 }
 
-svg {
-  .fill-secondary-dark: rgb(6.4, 64, 110.4);
-  .stroke-secondary-dark: rgb(6.4, 64, 110.4);
+svg .fill-secondary-dark {
+  fill: rgb(6.4, 64, 110.4);
+}
+svg .stroke-secondary-dark {
+  stroke: rgb(6.4, 64, 110.4);
 }
 
-svg {
-  .fill-secondary-darker: rgb(4.8, 48, 82.8);
-  .stroke-secondary-darker: rgb(4.8, 48, 82.8);
+svg .fill-secondary-darker {
+  fill: rgb(4.8, 48, 82.8);
+}
+svg .stroke-secondary-darker {
+  stroke: rgb(4.8, 48, 82.8);
 }
 
-svg {
-  .fill-secondary-darkest: rgb(3.2, 32, 55.2);
-  .stroke-secondary-darkest: rgb(3.2, 32, 55.2);
+svg .fill-secondary-darkest {
+  fill: rgb(3.2, 32, 55.2);
+}
+svg .stroke-secondary-darkest {
+  stroke: rgb(3.2, 32, 55.2);
 }
 
-svg {
-  .fill-secondary-light: rgb(11.9890410959, 119.8904109589, 206.8109589041);
-  .stroke-secondary-light: rgb(11.9890410959, 119.8904109589, 206.8109589041);
+svg .fill-secondary-light {
+  fill: rgb(11.9890410959, 119.8904109589, 206.8109589041);
+}
+svg .stroke-secondary-light {
+  stroke: rgb(11.9890410959, 119.8904109589, 206.8109589041);
 }
 
-svg {
-  .fill-secondary-lighter: rgb(48.5671232877, 156.2712328767, 243.0328767123);
-  .stroke-secondary-lighter: rgb(48.5671232877, 156.2712328767, 243.0328767123);
+svg .fill-secondary-lighter {
+  fill: rgb(48.5671232877, 156.2712328767, 243.0328767123);
+}
+svg .stroke-secondary-lighter {
+  stroke: rgb(48.5671232877, 156.2712328767, 243.0328767123);
 }
 
-svg {
-  .fill-secondary-lightest: rgb(117.3780821918, 189.1808219178, 247.0219178082);
-  .stroke-secondary-lightest: rgb(117.3780821918, 189.1808219178, 247.0219178082);
+svg .fill-secondary-lightest {
+  fill: rgb(117.3780821918, 189.1808219178, 247.0219178082);
+}
+svg .stroke-secondary-lightest {
+  stroke: rgb(117.3780821918, 189.1808219178, 247.0219178082);
 }
 
-svg {
-  .fill-tertiary-dark: rgb(184, 110.4, 0);
-  .stroke-tertiary-dark: rgb(184, 110.4, 0);
+svg .fill-tertiary-dark {
+  fill: rgb(184, 110.4, 0);
+}
+svg .stroke-tertiary-dark {
+  stroke: rgb(184, 110.4, 0);
 }
 
-svg {
-  .fill-tertiary-darker: rgb(138, 82.8, 0);
-  .stroke-tertiary-darker: rgb(138, 82.8, 0);
+svg .fill-tertiary-darker {
+  fill: rgb(138, 82.8, 0);
+}
+svg .stroke-tertiary-darker {
+  stroke: rgb(138, 82.8, 0);
 }
 
-svg {
-  .fill-tertiary-darkest: rgb(92, 55.2, 0);
-  .stroke-tertiary-darkest: rgb(92, 55.2, 0);
+svg .fill-tertiary-darkest {
+  fill: rgb(92, 55.2, 0);
+}
+svg .stroke-tertiary-darkest {
+  stroke: rgb(92, 55.2, 0);
 }
 
-svg {
-  .fill-tertiary-light: rgb(255, 165.4, 31);
-  .stroke-tertiary-light: rgb(255, 165.4, 31);
+svg .fill-tertiary-light {
+  fill: rgb(255, 165.4, 31);
+}
+svg .stroke-tertiary-light {
+  stroke: rgb(255, 165.4, 31);
 }
 
-svg {
-  .fill-tertiary-lighter: rgb(255, 187.8, 87);
-  .stroke-tertiary-lighter: rgb(255, 187.8, 87);
+svg .fill-tertiary-lighter {
+  fill: rgb(255, 187.8, 87);
+}
+svg .stroke-tertiary-lighter {
+  stroke: rgb(255, 187.8, 87);
 }
 
-svg {
-  .fill-tertiary-lightest: rgb(255, 210.2, 143);
-  .stroke-tertiary-lightest: rgb(255, 210.2, 143);
+svg .fill-tertiary-lightest {
+  fill: rgb(255, 210.2, 143);
+}
+svg .stroke-tertiary-lightest {
+  stroke: rgb(255, 210.2, 143);
 }
 
-svg {
-  .fill-quaternary-dark: #00cc00;
-  .stroke-quaternary-dark: #00cc00;
+svg .fill-quaternary-dark {
+  fill: #00cc00;
+}
+svg .stroke-quaternary-dark {
+  stroke: #00cc00;
 }
 
-svg {
-  .fill-quaternary-darker: #009900;
-  .stroke-quaternary-darker: #009900;
+svg .fill-quaternary-darker {
+  fill: #009900;
+}
+svg .stroke-quaternary-darker {
+  stroke: #009900;
 }
 
-svg {
-  .fill-quaternary-darkest: #006600;
-  .stroke-quaternary-darkest: #006600;
+svg .fill-quaternary-darkest {
+  fill: #006600;
+}
+svg .stroke-quaternary-darkest {
+  stroke: #006600;
 }
 
-svg {
-  .fill-quaternary-light: #33ff33;
-  .stroke-quaternary-light: #33ff33;
+svg .fill-quaternary-light {
+  fill: #33ff33;
+}
+svg .stroke-quaternary-light {
+  stroke: #33ff33;
 }
 
-svg {
-  .fill-quaternary-lighter: #66ff66;
-  .stroke-quaternary-lighter: #66ff66;
+svg .fill-quaternary-lighter {
+  fill: #66ff66;
+}
+svg .stroke-quaternary-lighter {
+  stroke: #66ff66;
 }
 
-svg {
-  .fill-quaternary-lightest: #99ff99;
-  .stroke-quaternary-lightest: #99ff99;
+svg .fill-quaternary-lightest {
+  fill: #99ff99;
+}
+svg .stroke-quaternary-lightest {
+  stroke: #99ff99;
 }
 
-svg {
-  .fill-neutral-dark: rgb(95.2, 95.2, 95.2);
-  .stroke-neutral-dark: rgb(95.2, 95.2, 95.2);
+svg .fill-neutral-dark {
+  fill: rgb(95.2, 95.2, 95.2);
+}
+svg .stroke-neutral-dark {
+  stroke: rgb(95.2, 95.2, 95.2);
 }
 
-svg {
-  .fill-neutral-darker: rgb(71.4, 71.4, 71.4);
-  .stroke-neutral-darker: rgb(71.4, 71.4, 71.4);
+svg .fill-neutral-darker {
+  fill: rgb(71.4, 71.4, 71.4);
+}
+svg .stroke-neutral-darker {
+  stroke: rgb(71.4, 71.4, 71.4);
 }
 
-svg {
-  .fill-neutral-darkest: rgb(47.6, 47.6, 47.6);
-  .stroke-neutral-darkest: rgb(47.6, 47.6, 47.6);
+svg .fill-neutral-darkest {
+  fill: rgb(47.6, 47.6, 47.6);
+}
+svg .stroke-neutral-darkest {
+  stroke: rgb(47.6, 47.6, 47.6);
 }
 
-svg {
-  .fill-neutral-light: rgb(146.2, 146.2, 146.2);
-  .stroke-neutral-light: rgb(146.2, 146.2, 146.2);
+svg .fill-neutral-light {
+  fill: rgb(146.2, 146.2, 146.2);
+}
+svg .stroke-neutral-light {
+  stroke: rgb(146.2, 146.2, 146.2);
 }
 
-svg {
-  .fill-neutral-lighter: rgb(173.4, 173.4, 173.4);
-  .stroke-neutral-lighter: rgb(173.4, 173.4, 173.4);
+svg .fill-neutral-lighter {
+  fill: rgb(173.4, 173.4, 173.4);
+}
+svg .stroke-neutral-lighter {
+  stroke: rgb(173.4, 173.4, 173.4);
 }
 
-svg {
-  .fill-neutral-lightest: rgb(200.6, 200.6, 200.6);
-  .stroke-neutral-lightest: rgb(200.6, 200.6, 200.6);
+svg .fill-neutral-lightest {
+  fill: rgb(200.6, 200.6, 200.6);
+}
+svg .stroke-neutral-lightest {
+  stroke: rgb(200.6, 200.6, 200.6);
 }
 
-svg {
-  .fill-primary: #A1C51B;
-  .stroke-primary: #A1C51B;
+svg .fill-primary {
+  fill: #A1C51B;
+}
+svg .stroke-primary {
+  stroke: #A1C51B;
 }
 
-svg {
-  .fill-secondary: #08508A;
-  .stroke-secondary: #08508A;
+svg .fill-secondary {
+  fill: #08508A;
+}
+svg .stroke-secondary {
+  stroke: #08508A;
 }
 
-svg {
-  .fill-tertiary: #e68a00;
-  .stroke-tertiary: #e68a00;
+svg .fill-tertiary {
+  fill: #e68a00;
+}
+svg .stroke-tertiary {
+  stroke: #e68a00;
 }
 
-svg {
-  .fill-quaternary: lime;
-  .stroke-quaternary: lime;
+svg .fill-quaternary {
+  fill: lime;
+}
+svg .stroke-quaternary {
+  stroke: lime;
 }
 
-svg {
-  .fill-neutral: #777;
-  .stroke-neutral: #777;
+svg .fill-neutral {
+  fill: #777;
+}
+svg .stroke-neutral {
+  stroke: #777;
 }
 
-svg {
-  .fill-palettee: #199fd9;
-  .stroke-palettee: #199fd9;
+svg .fill-palettee {
+  fill: #199fd9;
+}
+svg .stroke-palettee {
+  stroke: #199fd9;
 }
 
-svg {
-  .fill-palettef: #ff3399;
-  .stroke-palettef: #ff3399;
+svg .fill-palettef {
+  fill: #ff3399;
+}
+svg .stroke-palettef {
+  stroke: #ff3399;
 }
 
 /********************************************/

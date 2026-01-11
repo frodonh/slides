@@ -7,8 +7,8 @@ $theme: () !default;
 
 @each $name, $col in colors.$theme {
   svg {
-    .fill-#{$name}: $col;
-    .stroke-#{$name}: $col;
+    .fill-#{$name} {fill: $col}
+    .stroke-#{$name} {stroke: $col}
   }
 }
 

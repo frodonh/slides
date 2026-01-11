@@ -826,7 +826,7 @@ body > section.outline > div > ul > li, #thumblayer > div.wthumb > section.outli
   padding-bottom: 0.2vh;
   padding-right: 1.2vw;
 }
-body > section.outline > div:has(.current) ul > li:not(.current), #thumblayer > div.wthumb > section.outline > div:has(.current) ul > li:not(.current) {
+body > section.outline > div:has(.current) ul > li:not(:has(.current)):not(.current), #thumblayer > div.wthumb > section.outline > div:has(.current) ul > li:not(:has(.current)):not(.current) {
   opacity: 0.5;
 }
 body > section.outline div.content .current, #thumblayer > div.wthumb > section.outline div.content .current {

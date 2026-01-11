@@ -421,7 +421,7 @@ body>section, #thumblayer>div.wthumb>section {
       padding-right: 1.2vw;
     }
 
-    & > div:has(.current) ul > li:not(.current) { opacity: 0.5; }
+    & > div:has(.current) ul > li:not(:has(.current)):not(.current) { opacity: 0.5; }
 
     div.content .current {
       opacity: 1;
