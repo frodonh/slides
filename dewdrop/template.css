@@ -582,6 +582,14 @@ body > h1, body > h2 {
 .component-minitoc ul {
   padding: 0;
 }
+.component-minitoc li:has(ul):not(:has(.current)) {
+  opacity: 0.4;
+}
+.component-minitoc li:has(ul).current {
+  opacity: 1;
+  background-color: rgb(57.9398019802, 25.838019802, 132.321980198);
+  color: white;
+}
 .component-minitoc a {
   color: inherit;
 }
@@ -596,14 +604,6 @@ body > h1, body > h2 {
   color: rgb(57.9398019802, 25.838019802, 132.321980198);
   padding: 0;
   flex: auto;
-}
-.component-minitoc > ul > li:not(:has(.current)) {
-  opacity: 0.4;
-}
-.component-minitoc > ul > li.current {
-  opacity: 1;
-  background-color: rgb(57.9398019802, 25.838019802, 132.321980198);
-  color: white;
 }
 .component-minitoc > ul > li > ul {
   display: block;
@@ -868,10 +868,13 @@ body > section.chessboard > .content > div > div, #thumblayer > div.wthumb > sec
   flex-flow: column nowrap;
   justify-content: center;
 }
-body > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd), body > section.chessboard > .content > div:nth-child(even) > div:nth-child(even), body > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even), body > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd), #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd), #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(even) > div:nth-child(even), #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even), #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) {
+body > section.chessboard > .content:not(.reversed) > div:nth-child(odd) > div:nth-child(odd), body > section.chessboard > .content:not(.reversed) > div:nth-child(even) > div:nth-child(even), body > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even), body > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd), #thumblayer > div.wthumb > section.chessboard > .content:not(.reversed) > div:nth-child(odd) > div:nth-child(odd), #thumblayer > div.wthumb > section.chessboard > .content:not(.reversed) > div:nth-child(even) > div:nth-child(even), #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even), #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) {
   background-color: rgb(57.9398019802, 25.838019802, 132.321980198);
 }
-body > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd), body > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd) ul > li, body > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd) ul > li::before, body > section.chessboard > .content > div:nth-child(even) > div:nth-child(even), body > section.chessboard > .content > div:nth-child(even) > div:nth-child(even) ul > li, body > section.chessboard > .content > div:nth-child(even) > div:nth-child(even) ul > li::before, body > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even), body > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even) ul > li, body > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even) ul > li::before, body > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd), body > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) ul > li, body > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) ul > li::before, #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd), #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd) ul > li, #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(odd) > div:nth-child(odd) ul > li::before, #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(even) > div:nth-child(even), #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(even) > div:nth-child(even) ul > li, #thumblayer > div.wthumb > section.chessboard > .content > div:nth-child(even) > div:nth-child(even) ul > li::before, #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even), #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even) ul > li, #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even) ul > li::before, #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd), #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) ul > li, #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) ul > li::before {
+body > section.chessboard > .content:not(.reversed) > div:nth-child(odd) > div:nth-child(odd) strong, body > section.chessboard > .content:not(.reversed) > div:nth-child(even) > div:nth-child(even) strong, body > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even) strong, body > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) strong, #thumblayer > div.wthumb > section.chessboard > .content:not(.reversed) > div:nth-child(odd) > div:nth-child(odd) strong, #thumblayer > div.wthumb > section.chessboard > .content:not(.reversed) > div:nth-child(even) > div:nth-child(even) strong, #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even) strong, #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) strong {
+  color: white;
+}
+body > section.chessboard > .content:not(.reversed) > div:nth-child(odd) > div:nth-child(odd), body > section.chessboard > .content:not(.reversed) > div:nth-child(odd) > div:nth-child(odd) ul > li, body > section.chessboard > .content:not(.reversed) > div:nth-child(odd) > div:nth-child(odd) ul > li::before, body > section.chessboard > .content:not(.reversed) > div:nth-child(even) > div:nth-child(even), body > section.chessboard > .content:not(.reversed) > div:nth-child(even) > div:nth-child(even) ul > li, body > section.chessboard > .content:not(.reversed) > div:nth-child(even) > div:nth-child(even) ul > li::before, body > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even), body > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even) ul > li, body > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even) ul > li::before, body > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd), body > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) ul > li, body > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) ul > li::before, #thumblayer > div.wthumb > section.chessboard > .content:not(.reversed) > div:nth-child(odd) > div:nth-child(odd), #thumblayer > div.wthumb > section.chessboard > .content:not(.reversed) > div:nth-child(odd) > div:nth-child(odd) ul > li, #thumblayer > div.wthumb > section.chessboard > .content:not(.reversed) > div:nth-child(odd) > div:nth-child(odd) ul > li::before, #thumblayer > div.wthumb > section.chessboard > .content:not(.reversed) > div:nth-child(even) > div:nth-child(even), #thumblayer > div.wthumb > section.chessboard > .content:not(.reversed) > div:nth-child(even) > div:nth-child(even) ul > li, #thumblayer > div.wthumb > section.chessboard > .content:not(.reversed) > div:nth-child(even) > div:nth-child(even) ul > li::before, #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even), #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even) ul > li, #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(odd) > div:nth-child(even) ul > li::before, #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd), #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) ul > li, #thumblayer > div.wthumb > section.chessboard > .content.reversed > div:nth-child(even) > div:nth-child(odd) ul > li::before {
   color: white;
 }
 body > section p, body > section table, body > section img, body > section object, #thumblayer > div.wthumb > section p, #thumblayer > div.wthumb > section table, #thumblayer > div.wthumb > section img, #thumblayer > div.wthumb > section object {

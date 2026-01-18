@@ -1,4 +1,4 @@
-/** Array of slides together with ook characteristics
+/** Array of slides together with their characteristics
  *	Each element of the slide is an object with the following members:
  *	<dl>
  *		<dt>id</dt><dd>id of the slide</dd>

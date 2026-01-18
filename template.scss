@@ -130,6 +130,13 @@ body {
     padding: 0;
   }
 
+  li:has(ul):not(:has(.current)) {opacity: 0.4;}
+  li:has(ul).current {
+    opacity: 1;
+    background-color: map.get(colors.$theme, "primary-darker");
+    color: white;
+  }
+
   a { color: inherit;}
 
   & > ul {
@@ -143,13 +150,6 @@ body {
       color: map.get(colors.$theme, "primary-darker");
       padding: 0;
       flex: auto;
-
-      &:not(:has(.current)) {opacity: 0.4;}
-      &.current {
-        opacity: 1;
-        background-color: map.get(colors.$theme, "primary-darker");
-        color: white;
-      }
 
       & > ul {
         display: block;
@@ -470,8 +470,9 @@ body>section, #thumblayer>div.wthumb>section {
         }
       }
 
-      & > div:nth-child(odd) > div:nth-child(odd), & > div:nth-child(even) > div:nth-child(even), &.reversed > div:nth-child(odd) > div:nth-child(even), &.reversed > div:nth-child(even) > div:nth-child(odd) {
+      &:not(.reversed) > div:nth-child(odd) > div:nth-child(odd), &:not(.reversed) > div:nth-child(even) > div:nth-child(even), &.reversed > div:nth-child(odd) > div:nth-child(even), &.reversed > div:nth-child(even) > div:nth-child(odd) {
         background-color: map.get(colors.$theme, "primary-darker");
+        strong {color: white; }
         &, & ul > li, & ul > li::before { color: white; }
       }
     }
