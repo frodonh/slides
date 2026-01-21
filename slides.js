@@ -1847,6 +1847,7 @@ function afterLoad() {
 				} else {
 					let uri = URL.parse(syncConfig.url, location.protocol + '//' + location.host + location.pathname) + "?wait=" + syncConfig.name;
 					if (syncConfig.css) uri += "&css=" + syncConfig.css;
+					if ('nosse' in parameters) uri += "&nosse=1";
 					displayQrcode(uri);
 				}
 				break;

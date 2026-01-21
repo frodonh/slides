@@ -101,6 +101,16 @@ if (array_key_exists('push',$_REQUEST))	{	// Master mode, updates database with 
 		sleep(1);
 	}
 	pg_close($dbconn);
+} elseif (array_key_exists('subscribep', $_REQUEST)) {	// Get a poll form when server-side events are deactivated
+	$dbconn=pg_connect("host=".$host." dbname=".$dbname." user=".$user." password=".$password) or die ('Impossible to connect to the database: '.pg_last_error());
+	$query="select interactive from slides where name=$1";
+	$res=pg_query_params($dbconn, $query, array($_REQUEST['subscribep'])) or die('Request failed: '.pg_last_error());
+	$val=pg_fetch_array($res,null,PGSQL_ASSOC);
+	pg_free_result($res);
+	if ($val) {
+		echo $val['interactive'];
+	}
+	pg_close($dbconn);
 } elseif (array_key_exists('submit', $_REQUEST) && array_key_exists('poll', $_REQUEST)) {	// Submit an answer to a poll
 	$dbconn=pg_connect("host=".$host." dbname=".$dbname." user=".$user." password=".$password) or die ('Impossible to connect to the database: '.pg_last_error());
 	if (!pg_meta_data($dbconn,'polls')) {
@@ -154,6 +164,14 @@ if (array_key_exists('push',$_REQUEST))	{	// Master mode, updates database with 
 		if (connection_aborted()) break;
 		sleep(1);
 	}
+	pg_close($dbconn);
+} elseif (array_key_exists('followp', $_REQUEST) && array_key_exists('poll', $_REQUEST)) {	// Request new answers in poll with no server-side events
+	$dbconn=pg_connect("host=".$host." dbname=".$dbname." user=".$user." password=".$password) or die ('Impossible to connect to the database: '.pg_last_error());
+	$query="select answers from polls where name=$1 and poll=$2";
+	$res=pg_query_params($dbconn, $query, array($_REQUEST['followp'], $_REQUEST['poll'])) or die('Request failed: '.pg_last_error());
+	$ret=pg_fetch_array($res, null, PGSQL_ASSOC);
+	pg_free_result($res);
+	if ($ret) echo $ret["answers"];
 	pg_close($dbconn);
 } 
 ?>

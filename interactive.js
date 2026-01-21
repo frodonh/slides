@@ -1,5 +1,6 @@
 let polls = {};	// List of all polls in the slideshow, indexed by their id
 let sse_listener = null;	// Event source listener for polls
+let poll_listener = null;	// Polling listener for polls
 
 /**
  * Generic poll class, base for other poll objects
@@ -188,19 +189,35 @@ document.addEventListener("DOMContentLoaded",function(event) {
 	}
 
 	// Close the event source when the user disconnects
-	window.addEventListener('beforeunload', () => { if (sse_listener) sse_listener.close(); });
+	if (!('nosse' in parameters)) window.addEventListener('beforeunload', () => { if (sse_listener) sse_listener.close(); });
 
 	// Register a new event listener to start listening for answers on slides with polls
 	window.addEventListener('hashchange', function() {
 		let curslideo = getSlide(curslide);
 		if (sse_listener) sse_listener.close();
+		if (poll_listener) {
+			clearInterval(poll_listener);
+			poll_listener = null;
+		}
 		let els = curslideo.getElementsByClassName("interactive");
 		if (els.length > 0) {
 			let id = els[0].id;
-			sse_listener = new EventSource(syncConfig.url + '?follow=' + encodeURIComponent(syncConfig.name) + '&poll=' + encodeURIComponent(id));
-			sse_listener.onmessage = function(e) {
-				polls[id].update(JSON.parse(e.data));
-			};
+			if ('nosse' in parameters) {
+				poll_listener = setInterval(function() {
+					let xhttp = new XMLHttpRequest;
+					xhttp.open('POST', syncConfig.url, true);
+					xhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+					xhttp.onreadystatechange=function() {
+						if (this.readyState==XMLHttpRequest.DONE && this.status==200 && this.responseText && this.responseText.trim()!='') polls[id].update(JSON.parse(this.responseText));
+					}
+					xhttp.send('followp=' + encodeURIComponent(syncConfig.name) + '&poll=' + encodeURIComponent(id));
+				}, 2000)
+			} else {
+				sse_listener = new EventSource(syncConfig.url + '?follow=' + encodeURIComponent(syncConfig.name) + '&poll=' + encodeURIComponent(id));
+				sse_listener.onmessage = function(e) {
+					polls[id].update(JSON.parse(e.data));
+				};
+			}
 		}
 	});
 });
