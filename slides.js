@@ -1204,14 +1204,14 @@ function toggleSync(elem) {
  * Display QR-Code of sync'ed presentation. This function uses the Google API to generate a QR-Code from a URL.
  * @param {string} uri - Id of URI for which the QR code is displayed
  */
-function displayQrcode(uri) {
+function displayQrcode(uri, prompt) {
 	document.body.insertAdjacentHTML('afterbegin','<div id="coverlayer"></div>');
 	document.getElementById('coverlayer').style.opacity='1';
 	let syncd=document.createElement('div');
 	syncd.id='qrcode-view';
 	let encodeduri=encodeURIComponent(uri);
 	//syncd.innerHTML='<div class="title">Suivez la présentation en direct<br/>en flashant le QR-Code suivant</div><figure><img src="https://chart.googleapis.com/chart?cht=qr&chl='+encodeduri+'&chs=400x400" /></figure><p><a href="'+uri+'">'+uri+'</p>';
-	syncd.innerHTML='<div class="title">Suivez la présentation en direct<br/>en flashant le QR-Code suivant</div><figure><img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data='+encodeduri+'" /></figure><p><a href="'+uri+'">'+uri+'</p>';
+	syncd.innerHTML='<div class="title">' + prompt + '</div><figure><img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data='+encodeduri+'" /></figure><p><a href="'+uri+'">'+uri+'</p>';
 	on_qrcode=true;
 	document.body.insertAdjacentElement('afterbegin',syncd);
 	setTimeout(()=>{syncd.classList.add('active');},10);
@@ -1837,8 +1837,8 @@ function afterLoad() {
 					closeQrcode();
 				} else {
 					let uri = location.protocol + '//' + location.host + location.pathname + location.search;
-					uri += (location.search!=''?'&':'?') + "sync=" + syncConfig.name;
-					displayQrcode(uri);
+					uri += (location.search!=''?'&':'?') + ("nosse" in params ? "syncp=" : "sync=") + syncConfig.name;
+					displayQrcode(uri, 'Suivez la présentation en direct<br/>en flashant le QR-Code suivant');
 				}
 				break;
 			case "Q":	// 'Q'
@@ -1848,7 +1848,7 @@ function afterLoad() {
 					let uri = URL.parse(syncConfig.url, location.protocol + '//' + location.host + location.pathname) + "?wait=" + syncConfig.name;
 					if (syncConfig.css) uri += "&css=" + syncConfig.css;
 					if ('nosse' in parameters) uri += "&nosse=1";
-					displayQrcode(uri);
+					displayQrcode(uri, 'Participez aux questions<br/>en flashant le QR-Code suivant');
 				}
 				break;
 		}

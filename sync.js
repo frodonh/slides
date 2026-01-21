@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded",function(event) {
 			let xhttp = new XMLHttpRequest();
 			xhttp.open("POST", "slides.php", true);
 			xhttp.onreadystatechange = function() {
-				if (this.readyState == XMLHttpRequest.DONE && this.status == 200 && !(this.responseText in seen)) {
+				if (this.readyState == XMLHttpRequest.DONE && this.status == 200 && this.responseText.trim()!="" && !(this.responseText in seen)) {
 					seen[this.responseText] = true;
 					fill_poll(this.responseText);
 				}
