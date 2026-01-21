@@ -1837,7 +1837,7 @@ function afterLoad() {
 					closeQrcode();
 				} else {
 					let uri = location.protocol + '//' + location.host + location.pathname + location.search;
-					uri += (location.search!=''?'&':'?') + ("nosse" in params ? "syncp=" : "sync=") + syncConfig.name;
+					uri += (location.search!=''?'&':'?') + ("nosse" in parameters ? "syncp=" : "sync=") + syncConfig.name;
 					displayQrcode(uri, 'Suivez la présentation en direct<br/>en flashant le QR-Code suivant');
 				}
 				break;
