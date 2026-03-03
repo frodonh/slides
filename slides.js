@@ -1267,6 +1267,29 @@ function toggle_outline() {
 /**********************************
  *   Pre-processing of slides     *
  **********************************/
+/**
+ * Filter slides which should be kept in the slideshow based on the current parameters
+ * @param {object} slide - DOM element for the slide
+ * @param {int} index - Index of the slide in the sequence
+ * @returns True if the slide has to be included in the slideshow
+ */
+function filter_slides(slide, index) {
+	// Test if the slide is in the slideshow subset, otherwise skip it
+	if ('subset' in parameters && parameters['subset'].length > 0) {
+		let ok = false;
+		if (parameters['subset'].includes(''+(index+1)) || parameters['subset'].includes(slide.id)) ok=true;
+		if (!ok && 'groups' in element.dataset) for (const group of slide.dataset['groups'].split(',')) {
+			if (parameters['subset'].includes(group)) ok=true;
+			break;
+		}
+		if (!ok) return false;
+	}
+	// Test if the slide is in the slideshow hidden subset, if this is the case, skip it
+	if ('hidden' in parameters && parameters['hidden'].length>0 && (parameters['hidden'].includes(''+(index+1)) || parameters['hidden'].includes(slide.id))) return false;
+	// Otherwise the slide is included
+	return true;
+}
+
 /** Create the automatically generated slides (title and outlines) and generate the structure
  */
 function create_structure() {
@@ -1284,15 +1307,45 @@ function create_structure() {
 		`;
 		document.body.insertAdjacentElement("afterbegin", tslide);
 	}
+	css_to_data(tslide);
 
-	// Generate structure and create placeholder outline slides (we can't create the full outline slides at this stage because the slides don't have any ids, thus we can't link to them)
+	// Create the sequence of DOM elements to be included in the slideshow
+	let sequence = [];
+	if ('outline' in parameters) { // If 'outline' parameter is provided, the sequence is based on its content
+		for (const spec of parameters["outline"]) {
+			let slidee = null;
+			if (typeof spec == 'number') {	// If spec is a single number, add the corresponding slide in the sequence, with respect to the order in the input file
+				slidee = document.querySelector('body > section:nth-of-type(' + spec + ')');
+			} else if ('id' in spec) {	// If an id is given, add the slide with this id. All other fields in the object are used to set the attributes of the section
+				slidee = document.getElementById(id);
+				for (const [key, value] of Object.entries(spec)) if (key != 'id') slidee.setAttribute(key, value);
+			} else if ('section' in spec) {	// If section is provided, create a slide with the content of the parameter. All other fields are used to set the attributes of the section
+				slidee = document.createElement('section');
+				slidee.innerHTML = spec['section'];
+				for (const [key, value] of Object.entries(spec)) if (key != 'section') slidee.setAttribute(key, value);
+				document.body.appendChild(slidee);
+			} else if ('heading' in spec && 'level' in spec) {	// If heading and level are given, create an outline slide with the content of the heading parameter, at the given level. All other fields are used to set the attributes of the section
+				slidee = document.createElement('h' + level);
+				slidee.innerHTML = spec['heading'];
+				for (const [key, value] of Object.entries(spec)) if (key != 'heading' && key != 'level') slidee.setAttribute(key, value);
+				document.body.appendChild(slidee);
+			}
+			if (slidee) sequence.push(slidee);	
+		}
+	} else { // If not provided, use all elements headings and section elements
+		sequence = Array.from(document.querySelectorAll(Array.from({length: 6}, (_, i) => 1+i).map((val) => "body > h" + val.toString()).join() + ', body > section:not(#title)')).filter(filter_slides);
+	}
+	slides = [process_slide(tslide)];
+
+	// Generate structure and create outline slides
 	let parents = [structure];
-	Array.from(document.querySelectorAll(Array.from({length: 6}, (_, i) => 1+i).map((val) => "body > h" + val.toString()).join() + ', body > section:not(#title)')).forEach(function(el) {
+	sequence.forEach(function(el) {
 		let entry = {"element": el};
 		if (el.tagName == 'SECTION') {
 			entry.level = parents.length;
 			entry.name = el.querySelector('h1').innerHTML;
 			entry.target = el;
+			slides.push(process_slide(el));	
 		} else {
 			entry.name = el.innerHTML;	
 			entry.level = Number.parseInt(el.tagName.substring(1));
@@ -1305,6 +1358,7 @@ function create_structure() {
 				oslide.dataset["level"] = entry.level;
 				el.insertAdjacentElement('afterend', oslide);
 				entry.target = oslide;
+				slides.push(process_slide(oslide));
 			} else {
 				let sibling = entry.element;
 				do { sibling = sibling.nextElementSibling; } while (sibling && (sibling.tagName != 'SECTION' || sibling.classList.contains("outline")));
@@ -1320,13 +1374,27 @@ function create_structure() {
 		}
 		if ("short" in el.dataset) entry["short"] = el.dataset["short"];
 		if (entry.level > parents.length) {
-			for (const i=parents.length ; i<entry.level ; ++i) {
+			for (const i = parents.length ; i < entry.level ; ++i) {
 				parents.push({"name": "", "parts": []});
 			}
 		}
-		entry.parent = parents[entry.level-1];
-		parents[entry.level-1].push(entry);
+		entry.parent = parents[entry.level - 1];
+		parents[entry.level - 1].push(entry);
 	});
+
+	// Give id to each slide
+	slides.forEach(function(slideo,index) {
+		slideo["num"] = index;
+		// Give an id to the slide
+		if (!slideo.element.id) {
+			let id = "slide-" + (index+1);
+			slideo.element.id = id;
+			slideo.id = slideo.element.id;
+		}
+		add_components(slideo);	// Add components to the slides
+	});
+	// Compose outline slides
+	compose_outline_slides();
 
 	// Create background and foreground layers if they are not disabled and they are not provided
 	for (const layer of ['foreground', 'background']) if (config[layer+"Layer"]) {
@@ -1508,64 +1576,6 @@ function add_components(slideo) {
 	}
 }
 
-/**
- * Generate the array of slides {@link slides}
- */
-function prepare_slides() {
-	// Prepare array of slides
-	Array.from(document.getElementsByTagName('section')).forEach(function(element,index) {
-		// Give an id to the slide
-		let id="slide-"+(index+1);
-		if (!element.id) element.id=id;
-	});
-	if ('outline' in parameters) {
-		for (let slidespec of parameters['outline']) {
-			let slidee;
-			if ('html' in slidespec) { // Generate slide if it does not exist
-				let slidee=document.createElement('section');
-				slidespec['id']='slide-'+Math.random().toString().substring(2).replace(/./g,s=>String.fromCharCode(s.charCodeAt(0)+17));
-				slidee.id=slidespec['id'];
-				slidee.innerHTML=slidespec['html'];
-			} else { // Overrides attributes with the one given as parameters
-				slidee = document.getElementById(slidespec['id']);
-				for (const att in slidespec) if (att!='id' && att!='html') {
-					slidee.dataset[att.replace(/^data-/, '')] = from_string(slidespec[att]);
-				}
-			}
-			let slideo=process_slide(slidee);
-			// Insert slide in array
-			if ('html' in slidespec) document.body.appendChild(slidee);
-			slides.push(slideo);
-		}
-	} else {
-		// Add all slides to the array
-		Array.from(document.getElementsByTagName('section')).forEach(function(element,index) {
-			// Test if the slide is in the slideshow subset, otherwise skip it
-			if ('subset' in parameters && parameters['subset'].length>0) {
-				let ok=false;
-				if (parameters['subset'].includes(''+(index+1)) || parameters['subset'].includes(element.id)) ok=true;
-				if (!ok && 'groups' in element.dataset) for (const group of element.dataset['groups'].split(',')) {
-					if (parameters['subset'].includes(group)) ok=true;
-					break;
-				}
-				if (!ok) return;
-			}
-			// Test if the slide is in the slideshow hidden subset, if this is the case, skip it
-			if ('hidden' in parameters && parameters['hidden'].length>0 && (parameters['hidden'].includes(''+(index+1)) || parameters['hidden'].includes(element.id))) return;
-			// Insert slide in array
-			let slideo = process_slide(element);
-			slides.push(slideo);
-		});
-	}
-	let tslide = document.getElementById("title");
-	if (tslide) css_to_data(tslide);
-	compose_outline_slides(); // Fill out outline slides
-	slides.forEach(function(slideo, num) {
-		slideo["num"] = num; // Fill out slides numbers
-		add_components(slideo); // Add components to all slides
-	}); 
-}
-
 /**********************************
  *       Handler functions        *
  **********************************/
@@ -1596,20 +1606,18 @@ document.addEventListener("DOMContentLoaded",function(event) {
 	}
 
 	// Read query string
-	let querys=decodeURI(location.search.substring(1)).split('&');
-	for (let i=0;i<querys.length;++i) {
-		let varval=querys[i].split('=');
-		parameters[varval[0]]=varval[1];
+	let pquery = new URL(location.toString()).searchParams;
+	for (let [key, value] of pquery) {
+		if (key == 'subset' || key == 'hidden') value = value.split(',');
+		else if (key == 'outline') value = JSON.parse(value);
+		parameters[key] = value;
 	}
-	if ('subset' in parameters && parameters['subset']!='') parameters['subset']=parameters['subset'].split(',');
-	if ('hidden' in parameters && parameters['hidden']!='') parameters['hidden']=parameters['hidden'].split(',');
 
 	// Disable outline stylesheet
 	for (let i=0;i<document.styleSheets.length;++i) if (document.styleSheets[i].title=='outlinesheet') document.styleSheets[i].disabled=true;
 
 	// Preprocess the document
 	process_slideshow();
-	create_structure();
 
 	// Load external SVG files
 	Array.from(document.querySelectorAll('div [data-file]')).forEach(function(element) {
@@ -1653,7 +1661,7 @@ function afterLoad() {
 	window.name="parentpres";
 	syncConfig.url=document.documentElement.dataset['synchronize'];
 	syncConfig.css=document.documentElement.dataset['syncss'];
-	prepare_slides(parameters); // Prepare the array of slides
+	create_structure(); // Prepare the array of slides
 	if (location.hash=='') location.hash='#title';
 
 	// Hash change handler

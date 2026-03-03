@@ -265,7 +265,7 @@ initialize({
 	<section class="content">
 		<h1>Headings</h1>
 		<div class="content">
-			<p>Currenty, two outline styles (which can be used in <code>data-outline</code>are defined:</p>
+			<p>Currenty, two outline styles (which can be used in <code>data-outline</code>) are defined:</p>
 
 			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
 				<thead>
@@ -299,6 +299,7 @@ initialize({
 					<tr><td>section</td><td>data-foreground</td><td>--foreground</td><td>Array of components constructors to add to the foreground layer. See also <a href="#backfore">here</a></td></tr>
 					<tr><td>section</td><td>data-numfragment</td><td></td><td>Number of fragment. See also <a href="#fragment">here</a></td></tr>
 					<tr><td>section</td><td>data-autofragment</td><td></td><td>Auto-fragment specification. See also <a href="#fragment">here</a></td></tr>
+					<tr><td>section</td><td>data-groups</td><td></td><td>Comma-separated list of groups the current slide belongs to. See also <a href="#subsets">here</a></td></tr>
 				</tbody>
 			</table>
 
@@ -1363,6 +1364,89 @@ function animate_none(source,dest,increasing,callback) {
 		</div>
 	</section>
 
+	<h2 data-short="Parameters">URL parameters</h2>
+
+	<section class="content">
+		<h1>URLs may hold parameters</h1>
+		<div class="content">
+			<p>URL parameters may be used to customize the slideshow behaviour on-the-fly, without changing the content files.</p>			
+
+			<pre><code>
+				{baseuri}?nosse=1&author=Sam%20Baggins
+			</code></pre>
+
+			<p>URL parameters may be used for instance:
+				<ul>
+					<li>to provide values for varying fields (like a templating engine),</li>
+					<li>to configure synchronization between a master slideshow and its slaves,</li>
+					<li>to select which slides should be used in the slideshow, and which ones should be hidden,</li>
+					<li>to generate slides on-the-fly.</li>
+				</ul>
+			</p>
+		</div>
+	</section>
+
+	<h3>Synchronization</h3>
+
+	<section class="content">
+		<h1>Parameters used to configure synchronization</h1>
+		<div class="content">
+			<p>The following parameters are used to setup <a href="#synchronization">synchronization</a>, in order for slave clients to switch slides synchronously with the presenter.</p>
+
+			<table class="shadowed" style="width:100%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>Parameter</td><td>Type of value</td><td>Meaning</td><td>Example</td></tr>
+				</thead>
+				<tbody>
+					<tr><td>nosse</td><td>Any, only the existence of the parameter is checked</td><td>When provided, it means that the server hosting the slideshow <strong>does not support</strong> HTML server-sent events.</td><td><code>{baseuri}?nosse=1</code></td></tr>
+					<tr><td>sync</td><td>A string</td><td>When the parameter is given, the slideshow is synchronized with a master slideshow with the given id, using HTML server-sent events.</td><td><code>{baseuri}?sync=abcd</code></td></tr>
+					<tr><td>syncp</td><td>A string</td><td>When the parameter is given, the slideshow is synchronized with a master slideshow with the given id, using repeated polling.</td><td><code>{baseuri}?syncp=abcd</code></td></tr>
+				</tbody>
+			</table>
+
+			<p>The <code>nosse</code> parameter is intended for the master slideshow in a synchronization session. When it is used, the QR-codes displayed to allow for slaves synchronization will use the <code>syncp</code> parameter instead of <code>sync</code>. In this case where HTML server-sent events are not supported, the slaves will rely on a fallback to check which slide is displayed (regular calls to the slideshow API).</p>
+		</div>
+	</section>
+
+	<h3>Slideshow organization</h3>
+
+	<section class="content">
+		<h1>Parameters to shorten the slideshow</h1>
+		<div class="content">
+			<p>Some parameters may be used to display only a subset of slideshow.</p>
+
+			<table class="shadowed" style="width:100%; margin-left: auto; margin-right: auto">
+				<thead>
+					<tr><td>Parameter</td><td>Type of value</td><td>Meaning</td><td>Example</td></tr>
+				</thead>
+				<tbody>
+					<tr><td>subset</td><td>Comma-separated list of slides</td><td>When provided, only the specified slides are included in the slideshow</td><td><code>{baseuri}?subset=1,3,4,synchronization,6</code></td></tr>
+					<tr><td>hidden</td><td>Comma-separated list of slides</td><td>When provided, the specified slides are <em>not</em> included in the slideshow</td><td><code>{baseuri}?hidden=4,body-options</code></td></tr>
+				</tbody>
+			</table>
+
+			<p>In the slide list specification, a slide may be specified in three ways:
+				<ul>
+					<li>by providing its index number relative to the declaration order in the HTML file (the first slide has number 1),</li>
+					<li>by providing its id as given in the HTML file,</li>
+					<li>by providing the name of a group it belongs to: the groups of a slides are specified by the <code>data-groups</code> parameter in the <code>section</code> element of the slide (see also <a href="#slide-options">here</a>).</li>
+				</ul>
+			</p>
+
+			<p>Note that it is currently not possible to change the order of the slides in the slideshow this way. The order of the slides remains the same as the order of the slides declarations in the HTML file. Also note that the headings are kept in the final slideshow, even if their section is empty.</p>
+		</div>
+	</section>
+
+	<section class="content">
+		<h1>Parameters to organize the slideshow</h1>
+		<div class="content">
+			<p>With the <code>outline</code> parameter, it is possible to fully re-organize the orders of slides and event to create new slides on the fly.</p>
+
+
+		</div>
+	</section>
+
+
 	<h2 data-short="Templates">Creating your own template</h2>
 
 	<h3>Creating the template</h3>
@@ -1673,10 +1757,16 @@ function FocusOutlineSlide() {return new FocusOutlineSlideObject();}
 		}
 		table.append(tbody);
 	}
+	function substitute_content() {
+		for (let el of document.querySelectorAll("section code")) {
+			el.textContent = el.textContent.replace('{baseuri}', location.origin + location.pathname);
+		}
+	}
 	document.addEventListener("DOMContentLoaded", function(event) {
 		hljs.highlightAll();
 		generate_qr_code("qrcode");
 		generate_table_color();
+		substitute_content();
 	});
 </script>
 </body>
