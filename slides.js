@@ -1391,10 +1391,15 @@ function create_structure() {
 			slideo.element.id = id;
 			slideo.id = slideo.element.id;
 		}
-		add_components(slideo);	// Add components to the slides
 	});
+
 	// Compose outline slides
 	compose_outline_slides();
+
+	// Add components to slides
+	slides.forEach(function(slideo,index) {
+		add_components(slideo);	// Add components to the slides
+	});
 
 	// Create background and foreground layers if they are not disabled and they are not provided
 	for (const layer of ['foreground', 'background']) if (config[layer+"Layer"]) {
