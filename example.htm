@@ -1109,33 +1109,41 @@ function animate_none(source,dest,increasing,callback) {
 
 	<section class="content">
 		<h1>Navigation</h1>
-		<div class="content">
-			<dl class="rightheader">
-				<dt><key>→</key></dt> <dd>Display next slide fragment, or next slide if there is no more fragment</dd>
-				<dt><key>Space</key></dt> <dd>Display next slide fragment, or next slide if there is no more fragment</dd>
-				<dt><key>←</key></dt> <dd>Display previous slide fragment, or previous slide if there is no more fragment</dd>
-				<dt><key>↓</key></dt> <dd>Display next slide</dd>
-				<dt><key>↑</key></dt> <dd>Display previous slide</dd>
-				<dt><key>PageDown</key></dt> <dd>Move to next outline (section, subsection…)</dd>
-				<dt><key>PageUp</key></dt> <dd>Move to previous outline (section, subsection…)</dd>
-				<dt><key>Home</key></dt> <dd>Move to the start of the slideshow</dd>
-				<dt><key>End</key></dt> <dd>Move to the end of the slideshow</dd>
-				<dt><key>N</key></dt> <dd>Open presenter notes</dd>
-				<dt><key>S</key></dt> <dd>Set synchronize mode</dd>
-				<dt><key>Shift</key><key>S</key></dt> <dd>Display synchronization URL (when in synchronize mode)</dd>
-				<dt><key>O</key></dt> <dd>Open outline view</dd>
-				<dt><key>P</key></dt> <dd>Toggle document view (printable text document)</dd>
-				<dt>Double click</dt> <dd>Toggle fullscreen mode</dd>
-			</dl>
+		<div class="content twocolumns">
+			<div>
+				<dl class="rightheader">
+					<dt><key>→</key></dt> <dd>Display next slide fragment, or next slide if there is no more fragment</dd>
+					<dt><key>Space</key></dt> <dd>Display next slide fragment, or next slide if there is no more fragment</dd>
+					<dt><key>←</key></dt> <dd>Display previous slide fragment, or previous slide if there is no more fragment</dd>
+					<dt><key>↓</key></dt> <dd>Display next slide</dd>
+					<dt><key>↑</key></dt> <dd>Display previous slide</dd>
+					<dt><key>PageDown</key></dt> <dd>Move to next outline (section, subsection…)</dd>
+					<dt><key>PageUp</key></dt> <dd>Move to previous outline (section, subsection…)</dd>
+					<dt><key>Home</key></dt> <dd>Move to the start of the slideshow</dd>
+					<dt><key>End</key></dt> <dd>Move to the end of the slideshow</dd>
+				</dl>
+			</div>
+			<div>
+				<dl class="rightheader">
+					<dt><key>N</key></dt> <dd>Open presenter notes</dd>
+					<dt><key>S</key></dt> <dd>Set synchronize mode</dd>
+					<dt><key>Shift</key><key>S</key></dt> <dd>Display synchronization URL (when in synchronize mode)</dd>
+					<dt><key>+</key></dt> <dd>Zoom in</dd>
+					<dt><key>-</key></dt> <dd>Zoom out</dd>
+					<dt><key>O</key></dt> <dd>Open outline view</dd>
+					<dt><key>P</key></dt> <dd>Toggle document view (printable text document)</dd>
+					<dt>Double click</dt> <dd>Toggle fullscreen mode</dd>
+				</dl>
 
-			It is also possible to navigate slides by swiping leftwards, rightwards, upwards or downwards when on a mobile device.
+				It is also possible to navigate slides by swiping leftwards, rightwards, upwards or downwards when on a mobile device.
+			</div>
 		</div>
 	</section>
 
 	<section class="content">
 		<h1>Outline view</h1>
 		<div class="content">
-			The outline view displays small versions of slides in a grid and allows to quickly jump to another slide.
+			<p>The outline view displays small versions of slides in a grid and allows to quickly jump to another slide.
 			<dl class="rightheader">
 				<dt><key>O</key></dt> <dd>Open the outline view</dd>
 				<dt><key>←</key></dt> <dd>Select the previous slide</dd>
@@ -1143,9 +1151,21 @@ function animate_none(source,dest,increasing,callback) {
 				<dt><key>Enter</key></dt> <dd>Close the outline view and switch to the selected slide</dd>
 			</dl>
 
-			A new slide can also be selected by clicking on it.
+			A new slide can also be selected by clicking on it.</p>
 		</div>
 	</section>
+
+	<section class="content">
+		<h1>Zoom mode</h1>
+		<div class="content">
+			<p>Zoom mode can be used when you want to zoom on a part of the screen. When in zoom mode, move the mouse cursor on screen to move the focused part.</p>
+			<dl class="rightheader">
+				<dt><key>+</key></dt> <dd>Enter zoom mode or zoom in</dd>
+				<dt><key>-</key></dt> <dd>Zoom out or leave zoom mode if the normal size is restored</dd>
+			</dl>
+		</div>
+	</section>
+
 
 	<section id="presenter-notes" class="content">
 		<h1>Presenter notes</h1>

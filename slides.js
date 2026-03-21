@@ -1041,6 +1041,7 @@ function switch_slide(newslidenum,newfragmentnum) {
 		let slide=curslide;
 		curslide=newslidenum;
 		curfragment=newfragmentnum;
+		restore_zoom();
 		if (increasing) {
 			reset_fragments(newslideo, 0, 1); 
 		} else reset_fragments(newslideo, slides[newslidenum]['numfragments'], -1);
@@ -1245,6 +1246,21 @@ function onNotesLoaded(event) {
 		while (i<num && titles[i].innerHTML!=element.innerHTML) ++i;
 		if (i<num) element.id=titles[i].parentNode.id;
 	});
+}
+
+/**********************************
+ *        Zoom management         *
+ **********************************/
+function move_zoom(event) {
+	let xprop = event.clientX / window.innerWidth;
+	let yprop = event.clientY / window.innerHeight;
+	event.currentTarget.style.transformOrigin = `${Math.round(xprop * 100)}% ${Math.round(yprop * 100)}%`;
+}
+
+function restore_zoom() {
+	document.body.style.transformOrigin = "none";
+	document.body.style.scale = "1.0";
+	document.body.removeEventListener("mousemove", move_zoom);
 }
 
 /**********************************
@@ -1724,6 +1740,7 @@ function afterLoad() {
 		if (outlinestyle) return;
 		let newslide=curslide;
 		let newfragment=curfragment;
+		let zoom = 1;
 		switch (e.key) {
 			case "ArrowRight":case " ":	// Right arrow, Space
 				if (!on_overview) {
@@ -1828,6 +1845,18 @@ function afterLoad() {
 					let obj=wnotes.document.getElementById('notes');
 					obj.scrollTop-=wnotes.screen.height/2;
 				}
+				break;
+			case "+":	// "+"
+				zoom = window.getComputedStyle(document.body)["scale"];
+				if (zoom == "none") zoom = 1.0;
+				zoom *= 1.2;
+				document.body.style.scale = "" + zoom;
+				document.body.addEventListener("mousemove", move_zoom);
+				break;
+			case "-":	// "-"
+				zoom = window.getComputedStyle(document.body)["scale"];
+				zoom /= 1.2;
+				if (zoom <= 1.000001) restore_zoom(); else document.body.style.scale = "" + zoom;
 				break;
 			case "s":	// 's'
 				if (syncConfig.url) {
