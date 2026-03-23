@@ -1896,6 +1896,10 @@ function afterLoad() {
 		}
 	});
 
+	// Raise event to let users add some final customization
+	requestAnimationFrame(function() {
+		document.dispatchEvent(new CustomEvent('slidesReady'));
+	});
 }
 
 /**********************************

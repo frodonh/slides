@@ -6,8 +6,8 @@
 
 	<link rel="stylesheet" title="mainsheet" href="dewdrop/template.css">
 	<link rel="alternate stylesheet" title="outlinesheet" href="dewdrop/template_outline.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
 	<script src="slides.js"></script>
 	<script src="interactive.js"></script> <!-- This is only needed if interactive features are used. -->
 	<script>
@@ -113,20 +113,20 @@ key {
 					<dt><code>title="outlinesheet"</code></dt><dd>Stylesheet used when displaying the outline view</dd>
 					<dt><code>title="mainsheet"</code></dt><dd>Stylesheet used when displaying the normal view of slides</dd>
 				</dl>
-				<pre><code class="language-html">
+				<pre><code>
 &lt;link rel="stylesheet" title="outlinesheet" href="/templates/dewdrop/slides/template_outline.css"&gt;
 &lt;link rel="stylesheet" title="mainsheet" href="/templates/dewdrop/slides/template.css"&gt;
 				</code></pre>
 			</div>
 			<div>
 				Include the main library:
-				<pre><code class="language-html">
+				<pre><code>
 &lt;script src="/templates/slides/slides.js"&gt;&lt;/script&gt;
 				</code></pre>
 			</div>
 			<div>
 				Initialize metadata:
-<pre><code class="language-html">
+<pre><code>
 &lt;script&gt;
 	initialize({
 		"title": "Slides.js",
@@ -143,7 +143,7 @@ key {
 	<section class="content">
 		<h1>Initialize metadata</h1>
 		<div class="content">
-			<pre><code class="language-js">
+			<pre><code>
 initialize({
 	"title": "My wonderful slideshow",
 	"subtitle": "Executive board",
@@ -170,7 +170,7 @@ initialize({
 	<section class="content">
 		<h1>General options in html element</h1>
 		<div class="content">
-			<pre><code class="language-html">
+			<pre><code>
 &lt;html lang="en" data-notes="example_notes.html" data-synchronize="/templates/slides/slides.php"&gt;
 			</code></pre>
 			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
@@ -189,7 +189,7 @@ initialize({
 	<section id="body-options" class="content">
 		<h1>General options in body element</h1>
 		<div class="content">
-			<pre><code class="language-html">
+			<pre><code>
 &lt;body data-background-layer="active" data-foreground-layer="active"&gt;
 			</code></pre>
 			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
@@ -209,7 +209,7 @@ initialize({
 	<section class="content">
 		<h1>Headings and slides</h1>
 		<div class="content">
-			<pre><code class="language-html" style="height: 30vh">
+			<pre><code style="height: 30vh">
 &lt;h2&gt;Outer structure&lt;/h2&gt;
 
 &lt;h3 data-short="Templates"&gt;Slides templates&lt;/h3&gt;
@@ -239,7 +239,7 @@ initialize({
 	<section id="heading-options" class="content">
 		<h1>Headings</h1>
 		<div class="content">
-			<pre><code class="language-html">&lt;h2 data-short="Outer" data-outline="ClassicOutlineSlide"&gt;Outer structure&lt;/h2&gt;</code></pre>
+			<pre><code>&lt;h2 data-short="Outer" data-outline="ClassicOutlineSlide"&gt;Outer structure&lt;/h2&gt;</code></pre>
 			<p>HTML attributes and CSS properties:</p>
 
 			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
@@ -253,7 +253,7 @@ initialize({
 			</table>
 
 			<p>The composition function should return an object that inherits the OutlineSlide class. It has one mandatory member function:
-			<pre><code class="language-js">compose(entry, structure)</code></pre>
+			<pre><code>compose(entry, structure)</code></pre>
 			where:
 			<ul>
 				<li><code>entry</code> is the structure node of the current heading</li>
@@ -284,7 +284,7 @@ initialize({
 	<section id="slide-options" class="content">
 		<h1>Slides</h1>
 		<div class="content">
-			<pre><code class="language-html">&lt;section id="myslide" data-animation="fade"&gt;…&lt;/section&gt;</code></pre>
+			<pre><code>&lt;section id="myslide" data-animation="fade"&gt;…&lt;/section&gt;</code></pre>
 			<p>HTML attributes and CSS properties:</p>
 
 			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
@@ -312,7 +312,7 @@ initialize({
 		<h1>Transitions between slides</h1>
 		<div class="content">
 			The transition between two slides is defined in the destination slide. It can be setup either inline or in the CSS stylesheet.
-			<pre><code class="language-html">&lt;section data-animation="convex"&gt;</code></pre>
+			<pre><code>&lt;section data-animation="convex"&gt;</code></pre>
 
 			HTML attributes and CSS properties:
 			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
@@ -326,7 +326,7 @@ initialize({
 
 			The name of the animation may be:
 			<ul>
-				<li>A function <code class="language-js">animate(source, dest, increasing, callback)</code>: in this case, the function is executed with <code>source</code> being the DOM object for the source slide, <code>dest</code> the DOM object for the destination slide, <code>increasing</code> a boolean indicating if the direction of the animation and <code>callback</code> a callback function to execute after the end of the animation</li>
+				<li>A function <code>animate(source, dest, increasing, callback)</code>: in this case, the function is executed with <code>source</code> being the DOM object for the source slide, <code>dest</code> the DOM object for the destination slide, <code>increasing</code> a boolean indicating if the direction of the animation and <code>callback</code> a callback function to execute after the end of the animation</li>
 				<li>A string <code>name</code>: the animation is done in four steps
 					<ul>
 						<li>apply the anim-<em>name</em>-transitions class to both the source and destination slide (generally this class should only define transitions)</li>
@@ -345,7 +345,7 @@ initialize({
 			<code>data-animation="none"</code>
 
 			Implementation through Javascript function:
-			<pre><code class="language-js">
+			<pre><code>
 function animate_none(source,dest,increasing,callback) {
 	source.style.visibility=null;
 	if (source.dataset["onhide"]) window[source.dataset["onhide"]](source);
@@ -366,7 +366,7 @@ function animate_none(source,dest,increasing,callback) {
 			<code>data-animation="fade"</code>
 
 			Implementation with CSS classes:
-			<pre><code class="language-css">
+			<pre><code>
 .anim-fade-transitions {
 	opacity: 1;
 	transition: opacity 1s ease-in-out;
@@ -389,7 +389,7 @@ function animate_none(source,dest,increasing,callback) {
 			<code>data-animation="sweep"</code>
 
 			Implementation with CSS classes:
-			<pre><code class="language-css">
+			<pre><code>
 .anim-sweep-transitions {
 	transition: left 1s ease-in-out;
 }
@@ -412,7 +412,7 @@ function animate_none(source,dest,increasing,callback) {
 			<code>data-animation="rotate"</code>
 
 			Implementation with CSS classes:
-			<pre><code class="language-css">
+			<pre><code>
 .anim-rotate-transitions {
 	transform-origin: -50% 50%;
 	transition: transform 1s ease-in-out;
@@ -435,7 +435,7 @@ function animate_none(source,dest,increasing,callback) {
 			<code style="background-color: transparent">data-animation="convex"</code>
 
 			Implementation with CSS classes:
-			<pre><code class="language-css">
+			<pre><code>
 .anim-convex-transitions {
 	opacity: 1;
 	transform-origin: center center 250px;
@@ -463,7 +463,7 @@ function animate_none(source,dest,increasing,callback) {
 			<code>data-animation="takeoff"</code>
 
 			Implementation with CSS classes:
-			<pre><code class="language-css">
+			<pre><code>
 .anim-takeoff-transitions {
 	opacity: 1;
 	transform-origin: center center;
@@ -494,7 +494,7 @@ function animate_none(source,dest,increasing,callback) {
 
 			To use this animation, you have to add the following code at the beginning of your body. (Unfortunately, it is not possible to add it dynamically with Javascript because the mask-image CSS property requires an existing url.)
 
-			<pre><code class="language-html">
+			<pre><code>
 &lt;svg viewBox="0 0 1 1" width="0" height="0"&gt;
 	&lt;mask id="tempmask" maskContentUnits="objectBoundingBox"&gt;&lt;/mask&gt;
 	&lt;mask id="tempmaskb" maskContentUnits="objectBoundingBox"&gt;&lt;/mask&gt;
@@ -510,7 +510,7 @@ function animate_none(source,dest,increasing,callback) {
 	<section class="title">
 		<h1>A title slide</h1>
 		<div class="authordate">John Doe<br/>July 14<sup>th</sup>, 1789</div>
-		<pre><code class="language-html">
+		<pre><code>
 &lt;section class="title"&gt;
 	&lt;h1&gt;A title slide&lt;br/&gt;&lt;span class="subtitle"&gt;The subtitle&lt;/span&gt;&lt;/h1&gt;
 	&lt;div class="authordate"&gt;John Doe&lt;br/&gt;July 14&lt;sup&gt;th&lt;/sup&gt;, 1789&lt;/div&gt;
@@ -525,7 +525,7 @@ function animate_none(source,dest,increasing,callback) {
 				<li>This is the main type of slide</li>
 				<li>The content will be centered vertically</li>
 			</ul>
-		<pre><code class="language-html">
+		<pre><code>
 &lt;section class="content"&gt;
 	&lt;h1&gt;A content slide&lt;/h1&gt;
 	&lt;div class="content"&gt;
@@ -549,7 +549,7 @@ function animate_none(source,dest,increasing,callback) {
 				</ul>
 			</div>
 			<div>
-		<pre><code class="language-html">
+		<pre><code>
 &lt;section class="content"&gt;
 	&lt;h1&gt;A content slide&lt;/h1&gt;
 	&lt;div class="content twocolumns"&gt;
@@ -560,7 +560,7 @@ function animate_none(source,dest,increasing,callback) {
 			&lt;/ul&gt;
 		&lt;/div&gt;
 		&lt;div&gt;
-	&lt;pre&gt;&lt;code class="language-html"&gt;
+	&lt;pre&gt;&lt;code&gt;
 	&lt;/code&gt;&lt;/pre&gt;
 		&lt;/div&gt;
 	&lt;/div&gt;
@@ -577,7 +577,7 @@ function animate_none(source,dest,increasing,callback) {
 				<li>When you want more place, just remove everything</li>
 				<li>Now you can use the full page for your content</li>
 			</ul>
-			<pre><code class="language-html">
+			<pre><code>
 &lt;section class="plain"&gt;
 	&lt;h1&gt;A plain slide&lt;/h1&gt;
 	&lt;div class="content"&gt;
@@ -585,7 +585,7 @@ function animate_none(source,dest,increasing,callback) {
 			&lt;li&gt;When you want more place, just remove everything&lt;/li&gt;
 			&lt;li&gt;Now you can use the full page for your content&lt;/li&gt;
 		&lt;/ul&gt;
-		&lt;pre&gt;&lt;code class="language-html"&gt;
+		&lt;pre&gt;&lt;code&gt;
 		&lt;/code&gt;&lt;/pre&gt;
 	&lt;/div&gt;
 &lt;/section&gt;
@@ -610,7 +610,7 @@ function animate_none(source,dest,increasing,callback) {
 					</ul>
 				</div>
 				<div>
-					<pre><code class="language-html">
+					<pre><code>
 &lt;section class="chessboard"&gt;
 &lt;h1&gt;A chessboard slide&lt;/h1&gt;
 &lt;div class="content"&gt;
@@ -622,7 +622,7 @@ function animate_none(source,dest,increasing,callback) {
 			&lt;li&gt;But you have to take care to have the same numbers of cells in each row&lt;/li&gt;
 		&lt;/ul&gt;
 		&lt;/div&gt; &lt;div&gt;
-			&lt;pre&gt;&lt;code class="language-html"&gt;
+			&lt;pre&gt;&lt;code&gt;
 			&lt;/code&gt;&lt;/pre&gt;
 	&lt;/div&gt; &lt;/div&gt;
 	&lt;div&gt; &lt;div&gt;
@@ -710,12 +710,12 @@ function animate_none(source,dest,increasing,callback) {
 			</table>
 
 			Example of adding components inline:
-			<pre><code class="language-html">
+			<pre><code>
 &lt;section data-components="[Minitoc(), ClassicFooter()]"&gt;
 			</code></pre>
 
 			The same configuration in the CSS stylesheet:
-			<pre><code class="language-css">
+			<pre><code>
 --components: "[Minitoc(), ClassicFooter()]";
 			</code></pre>
 		</div>
@@ -752,12 +752,12 @@ function animate_none(source,dest,increasing,callback) {
 
 			<p data-fragment="{'0-1':['invisible'],'3-':['semivisible']}">Fragments are added with the <code>data-fragment</code> attribute on the element. This attribute holds a <strong>fragment specification</strong>, which is a JSON dictionary (where double quotes are replaced by single quotes). The key is a slide specification and the value if an array of classes to apply to the corresponding elements.</p>
 
-			<pre data-fragment="{'0-2':['invisible'],'4-':['semivisible']}"><code class="language-html">
+			<pre data-fragment="{'0-2':['invisible'],'4-':['semivisible']}"><code>
 &lt;p data-fragment="{'0':['invisible'],'2-':['semivisible']}"&gt;Fragments are pieces of slides which are displayed or animated when browsing the slideshow. Every HTML element can be animated.&lt;/p&gt;
 
 &lt;p data-fragment="{'0-1':['invisible'],'3-':['semivisible']}"&gt;Fragments are added with the &lt;var&gt;data-fragment&lt;/var&gt; attribute on the element. This attribute may hold a &lt;strong&gt;fragment specification&lt;/strong&gt;, which is a JSON dictionary (where double quotes are replaced by single quotes). The key is a slide specification and the value if an array of classes to apply to the corresponding elements.&lt;/p&gt;
 
-&lt;pre data-fragment="{'0-2':['invisible']}"&gt;&lt;code class="language-html"&gt;
+&lt;pre data-fragment="{'0-2':['invisible']}"&gt;&lt;code&gt;
 &lt;/code&gt;&lt;/pre&gt;
 			</code></pre>
 
@@ -802,7 +802,7 @@ function animate_none(source,dest,increasing,callback) {
 
 			<div class="pulse" data-fanim="{'2': 'fragment_cssanim'}">
 				CSS stylesheet:
-				<pre><code class="language-css">
+				<pre><code>
 @keyframes pulsebox {
 	from { transform: scale(1); }
 	50% { transform: scale(1.2); }
@@ -812,7 +812,7 @@ function animate_none(source,dest,increasing,callback) {
 				</code></pre>
 
 				HTML code:
-				<pre><code class="language-html">
+				<pre><code>
 &lt;p class="pulse" data-fanim="{'0': 'fragment_cssanim'}"&gt;Fragments can also be animated.&lt;/p&gt;
 &lt;p class="pulse" data-fanim="{'1': 'fragment_cssanim'}"&gt;The &lt;strong&gt;fragment animation specification&lt;/strong&gt; is a JSON dictionary which keys are slides specifications and which values are names of animation functions. Currently, a single animation function is defined: &lt;code&gt;fragment_cssanim&lt;/code&gt;, which runs the CSS animations defined on the element&lt;/p&gt;
 				</code></pre>
@@ -865,7 +865,7 @@ function animate_none(source,dest,increasing,callback) {
 					</ul>
 				</li>
 			</ul>
-			<pre><code class="language-html">
+			<pre><code>
 &lt;section class="content" data-autofragment="['.content ul&gt;li',{'before':['semivisible'],'current':['pulse'],'animation':'fragment_cssanim'}]"&gt;
 	&lt;h1&gt;Auto-fragments for slides element&lt;/h1&gt;
 	&lt;div class="content"&gt;
@@ -889,14 +889,14 @@ function animate_none(source,dest,increasing,callback) {
 			</ul>
 
 			CSS stylesheet:
-			<pre><code class="language-css">
+			<pre><code>
 &num;autofragments-elements ul > li {
 	--autofragment: "{'before':['semivisible'],'current':['pulse'],'animation':'fragment_cssanim'}";
 }
 			</code></pre>
 
 			HTML code:
-			<pre><code class="language-html">
+			<pre><code>
 &lt;section id="autofragments-elements" class="content"&gt;
 	&lt;h1&gt;Auto-fragments for elements inside slides&lt;/h1&gt;
 	&lt;div class="content"&gt;
@@ -919,7 +919,7 @@ function animate_none(source,dest,increasing,callback) {
 					This is a standard block to highlight some content.
 				</div>
 			</div>
-			<pre><code class="language-html">
+			<pre><code>
 &lt;div class="block"&gt;
 	&lt;h1&gt;A standard block&lt;/h1&gt;
 	&lt;div class="content"&gt;
@@ -934,7 +934,7 @@ function animate_none(source,dest,increasing,callback) {
 					This is an informative block.
 				</div>
 			</div>
-			<pre><code class="language-html">
+			<pre><code>
 &lt;div class="infoblock"&gt;
 	&lt;h1&gt;An information block&lt;/h1&gt;
 	&lt;div class="content"&gt;
@@ -954,7 +954,7 @@ function animate_none(source,dest,increasing,callback) {
 					This is a warning block.
 				</div>
 			</div>
-			<pre><code class="language-html">
+			<pre><code>
 &lt;div class="warningblock"&gt;
 	&lt;h1&gt;A warning block&lt;/h1&gt;
 	&lt;div class="content"&gt;
@@ -977,7 +977,7 @@ function animate_none(source,dest,increasing,callback) {
 					<cite>Samuel Johnson</cite>
 				</div>
 			</div>
-			<pre><code class="language-html">
+			<pre><code>
 &lt;div class="block"&gt;
 &lt;h1&gt;De l'intérêt des citations&lt;/h1&gt;
 &lt;div class="content"&gt;
@@ -1005,7 +1005,7 @@ function animate_none(source,dest,increasing,callback) {
 				</svg>
 			</figure>
 
-			<pre><code class="language-html">
+			<pre><code>
 &lt;figure class="centered"&gt;
 	&lt;svg class="shadowed" style="width: 60vw; height: 40vh"&gt;
 		&lt;rect width="100%" height="100%" stroke="var(--secondary-dark)" fill="var(--secondary-lighter)" /&gt;
@@ -1193,7 +1193,7 @@ function animate_none(source,dest,increasing,callback) {
 		<div class="content">
 			<p>The presenter slideshow (<em>master</em>) may be synchronized with the audience devices (<em>slaves</em>) when they are connected on the same presentation. When synchronized, slave devices automatically switch slides to match the master progress. This does not include fragments however, which are always visible on slave devices.</p>
 			<p>The synchronization mode needs a synchronization script which manages the process through a remote database. The address of the script shall be included in the HTML data attributes.</p>
-			<pre><code class="language-html">
+			<pre><code>
 &lt;html lang="en" data-notes="example_notes.htm" data-synchronize="/templates/slides/slides.php"&gt;
 			</code></pre>
 			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
@@ -1220,7 +1220,7 @@ function animate_none(source,dest,increasing,callback) {
 		<h1>Presenter notes</h1>
 		<div class="content">
 			Example of note page:
-			<pre><code class="language-html">
+			<pre><code>
 &lt;!DOCTYPE html&gt;
 &lt;html lang="fr" data-duration="1h"&gt;
 &lt;head&gt;
@@ -1253,7 +1253,7 @@ function animate_none(source,dest,increasing,callback) {
 		<div class="content">
 			<p>Interactive components can only be used when the slideshow is hosted on a server with PHP and PostgreSql support. This is needed for server-side events which allow for an automatic synchronization of the presenter slideshow and the attendees devices.</p>
 			<p>When using interactive components, you need to configure a proper synchronization URL in the HTML element.</p>
-			<pre><code class="language-html">
+			<pre><code>
 &lt;html lang="fr" data-synchronize="slides.php" data-syncss="sync.css"&gt;
 			</code></pre>
 			<table class="shadowed" style="width:80%; margin-left: auto; margin-right: auto">
@@ -1473,7 +1473,7 @@ function animate_none(source,dest,increasing,callback) {
 	<section class="content">
 		<h1>Structure of the template</h1>
 		<div class="content">
-			<pre><code class="language-css">
+			<pre><code>
 @use "sass:map"; // Use the map library, needed if you want to use theme colors in you Sass stylesheet
 @import "colors"; // Import a colors definition stylesheet (optional)
 @import "fonts"; // Import a fonts definition stylesheet (optional)
@@ -1494,7 +1494,7 @@ function animate_none(source,dest,increasing,callback) {
 			
 			<p>Any theme colors may be defined in the Sass or CSS stylesheet. If you use, you may want to define your base colors this way:</p>
 
-			<pre><code class="language-css">
+			<pre><code>
 $theme: (
   "primary": #00A6E2FF,
   "secondary": #6AB96FFF,
@@ -1506,7 +1506,7 @@ $theme: (
 
 			<p>You can also override other color variants or use the predefined ones:</p>
 
-			<pre><code class="language-css">
+			<pre><code>
 $theme: (
   "primary": #00A6E2FF,
   "primary-lighter": #99D7F7FF,
@@ -1625,7 +1625,7 @@ $theme: (
 		<h1>Creating a new component</h1>
 		<div class="content">
 			To create a new component, you have to do it in a Javascript script, which must be loaded after the main slides.js script file. You have to create a new class and a new function which returns an instance of this class.
-			<pre><code class="language-js">
+			<pre><code>
 class ClassicFooterObject extends Component {
 	constructor(pconfig) {
 		super();
@@ -1675,7 +1675,7 @@ function ClassicFooter(pconfig) {return new ClassicFooterObject(pconfig);}
 		<h1>Creating a new outline style</h1>
 		<div class="content">
 			To create a new outline style, you have to do it in a Javascript script, which must be loaded after the main slides.js script file. You have to create a new class and a new function which returns an instance of this class.
-			<pre><code class="language-js">
+			<pre><code>
 class FocusOutlineSlideObject extends OutlineSlide {
 	compose(entry) {
 		let h = document.createElement("h1");
@@ -1783,10 +1783,15 @@ function FocusOutlineSlide() {return new FocusOutlineSlideObject();}
 		}
 	}
 	document.addEventListener("DOMContentLoaded", function(event) {
-		hljs.highlightAll();
 		generate_qr_code("qrcode");
 		generate_table_color();
 		substitute_content();
+	});
+	document.addEventListener("slidesReady", function() {
+		hljs.configure({
+			languages: ["html", "css", "javascript"]
+		});
+		hljs.highlightAll();
 	});
 </script>
 </body>
